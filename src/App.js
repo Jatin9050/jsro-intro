@@ -3,11 +3,43 @@ import { Menu, X, Rocket, Users, Target, Award } from 'lucide-react';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [popUp, setPopUp] = useState(false);
+
+  // Form State
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    school: ''
+  });
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: 'smooth' });
     setIsMenuOpen(false);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (!formData.name || !formData.email || !formData.phone || !formData.school) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    console.log('Event Registration Submitted:', formData);
+    
+    // You can replace this with actual API call later
+    alert(`Thank you ${formData.name}! We will contact you shortly with event details.`);
+
+    // Reset form and close popup
+    setFormData({ name: '', email: '', phone: '', school: '' });
+    setPopUp(false);
   };
 
   return (
@@ -27,6 +59,12 @@ function App() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-10 text-sm font-medium">
+            <button 
+              onClick={() => setPopUp(true)} 
+              className="hover:text-cyan-400 transition-colors"
+            >
+              Events
+            </button>
             <button onClick={() => scrollToSection('vision')} className="hover:text-cyan-400 transition-colors">Vision</button>
             <button onClick={() => scrollToSection('problem')} className="hover:text-cyan-400 transition-colors">Problem</button>
             <button onClick={() => scrollToSection('solution')} className="hover:text-cyan-400 transition-colors">Solution</button>
@@ -55,6 +93,12 @@ function App() {
         {isMenuOpen && (
           <div className="md:hidden bg-zinc-900 border-t border-zinc-800 py-6">
             <div className="flex flex-col gap-6 px-6 text-lg">
+              <button
+                onClick={() => setPopUp(true)}
+                className="text-left hover:text-cyan-400 transition-colors"
+              >
+                Events
+              </button>
               {['Vision', 'Problem', 'Solution', 'Product', 'Market', 'Roadmap'].map((item) => (
                 <button
                   key={item}
@@ -75,10 +119,98 @@ function App() {
         )}
       </nav>
 
+      {/* Events Popup */}
+      {popUp && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+          <div className="bg-zinc-900 border border-zinc-700 rounded-3xl max-w-md w-full overflow-hidden">
+            
+            {/* Header */}
+            <div className="flex items-center justify-between px-8 py-6 border-b border-zinc-700">
+              <div>
+                <h2 className="text-3xl font-bold">Join Our Events</h2>
+                <p className="text-zinc-400 mt-1">Register now for upcoming robotics workshops</p>
+              </div>
+              <button 
+                onClick={() => setPopUp(false)}
+                className="text-3xl text-zinc-400 hover:text-white transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="p-8 space-y-6">
+              <div>
+                <label className="block text-sm text-zinc-400 mb-2">Full Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-cyan-400 transition-colors"
+                  placeholder="Enter your full name"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-zinc-400 mb-2">Email Address</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-cyan-400 transition-colors"
+                  placeholder="yourname@gmail.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-zinc-400 mb-2">Phone Number</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-cyan-400 transition-colors"
+                  placeholder="+91 98765 43210"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-zinc-400 mb-2">School / College / Organization</label>
+                <input
+                  type="text"
+                  name="school"
+                  value={formData.school}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-cyan-400 transition-colors"
+                  placeholder="e.g. ABC International School"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full mt-4 py-4 bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-500 hover:to-purple-700 text-black font-semibold text-lg rounded-2xl transition-all active:scale-95"
+              >
+                Register for Events
+              </button>
+            </form>
+
+            <div className="px-8 py-6 text-center text-xs text-zinc-500 border-t border-zinc-700">
+              We will contact you shortly with event details
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="pt-32 pb-24 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(at_top_right,#22d3ee_0%,transparent_50%)] opacity-20"></div>
-        
+
         <div className="max-w-7xl mx-auto px-6 text-center">
           <div className="inline-flex items-center gap-2 bg-zinc-900 border border-cyan-500/30 rounded-full px-4 py-1.5 mb-6">
             <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
@@ -113,7 +245,7 @@ function App() {
 
           <div className="mt-20 flex justify-center">
             <div className="text-xs text-zinc-500 flex items-center gap-8">
-              <div>POWERED BY AI • IoT • COMPUTER VISION</div>
+              POWERED BY AI • IoT • COMPUTER VISION
             </div>
           </div>
         </div>
@@ -270,7 +402,7 @@ function App() {
       <section id="roadmap" className="py-24 bg-zinc-900">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-5xl font-bold text-center mb-16">Our Roadmap</h2>
-          
+
           <div className="max-w-3xl mx-auto space-y-12">
             {[
               { year: "2026", title: "Prototype & Testing", desc: "Develop core AI robotics modules and conduct extensive field testing" },
@@ -315,7 +447,10 @@ function App() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="mailto:contact@jsro.in" className="px-12 py-5 bg-white text-black font-semibold text-lg rounded-2xl hover:bg-cyan-400 transition-all">
+            <a 
+              href="mailto:contact@jsro.in" 
+              className="px-12 py-5 bg-white text-black font-semibold text-lg rounded-2xl hover:bg-cyan-400 transition-all"
+            >
               Contact Us
             </a>
             <button className="px-12 py-5 border border-white/60 hover:border-white font-semibold text-lg rounded-2xl transition-all">
