@@ -137,12 +137,12 @@ function App() {
 
   const downloadBrochure = () => {
     const link = document.createElement('a');
-    link.href = '/JSRO_Brochure.pdf'; // Replace this with your actual brochure PDF URL in production
+    link.href = '/JSRO_Brochure.pdf';
     link.download = 'JSRO_Robotics_Brochure.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    alert("Brochure is downloading... (Add real PDF link in production)");
+    alert("Brochure is downloading...");
   };
 
   return (
@@ -156,14 +156,14 @@ function App() {
             </div>
             <div>
               <h1 className="text-2xl font-bold tracking-tight">JSRO</h1>
-              <p className="text-[10px] text-zinc-500 -mt-1">Learning Labs</p>
+              <p className="text-[10px] text-zinc-500 -mt-1">Be an Innovator</p>
             </div>
           </div>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-8 text-sm font-medium">
             <button onClick={() => setShowEvents(true)} className="hover:text-cyan-400 transition-colors">Events</button>
-            <button onClick={() => setShowMembership(true)} className="hover:text-cyan-400 transition-colors">Membership</button>
+            <button onClick={() => setShowMembership(true)} className="hover:text-cyan-400 transition-colors">Join Us</button>
             <button onClick={() => scrollToSection('vision')} className="hover:text-cyan-400 transition-colors">Vision</button>
             <button onClick={() => scrollToSection('about')} className="hover:text-cyan-400 transition-colors">About</button>
             <button onClick={() => scrollToSection('products')} className="hover:text-cyan-400 transition-colors">Products</button>
@@ -177,7 +177,6 @@ function App() {
             Get In Touch
           </button>
 
-          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden text-white"
@@ -191,7 +190,7 @@ function App() {
           <div className="md:hidden bg-zinc-900 border-t border-zinc-800 py-6">
             <div className="flex flex-col gap-6 px-6 text-lg">
               <button onClick={() => setShowEvents(true)} className="text-left hover:text-cyan-400">Events</button>
-              <button onClick={() => setShowMembership(true)} className="text-left hover:text-cyan-400">Membership</button>
+              <button onClick={() => setShowMembership(true)} className="text-left hover:text-cyan-400">Join Us</button>
               <button onClick={() => scrollToSection('vision')} className="text-left hover:text-cyan-400">Vision</button>
               <button onClick={() => scrollToSection('about')} className="text-left hover:text-cyan-400">About</button>
               <button onClick={() => scrollToSection('products')} className="text-left hover:text-cyan-400">Products</button>
@@ -204,7 +203,8 @@ function App() {
         )}
       </nav>
 
-      {/* ====================== EVENTS SELECTION MODAL ====================== */}
+      {/* ====================== Modals (Events, Membership, Registration) ====================== */}
+      {/* Events Modal */}
       {showEvents && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] flex items-center justify-center p-4">
           <div className="bg-zinc-900 border border-zinc-700 rounded-3xl max-w-4xl w-full overflow-hidden">
@@ -213,12 +213,7 @@ function App() {
                 <h2 className="text-3xl font-bold">Upcoming Events</h2>
                 <p className="text-zinc-400 mt-1">Choose an event to register</p>
               </div>
-              <button 
-                onClick={() => setShowEvents(false)}
-                className="text-3xl text-zinc-400 hover:text-white transition-colors"
-              >
-                ✕
-              </button>
+              <button onClick={() => setShowEvents(false)} className="text-3xl text-zinc-400 hover:text-white">✕</button>
             </div>
 
             <div className="p-8 grid md:grid-cols-3 gap-6">
@@ -226,119 +221,68 @@ function App() {
                 <div
                   key={event.id}
                   onClick={() => openEventForm(event)}
-                  className="group bg-zinc-800 border border-zinc-700 hover:border-cyan-400 rounded-3xl p-6 cursor-pointer transition-all hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/10"
+                  className="group bg-zinc-800 border border-zinc-700 hover:border-cyan-400 rounded-3xl p-6 cursor-pointer transition-all hover:scale-105"
                 >
                   <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${event.color} flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform`}>
                     {event.icon}
                   </div>
                   <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
                   <p className="text-zinc-400 text-sm mb-4 line-clamp-2">{event.desc}</p>
-                  
                   <div className="space-y-2 text-sm text-zinc-500">
                     <div className="flex items-center gap-2"><Calendar size={16} />{event.date}</div>
                     <div className="flex items-center gap-2"><Clock size={16} />{event.time}</div>
                     <div className="flex items-center gap-2"><MapPin size={16} />{event.location}</div>
                   </div>
-
                   <button className="mt-6 w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-2xl font-medium transition-colors">
                     Register Now
                   </button>
                 </div>
               ))}
             </div>
-
-            <div className="px-8 py-6 text-center text-xs text-zinc-500 border-t border-zinc-700">
-              All events include hands-on training and certification
-            </div>
           </div>
         </div>
       )}
 
-      {/* ====================== MEMBERSHIP MODAL ====================== */}
+      {/* Membership Modal */}
       {showMembership && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] flex items-center justify-center p-4">
           <div className="bg-zinc-900 border border-zinc-700 rounded-3xl max-w-lg w-full overflow-hidden">
             <div className="flex items-center justify-between px-8 py-6 border-b border-zinc-700">
               <div>
-                <h2 className="text-3xl font-bold">Membership</h2>
+                <h2 className="text-3xl font-bold">Join Us</h2>
                 <p className="text-zinc-400 mt-1">Share your robotics project idea</p>
               </div>
-              <button 
-                onClick={() => setShowMembership(false)}
-                className="text-3xl text-zinc-400 hover:text-white transition-colors"
-              >
-                ✕
-              </button>
+              <button onClick={() => setShowMembership(false)} className="text-3xl text-zinc-400 hover:text-white">✕</button>
             </div>
 
             <form onSubmit={handleMembershipSubmit} className="p-8 space-y-6">
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">Full Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={membershipData.name}
-                  onChange={handleMembershipChange}
-                  required
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-cyan-400"
-                  placeholder="Enter your full name"
-                />
+                <input type="text" name="name" value={membershipData.name} onChange={handleMembershipChange} required
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400" placeholder="Enter your full name" />
               </div>
-
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">Email Address</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={membershipData.email}
-                  onChange={handleMembershipChange}
-                  required
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-cyan-400"
-                  placeholder="yourname@gmail.com"
-                />
+                <input type="email" name="email" value={membershipData.email} onChange={handleMembershipChange} required
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400" placeholder="yourname@gmail.com" />
               </div>
-
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">Phone Number (Optional)</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={membershipData.phone}
-                  onChange={handleMembershipChange}
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-cyan-400"
-                  placeholder="+91 98765 43210"
-                />
+                <input type="tel" name="phone" value={membershipData.phone} onChange={handleMembershipChange}
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400" placeholder="+91 98765 43210" />
               </div>
-
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">School / College / Organization</label>
-                <input
-                  type="text"
-                  name="school"
-                  value={membershipData.school}
-                  onChange={handleMembershipChange}
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-cyan-400"
-                  placeholder="e.g. ABC International School"
-                />
+                <input type="text" name="school" value={membershipData.school} onChange={handleMembershipChange}
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400" placeholder="e.g. ABC International School" />
               </div>
-
               <div>
-                <label className="block text-sm text-zinc-400 mb-2">YouTube Project Link</label>
-                <input
-                  type="url"
-                  name="youtubeLink"
-                  value={membershipData.youtubeLink}
-                  onChange={handleMembershipChange}
-                  required
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-cyan-400"
-                  placeholder="https://youtube.com/watch?v=..."
-                />
+                <label className="block text-sm text-zinc-400 mb-2">Project Link (YouTube)</label>
+                <input type="url" name="youtubeLink" value={membershipData.youtubeLink} onChange={handleMembershipChange} required
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400" placeholder="https://youtube.com/watch?v=..." />
               </div>
 
-              <button
-                type="submit"
-                className="w-full py-4 bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-500 hover:to-purple-700 text-black font-semibold text-lg rounded-2xl transition-all active:scale-95"
-              >
+              <button type="submit" className="w-full py-4 bg-gradient-to-r from-cyan-400 to-purple-600 text-black font-semibold rounded-2xl hover:scale-105 transition-all">
                 Submit for Guidance
               </button>
             </form>
@@ -346,7 +290,7 @@ function App() {
         </div>
       )}
 
-      {/* ====================== EVENT REGISTRATION FORM MODAL ====================== */}
+      {/* Event Registration Modal */}
       {showForm && selectedEvent && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-[110] flex items-center justify-center p-4">
           <div className="bg-zinc-900 border border-zinc-700 rounded-3xl max-w-md w-full overflow-hidden">
@@ -355,88 +299,56 @@ function App() {
                 <h2 className="text-3xl font-bold">Register for</h2>
                 <p className="text-cyan-400 font-semibold mt-1">{selectedEvent.title}</p>
               </div>
-              <button 
-                onClick={() => { setShowForm(false); setSelectedEvent(null); }}
-                className="text-3xl text-zinc-400 hover:text-white transition-colors"
-              >
-                ✕
-              </button>
+              <button onClick={() => { setShowForm(false); setSelectedEvent(null); }} className="text-3xl text-zinc-400 hover:text-white">✕</button>
             </div>
 
             <form onSubmit={handleEventSubmit} className="p-8 space-y-6">
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">Full Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-cyan-400 transition-colors"
-                  placeholder="Enter your full name"
-                />
+                <input type="text" name="name" value={formData.name} onChange={handleInputChange} required className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4" placeholder="Enter your full name" />
               </div>
-
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">Email Address</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-cyan-400 transition-colors"
-                  placeholder="yourname@gmail.com"
-                />
+                <input type="email" name="email" value={formData.email} onChange={handleInputChange} required className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4" placeholder="yourname@gmail.com" />
               </div>
-
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">Phone Number</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-cyan-400 transition-colors"
-                  placeholder="+91 98765 43210"
-                />
+                <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4" placeholder="+91 98765 43210" />
               </div>
-
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">School / College / Organization</label>
-                <input
-                  type="text"
-                  name="school"
-                  value={formData.school}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-cyan-400 transition-colors"
-                  placeholder="e.g. ABC International School"
-                />
+                <input type="text" name="school" value={formData.school} onChange={handleInputChange} required className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4" placeholder="e.g. ABC International School" />
               </div>
 
-              <button
-                type="submit"
-                className="w-full mt-4 py-4 bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-500 hover:to-purple-700 text-black font-semibold text-lg rounded-2xl transition-all active:scale-95"
-              >
+              <button type="submit" className="w-full py-4 bg-gradient-to-r from-cyan-400 to-purple-600 text-black font-semibold rounded-2xl hover:scale-105 transition-all">
                 Confirm Registration
               </button>
             </form>
-
-            <div className="px-8 py-6 text-center text-xs text-zinc-500 border-t border-zinc-700">
-              We will contact you shortly with complete event details
-            </div>
           </div>
         </div>
       )}
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-24 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(at_top_right,#22d3ee_0%,transparent_50%)] opacity-20"></div>
+      {/* ====================== HERO SECTION WITH LOOPING VIDEO ====================== */}
+      <section className="pt-32 pb-32 relative overflow-hidden min-h-screen flex items-center">
+        {/* Background Video */}
+        <div className="absolute inset-0 z-0">
+          <video
+            src="/gifvideo.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+          />
+          {/* Dark overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/70"></div>
+          {/* Extra gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80"></div>
+        </div>
 
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <div className="inline-flex items-center gap-2 bg-zinc-900 border border-cyan-500/30 rounded-full px-4 py-1.5 mb-6">
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
+          <div className="inline-flex items-center gap-2 bg-zinc-900/80 border border-cyan-500/30 backdrop-blur-md rounded-full px-5 py-2 mb-8">
             <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
             <span className="text-cyan-400 text-sm font-medium">Building the Future of Robotics</span>
           </div>
@@ -448,33 +360,32 @@ function App() {
             </span>
           </h1>
 
-          <p className="max-w-2xl mx-auto text-xl text-zinc-400 mb-10">
+          <p className="max-w-2xl mx-auto text-xl text-zinc-200 mb-12">
             AI-powered robotics modules making advanced automation accessible to students, educators, and industries.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => scrollToSection('products')}
-              className="px-10 py-4 bg-white text-black font-semibold rounded-2xl hover:bg-cyan-400 hover:scale-105 transition-all flex items-center gap-3 justify-center"
+              className="px-10 py-4 bg-white text-black font-semibold rounded-2xl hover:bg-cyan-400 hover:scale-105 transition-all"
             >
               Explore Our Products
             </button>
             <button
               onClick={() => setShowMembership(true)}
-              className="px-10 py-4 border border-white/50 hover:border-white font-semibold rounded-2xl transition-all"
+              className="px-10 py-4 border border-white/70 hover:border-white font-semibold rounded-2xl transition-all"
             >
-              Join Membership
+              Join Us
             </button>
           </div>
 
-          <div className="mt-20 flex justify-center">
-            <div className="text-xs text-zinc-500 flex items-center gap-8">
-              POWERED BY AI • IoT • COMPUTER VISION
-            </div>
+          <div className="mt-20 text-xs text-zinc-400 flex items-center justify-center gap-8">
+            POWERED BY AI • IoT • COMPUTER VISION
           </div>
         </div>
       </section>
 
+      {/* Rest of the sections remain the same (Vision, About, Products, Market, Contact, Footer) */}
       {/* Vision Section */}
       <section id="vision" className="py-24 bg-zinc-900">
         <div className="max-w-7xl mx-auto px-6">
@@ -511,9 +422,7 @@ function App() {
       <section id="about" className="py-24 bg-black">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-5xl font-bold text-center mb-16">About Us</h2>
-          
           <div className="grid md:grid-cols-2 gap-12">
-            {/* About Trainer */}
             <div className="bg-zinc-900 p-10 rounded-3xl border border-zinc-700 text-center">
               <div className="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-2xl flex items-center justify-center text-7xl">
                 👨‍🔬
@@ -526,15 +435,14 @@ function App() {
               </p>
             </div>
 
-            {/* About Company */}
             <div className="bg-zinc-900 p-10 rounded-3xl border border-zinc-700">
               <div className="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-7xl">
                 🧪
               </div>
-              <h3 className="text-3xl font-bold mb-6 text-center">JSRO Learning Labs</h3>
+              <h3 className="text-3xl font-bold mb-6 text-center">JSRO - Be an Innovator</h3>
               <p className="text-zinc-400 text-lg leading-relaxed">
-                We are dedicated to revolutionizing robotics and AI education in India. 
-                Our goal is to make advanced technology affordable and accessible to students, 
+                We are dedicated to revolutionizing robotics and AI education in India.
+                Our goal is to make advanced technology affordable and accessible to students,
                 schools, and industries through innovative modules and expert guidance.
               </p>
             </div>
@@ -542,7 +450,7 @@ function App() {
         </div>
       </section>
 
-      {/* Combined Products & Solutions Section */}
+      {/* Products Section */}
       <section id="products" className="py-24 bg-zinc-900">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
@@ -577,14 +485,8 @@ function App() {
           <div className="max-w-7xl mx-auto px-6 py-12">
             <div className="flex justify-between items-center mb-12 sticky top-0 bg-zinc-950 py-6 z-10 border-b border-zinc-800">
               <h2 className="text-5xl font-bold">All Products</h2>
-              <button 
-                onClick={() => setShowAllProducts(false)}
-                className="text-4xl text-zinc-400 hover:text-white transition-colors"
-              >
-                ✕
-              </button>
+              <button onClick={() => setShowAllProducts(false)} className="text-4xl text-zinc-400 hover:text-white">✕</button>
             </div>
-            
             <div className="grid md:grid-cols-3 gap-8">
               {products.map((product, i) => (
                 <div key={i} className="bg-zinc-900 border border-zinc-700 hover:border-cyan-400 rounded-3xl p-10 transition-all">
@@ -598,7 +500,7 @@ function App() {
         </div>
       )}
 
-      {/* Market Opportunity */}
+      {/* Market Section */}
       <section id="market" className="py-24 bg-black">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-16">
@@ -616,9 +518,7 @@ function App() {
             <div>
               <h2 className="text-4xl font-bold mb-10">Market Opportunity</h2>
               <div className="space-y-8 text-lg">
-                <p className="text-zinc-300">
-                  The global robotics market is growing rapidly, with increasing demand in:
-                </p>
+                <p className="text-zinc-300">The global robotics market is growing rapidly, with increasing demand in:</p>
                 <ul className="space-y-4 text-zinc-400">
                   <li className="flex items-center gap-3">• Education & STEM Learning</li>
                   <li className="flex items-center gap-3">• Healthcare Automation</li>
@@ -643,16 +543,10 @@ function App() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="mailto:info@jsro.io" 
-              className="px-12 py-5 bg-white text-black font-semibold text-lg rounded-2xl hover:bg-cyan-400 transition-all"
-            >
+            <a href="mailto:info@jsro.io" className="px-12 py-5 bg-white text-black font-semibold text-lg rounded-2xl hover:bg-cyan-400 transition-all">
               Contact Us
             </a>
-            <button 
-              onClick={downloadBrochure}
-              className="px-12 py-5 border border-white/60 hover:border-white font-semibold text-lg rounded-2xl transition-all"
-            >
+            <button onClick={downloadBrochure} className="px-12 py-5 border border-white/60 hover:border-white font-semibold text-lg rounded-2xl transition-all">
               Download Brochure
             </button>
           </div>
@@ -665,7 +559,6 @@ function App() {
       <footer className="bg-black py-16 border-t border-zinc-800">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-12">
-            {/* Brand */}
             <div>
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-xl flex items-center justify-center">
@@ -674,16 +567,8 @@ function App() {
                 <h3 className="text-2xl font-bold">JSRO</h3>
               </div>
               <p className="text-zinc-500 mb-6">Empowering the next generation through robotics and AI education.</p>
-              
-              <div className="flex gap-5">
-                {/* <a href="#" className="text-zinc-400 hover:text-white transition-colors"><Instagram size={24} /></a> */}
-                {/* <a href="#" className="text-zinc-400 hover:text-white transition-colors"><Facebook size={24} /></a> */}
-                {/* <a href="#" className="text-zinc-400 hover:text-white transition-colors"><Linkedin size={24} /></a> */}
-                {/* <a href="#" className="text-zinc-400 hover:text-white transition-colors"><Youtube size={24} /></a> */}
-              </div>
             </div>
 
-            {/* Company */}
             <div>
               <h4 className="font-semibold mb-5 text-lg">Company</h4>
               <ul className="space-y-3 text-zinc-400">
@@ -697,7 +582,6 @@ function App() {
               </ul>
             </div>
 
-            {/* Support */}
             <div>
               <h4 className="font-semibold mb-5 text-lg">Support</h4>
               <ul className="space-y-3 text-zinc-400">
@@ -707,13 +591,11 @@ function App() {
               </ul>
             </div>
 
-            {/* Quick Links + Contact */}
             <div>
               <h4 className="font-semibold mb-5 text-lg">Quick Links</h4>
               <ul className="space-y-3 text-zinc-400 mb-8">
                 <li><a href="#" className="hover:text-white">Partner With Us</a></li>
               </ul>
-
               <div className="text-sm">
                 <p className="font-medium text-white">+91 9306647832</p>
                 <a href="mailto:info@jsro.io" className="text-cyan-400 hover:underline">info@jsro.io</a>
@@ -722,7 +604,7 @@ function App() {
           </div>
 
           <div className="border-t border-zinc-800 mt-16 pt-8 text-center text-sm text-zinc-500">
-            © JSRO Learning Labs 2022. All rights reserved.
+            © JSRO Be an Innovator 2022. All rights reserved.
           </div>
         </div>
       </footer>
