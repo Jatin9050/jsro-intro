@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Rocket, Users, Target, Award, Calendar, Clock, MapPin, Instagram, Facebook, Linkedin, Youtube } from 'lucide-react';
+import { Menu, X, Rocket, Users, Target, Award, Calendar, Clock, MapPin } from 'lucide-react';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
