@@ -1,5 +1,5 @@
 import  { useState, useEffect } from 'react';
-import { Menu, X, Rocket, Users, Target, Award, Calendar, Clock, MapPin } from 'lucide-react';
+import { Menu, X, Users, Target, Award, Calendar, Clock, MapPin } from 'lucide-react';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -149,15 +149,9 @@ function App() {
     <div className="min-h-screen bg-zinc-950 text-white overflow-hidden">
       {/* Navbar */}
       <nav className="fixed top-0 w-full bg-zinc-950/90 backdrop-blur-md z-50 border-b border-zinc-800">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-xl flex items-center justify-center">
-              <Rocket className="w-6 h-6" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight">JSRO</h1>
-              <p className="text-[10px] text-zinc-500 -mt-1">Be an Innovator</p>
-            </div>
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+          <div className="flex items-center">
+            <img src="/logojsro.jpeg" height={"100px"} width={"100px"}/>
           </div>
 
           {/* Desktop Menu */}
@@ -167,7 +161,6 @@ function App() {
             <button onClick={() => scrollToSection('vision')} className="hover:text-cyan-400 transition-colors">Vision</button>
             <button onClick={() => scrollToSection('about')} className="hover:text-cyan-400 transition-colors">About</button>
             <button onClick={() => scrollToSection('products')} className="hover:text-cyan-400 transition-colors">Products</button>
-            <button onClick={() => scrollToSection('market')} className="hover:text-cyan-400 transition-colors">Market</button>
           </div>
 
           <button
@@ -380,7 +373,7 @@ function App() {
           </div>
 
           <div className="mt-20 text-xs text-zinc-400 flex items-center justify-center gap-8">
-            POWERED BY AI • IoT • COMPUTER VISION
+             AI • IoT • COMPUTER VISION
           </div>
         </div>
       </section>
@@ -427,10 +420,10 @@ function App() {
               <div className="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-2xl flex items-center justify-center text-7xl">
                 👨‍🔬
               </div>
-              <h3 className="text-3xl font-bold mb-3">Meet Our Trainer</h3>
+              <h3 className="text-3xl font-bold mb-3">Meet Our Founder</h3>
               <p className="text-2xl text-cyan-400 mb-6">Jatin Sangwan</p>
               <p className="text-zinc-400 text-lg">
-                Robotics Trainer & Innovator<br />
+                Robotics Mentor & Innovator<br />
                 Passionate about making robotics education accessible to everyone through practical, hands-on learning.
               </p>
             </div>
@@ -500,40 +493,6 @@ function App() {
         </div>
       )}
 
-      {/* Market Section */}
-      <section id="market" className="py-24 bg-black">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-16">
-            <div>
-              <h2 className="text-4xl font-bold mb-10">Core Technology</h2>
-              <div className="grid grid-cols-2 gap-6">
-                {["Artificial Intelligence", "Machine Learning", "Computer Vision", "Embedded Systems", "IoT Integration"].map((tech, i) => (
-                  <div key={i} className="bg-zinc-900 p-6 rounded-2xl border border-zinc-700 hover:border-purple-500 transition-colors">
-                    <p className="font-medium">{tech}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h2 className="text-4xl font-bold mb-10">Market Opportunity</h2>
-              <div className="space-y-8 text-lg">
-                <p className="text-zinc-300">The global robotics market is growing rapidly, with increasing demand in:</p>
-                <ul className="space-y-4 text-zinc-400">
-                  <li className="flex items-center gap-3">• Education & STEM Learning</li>
-                  <li className="flex items-center gap-3">• Healthcare Automation</li>
-                  <li className="flex items-center gap-3">• Industrial Manufacturing</li>
-                  <li className="flex items-center gap-3">• Smart Homes & IoT</li>
-                </ul>
-                <div className="pt-6 border-t border-zinc-800">
-                  <p className="text-2xl font-semibold text-cyan-400">Be part of the robotics revolution.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Contact Section */}
       <section id="contact" className="py-28 bg-gradient-to-b from-zinc-900 to-black">
         <div className="max-w-3xl mx-auto px-6 text-center">
@@ -561,10 +520,10 @@ function App() {
           <div className="grid md:grid-cols-4 gap-12">
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-xl flex items-center justify-center">
-                  <Rocket className="w-6 h-6" />
-                </div>
-                <h3 className="text-2xl font-bold">JSRO</h3>
+               {/* <div className="flex items-center"> */}
+            <img src="/logojsro.jpeg" height={"100px"} width={"100px"}/>
+          {/* </div> */}
+                
               </div>
               <p className="text-zinc-500 mb-6">Empowering the next generation through robotics and AI education.</p>
             </div>
