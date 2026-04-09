@@ -572,29 +572,29 @@ function App() {
             <div>
               <h4 className="font-semibold mb-5 text-lg">Company</h4>
               <ul className="space-y-3 text-zinc-400">
-                <li><a  className="hover:text-white">About Us</a></li>
-                <li><a  className="hover:text-white">Blogs</a></li>
-                <li><a  className="hover:text-white">Gallery</a></li>
-                <li><a  className="hover:text-white">Careers</a></li>
-                <li><a  className="hover:text-white">Terms and Conditions</a></li>
-                <li><a  className="hover:text-white">Privacy Policy</a></li>
-                <li><a  className="hover:text-white">Refund & Returns</a></li>
+                <li><a href="/" className="hover:text-white">About Us</a></li>
+                <li><a href="/" className="hover:text-white">Blogs</a></li>
+                <li><a href="/" className="hover:text-white">Gallery</a></li>
+                <li><a href="/" className="hover:text-white">Careers</a></li>
+                <li><a href="/" className="hover:text-white">Terms and Conditions</a></li>
+                <li><a href="/" className="hover:text-white">Privacy Policy</a></li>
+                <li><a href="/" className="hover:text-white">Refund & Returns</a></li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-semibold mb-5 text-lg">Support</h4>
               <ul className="space-y-3 text-zinc-400">
-                <li><a  className="hover:text-white">Contact Us</a></li>
-                <li><a  className="hover:text-white">FAQs</a></li>
-                <li><a  className="hover:text-white">Sitemap</a></li>
+                <li><a href="/" className="hover:text-white">Contact Us</a></li>
+                <li><a href="/" className="hover:text-white">FAQs</a></li>
+                <li><a href="/" className="hover:text-white">Sitemap</a></li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-semibold mb-5 text-lg">Quick Links</h4>
               <ul className="space-y-3 text-zinc-400 mb-8">
-                <li><a  className="hover:text-white">Partner With Us</a></li>
+                <li><a href="/" className="hover:text-white">Partner With Us</a></li>
               </ul>
               <div className="text-sm">
                 <p className="font-medium text-white">+91 9306647832</p>
