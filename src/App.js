@@ -151,7 +151,7 @@ function App() {
       <nav className="fixed top-0 w-full bg-zinc-950/90 backdrop-blur-md z-50 border-b border-zinc-800">
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center">
-            <img src="/logojsro.jpeg" height={"100px"} width={"100px"}/>
+            <img alt="logo" src="/logojsro.jpeg" height={"100px"} width={"100px"}/>
           </div>
 
           {/* Desktop Menu */}
@@ -521,7 +521,7 @@ function App() {
             <div>
               <div className="flex items-center gap-3 mb-6">
                {/* <div className="flex items-center"> */}
-            <img src="/logojsro.jpeg" height={"100px"} width={"100px"}/>
+            <img alt="logo" src="/logojsro.jpeg" height={"100px"} width={"100px"}/>
           {/* </div> */}
                 
               </div>
