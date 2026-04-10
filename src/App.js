@@ -1,21 +1,19 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Menu, X, Users, Target, Award, Calendar, Clock, MapPin } from 'lucide-react';
+import { createClient } from '@supabase/supabase-js';
+
+// ==================== SUPABASE CONFIG ====================
+// Replace these with your actual Supabase credentials
+const supabaseUrl = 'https://djezyrrnmqqhopamttkb.supabase.co';     // ← Replace
+const supabaseAnonKey = 'sb_publishable_DbgXDjtunz3CeFT2MLTKvQ_EDGFaaeW';
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showEvents, setShowEvents] = useState(false);
-  const [showForm, setShowForm] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
   const [showMembership, setShowMembership] = useState(false);
   const [showAllProducts, setShowAllProducts] = useState(false);
-
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    school: '',
-    event: ''
-  });
 
   const [membershipData, setMembershipData] = useState({
     name: '',
@@ -42,7 +40,8 @@ function App() {
       location: "Hisar, Haryana",
       desc: "Hands-on workshop on building AI-powered robots using Raspberry Pi",
       icon: "🤖",
-      color: "from-cyan-400 to-blue-500"
+      color: "from-cyan-400 to-blue-500",
+      active: true
     },
     {
       id: 2,
@@ -52,7 +51,8 @@ function App() {
       location: "Delhi NCR",
       desc: "Competitive event for students to build automated systems",
       icon: "⚙️",
-      color: "from-purple-400 to-pink-500"
+      color: "from-purple-400 to-pink-500",
+      active: false
     },
     {
       id: 3,
@@ -62,7 +62,8 @@ function App() {
       location: "Online + Offline",
       desc: "Learn computer vision and IoT integration in robotics",
       icon: "📡",
-      color: "from-emerald-400 to-cyan-500"
+      color: "from-emerald-400 to-cyan-500",
+      active: false
     }
   ];
 
@@ -81,36 +82,24 @@ function App() {
     setIsMenuOpen(false);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  // Handle Register Now
+  const handleRegisterNow = (event) => {
+    if (!event.active) return;
+
+    const slug = event.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+
+    window.location.href = `/register/${slug}`;
+    setShowEvents(false);
   };
 
+  // Membership Functions
   const handleMembershipChange = (e) => {
     const { name, value } = e.target;
     setMembershipData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const openEventForm = (event) => {
-    setSelectedEvent(event);
-    setShowEvents(false);
-    setShowForm(true);
-    setFormData(prev => ({ ...prev, event: event.title }));
-  };
-
-  const handleEventSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.name || !formData.email || !formData.phone || !formData.school) {
-      alert("Please fill all fields");
-      return;
-    }
-
-    console.log('Event Registration Submitted:', formData);
-    alert(`Thank you ${formData.name}! You've successfully registered for ${formData.event}. We will contact you shortly.`);
-
-    setFormData({ name: '', email: '', phone: '', school: '', event: '' });
-    setShowForm(false);
-    setSelectedEvent(null);
   };
 
   const handleMembershipSubmit = (e) => {
@@ -129,7 +118,7 @@ function App() {
     setMembers(updatedMembers);
     localStorage.setItem('JSROMembers', JSON.stringify(updatedMembers));
 
-    alert(`Thank you ${membershipData.name}! Your project has been submitted successfully. Our team will review your YouTube link and provide guidance soon.`);
+    alert(`Thank you ${membershipData.name}! Your project has been submitted successfully.`);
 
     setMembershipData({ name: '', email: '', phone: '', school: '', youtubeLink: '' });
     setShowMembership(false);
@@ -145,16 +134,137 @@ function App() {
     alert("Brochure is downloading...");
   };
 
+  // ====================== REGISTER PAGE ======================
+  function RegisterPage() {
+    const [formData, setFormData] = useState({
+      name: '',
+      email: '',
+      phone: '',
+      school: '',
+      event: ''
+    });
+
+    const [loading, setLoading] = useState(false);
+
+    // Extract event name from URL
+    useEffect(() => {
+      const path = window.location.pathname;
+      const slug = path.split('/register/')[1];
+
+      if (slug) {
+        const eventName = slug
+          .split('-')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+        setFormData(prev => ({ ...prev, event: eventName }));
+      }
+    }, []);
+
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      if (!formData.name || !formData.email || !formData.phone || !formData.school) {
+        alert("Please fill all fields");
+        return;
+      }
+
+      setLoading(true);
+
+      const { error } = await supabase
+        .from('event_registrations')
+        .insert([formData]);
+
+      setLoading(false);
+
+      if (error) {
+        console.error("Full Supabase Error:", error);
+        alert(`Error: ${error.message}\n\nCode: ${error.code}`);
+      } else {
+        alert(`✅ Thank you ${formData.name}! Registration successful for ${formData.event}.`);
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1500);
+      }
+    };
+
+    return (
+      <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center p-6">
+        <div className="bg-zinc-900 border border-zinc-700 rounded-3xl max-w-md w-full overflow-hidden">
+          <div className="px-8 py-8 border-b border-zinc-700 text-center">
+            <h2 className="text-3xl font-bold">Event Registration</h2>
+            <p className="text-cyan-400 font-semibold mt-2 text-lg">
+              {formData.event || "Loading event..."}
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="p-8 space-y-6">
+            <div>
+              <label className="block text-sm text-zinc-400 mb-2">Full Name</label>
+              <input
+                type="text" name="name" value={formData.name} onChange={handleInputChange} required
+                className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400 focus:outline-none"
+                placeholder="Enter your full name"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm text-zinc-400 mb-2">Email Address</label>
+              <input
+                type="email" name="email" value={formData.email} onChange={handleInputChange} required
+                className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400 focus:outline-none"
+                placeholder="yourname@gmail.com"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm text-zinc-400 mb-2">Phone Number</label>
+              <input
+                type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required
+                className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400 focus:outline-none"
+                placeholder="+91 98765 43210"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm text-zinc-400 mb-2">School / College / Organization</label>
+              <input
+                type="text" name="school" value={formData.school} onChange={handleInputChange} required
+                className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400 focus:outline-none"
+                placeholder="e.g. ABC International School"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-4 bg-gradient-to-r from-cyan-400 to-purple-600 text-black font-semibold rounded-2xl hover:scale-105 transition-all disabled:opacity-70"
+            >
+              {loading ? "Submitting..." : "Confirm Registration"}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // Simple Routing
+  if (window.location.pathname.startsWith('/register/')) {
+    return <RegisterPage />;
+  }
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white overflow-hidden">
       {/* Navbar */}
       <nav className="fixed top-0 w-full bg-zinc-950/90 backdrop-blur-md z-50 border-b border-zinc-800">
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center">
-            <img alt="logo" src="/logojsro.jpeg" height={"100px"} width={"100px"}/>
+            <img alt="logo" src="/logojsro.jpeg" height="100px" width="100px" />
           </div>
 
-          {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-8 text-sm font-medium">
             <button onClick={() => setShowEvents(true)} className="hover:text-cyan-400 transition-colors">Events</button>
             <button onClick={() => setShowMembership(true)} className="hover:text-cyan-400 transition-colors">Join Us</button>
@@ -170,15 +280,11 @@ function App() {
             Get In Touch
           </button>
 
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-white"
-          >
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-white">
             {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
 
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden bg-zinc-900 border-t border-zinc-800 py-6">
             <div className="flex flex-col gap-6 px-6 text-lg">
@@ -187,7 +293,6 @@ function App() {
               <button onClick={() => scrollToSection('vision')} className="text-left hover:text-cyan-400">Vision</button>
               <button onClick={() => scrollToSection('about')} className="text-left hover:text-cyan-400">About</button>
               <button onClick={() => scrollToSection('products')} className="text-left hover:text-cyan-400">Products</button>
-              <button onClick={() => scrollToSection('market')} className="text-left hover:text-cyan-400">Market</button>
               <button onClick={() => scrollToSection('contact')} className="mt-4 px-6 py-3 bg-white text-black font-semibold rounded-full w-fit">
                 Get In Touch
               </button>
@@ -196,7 +301,6 @@ function App() {
         )}
       </nav>
 
-      {/* ====================== Modals (Events, Membership, Registration) ====================== */}
       {/* Events Modal */}
       {showEvents && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] flex items-center justify-center p-4">
@@ -213,21 +317,34 @@ function App() {
               {events.map((event) => (
                 <div
                   key={event.id}
-                  onClick={() => openEventForm(event)}
-                  className="group bg-zinc-800 border border-zinc-700 hover:border-cyan-400 rounded-3xl p-6 cursor-pointer transition-all hover:scale-105"
+                  className="group bg-zinc-800 border border-zinc-700 hover:border-cyan-400 rounded-3xl p-6 transition-all hover:scale-105"
                 >
+                  <span className={`inline-block px-3 py-1 mb-3 rounded-full text-xs font-semibold ${event.active ? "bg-green-500 text-black" : "bg-yellow-500 text-black"}`}>
+                    {event.active ? "🔴 Live" : "Upcoming"}
+                  </span>
+
                   <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${event.color} flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform`}>
                     {event.icon}
                   </div>
+
                   <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
                   <p className="text-zinc-400 text-sm mb-4 line-clamp-2">{event.desc}</p>
+
                   <div className="space-y-2 text-sm text-zinc-500">
                     <div className="flex items-center gap-2"><Calendar size={16} />{event.date}</div>
                     <div className="flex items-center gap-2"><Clock size={16} />{event.time}</div>
                     <div className="flex items-center gap-2"><MapPin size={16} />{event.location}</div>
                   </div>
-                  <button className="mt-6 w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-2xl font-medium transition-colors">
-                    Register Now
+
+                  <button
+                    onClick={() => handleRegisterNow(event)}
+                    disabled={!event.active}
+                    className={`mt-6 w-full py-3 font-semibold rounded-2xl transition-all ${event.active
+                        ? "bg-gradient-to-r from-cyan-400 to-purple-600 text-black hover:scale-105"
+                        : "bg-gray-600 text-gray-400 cursor-not-allowed"
+                      }`}
+                  >
+                    {event.active ? "Register Now →" : "Coming Soon"}
                   </button>
                 </div>
               ))}
@@ -283,63 +400,14 @@ function App() {
         </div>
       )}
 
-      {/* Event Registration Modal */}
-      {showForm && selectedEvent && (
-        <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-[110] flex items-center justify-center p-4">
-          <div className="bg-zinc-900 border border-zinc-700 rounded-3xl max-w-md w-full overflow-hidden">
-            <div className="flex items-center justify-between px-8 py-6 border-b border-zinc-700">
-              <div>
-                <h2 className="text-3xl font-bold">Register for</h2>
-                <p className="text-cyan-400 font-semibold mt-1">{selectedEvent.title}</p>
-              </div>
-              <button onClick={() => { setShowForm(false); setSelectedEvent(null); }} className="text-3xl text-zinc-400 hover:text-white">✕</button>
-            </div>
-
-            <form onSubmit={handleEventSubmit} className="p-8 space-y-6">
-              <div>
-                <label className="block text-sm text-zinc-400 mb-2">Full Name</label>
-                <input type="text" name="name" value={formData.name} onChange={handleInputChange} required className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4" placeholder="Enter your full name" />
-              </div>
-              <div>
-                <label className="block text-sm text-zinc-400 mb-2">Email Address</label>
-                <input type="email" name="email" value={formData.email} onChange={handleInputChange} required className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4" placeholder="yourname@gmail.com" />
-              </div>
-              <div>
-                <label className="block text-sm text-zinc-400 mb-2">Phone Number</label>
-                <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4" placeholder="+91 98765 43210" />
-              </div>
-              <div>
-                <label className="block text-sm text-zinc-400 mb-2">School / College / Organization</label>
-                <input type="text" name="school" value={formData.school} onChange={handleInputChange} required className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4" placeholder="e.g. ABC International School" />
-              </div>
-
-              <button type="submit" className="w-full py-4 bg-gradient-to-r from-cyan-400 to-purple-600 text-black font-semibold rounded-2xl hover:scale-105 transition-all">
-                Confirm Registration
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* ====================== HERO SECTION WITH LOOPING VIDEO ====================== */}
+      {/* ====================== HERO SECTION ====================== */}
       <section className="pt-32 pb-32 relative overflow-hidden min-h-screen flex items-center">
-        {/* Background Video */}
         <div className="absolute inset-0 z-0">
-          <video
-            src="/gifvideo.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover"
-          />
-          {/* Dark overlay for better text readability */}
+          <video src="/gifvideo.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-black/70"></div>
-          {/* Extra gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80"></div>
         </div>
 
-        {/* Hero Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
           <div className="inline-flex items-center gap-2 bg-zinc-900/80 border border-cyan-500/30 backdrop-blur-md rounded-full px-5 py-2 mb-8">
             <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
@@ -358,27 +426,20 @@ function App() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={() => scrollToSection('products')}
-              className="px-10 py-4 bg-white text-black font-semibold rounded-2xl hover:bg-cyan-400 hover:scale-105 transition-all"
-            >
+            <button onClick={() => scrollToSection('products')} className="px-10 py-4 bg-white text-black font-semibold rounded-2xl hover:bg-cyan-400 hover:scale-105 transition-all">
               Explore Our Products
             </button>
-            <button
-              onClick={() => setShowMembership(true)}
-              className="px-10 py-4 border border-white/70 hover:border-white font-semibold rounded-2xl transition-all"
-            >
+            <button onClick={() => setShowMembership(true)} className="px-10 py-4 border border-white/70 hover:border-white font-semibold rounded-2xl transition-all">
               Join Us
             </button>
           </div>
 
           <div className="mt-20 text-xs text-zinc-400 flex items-center justify-center gap-8">
-             AI • IoT • COMPUTER VISION
+            AI • IoT • COMPUTER VISION
           </div>
         </div>
       </section>
 
-      {/* Rest of the sections remain the same (Vision, About, Products, Market, Contact, Footer) */}
       {/* Vision Section */}
       <section id="vision" className="py-24 bg-zinc-900">
         <div className="max-w-7xl mx-auto px-6">
@@ -395,13 +456,11 @@ function App() {
               <h3 className="text-2xl font-semibold mb-3">Global Impact</h3>
               <p className="text-zinc-400">Democratizing robotics education and innovation across education and industry.</p>
             </div>
-
             <div className="bg-zinc-800/50 p-8 rounded-3xl border border-zinc-700 hover:border-purple-400/50 transition-all group">
               <Users className="w-12 h-12 text-purple-400 mb-6 group-hover:scale-110 transition-transform" />
               <h3 className="text-2xl font-semibold mb-3">Empowering Creators</h3>
               <p className="text-zinc-400">Making high-end robotics accessible to students, makers, and professionals.</p>
             </div>
-
             <div className="bg-zinc-800/50 p-8 rounded-3xl border border-zinc-700 hover:border-pink-400/50 transition-all group">
               <Award className="w-12 h-12 text-pink-400 mb-6 group-hover:scale-110 transition-transform" />
               <h3 className="text-2xl font-semibold mb-3">Future Ready</h3>
@@ -452,7 +511,7 @@ function App() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.slice(0, 6).map((product, i) => (
+            {products.map((product, i) => (
               <div key={i} className="group bg-zinc-800/60 hover:bg-zinc-800 border border-zinc-700 hover:border-cyan-400 rounded-3xl p-8 transition-all duration-300">
                 <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">{product.icon}</div>
                 <h3 className="text-2xl font-semibold mb-3">{product.name}</h3>
@@ -472,7 +531,7 @@ function App() {
         </div>
       </section>
 
-      {/* Full Screen All Products */}
+      {/* All Products Modal */}
       {showAllProducts && (
         <div className="fixed inset-0 bg-zinc-950 z-[120] overflow-y-auto">
           <div className="max-w-7xl mx-auto px-6 py-12">
@@ -502,7 +561,7 @@ function App() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="mailto:info@jsro.io" className="px-12 py-5 bg-white text-black font-semibold text-lg rounded-2xl hover:bg-cyan-400 transition-all">
+            <a href="mailto:info@jsro.in" className="px-12 py-5 bg-white text-black font-semibold text-lg rounded-2xl hover:bg-cyan-400 transition-all">
               Contact Us
             </a>
             <button onClick={downloadBrochure} className="px-12 py-5 border border-white/60 hover:border-white font-semibold text-lg rounded-2xl transition-all">
@@ -520,10 +579,7 @@ function App() {
           <div className="grid md:grid-cols-4 gap-12">
             <div>
               <div className="flex items-center gap-3 mb-6">
-               {/* <div className="flex items-center"> */}
-            <img alt="logo" src="/logojsro.jpeg" height={"100px"} width={"100px"}/>
-          {/* </div> */}
-                
+                <img alt="logo" src="/logojsro.jpeg" height="100px" width="100px" />
               </div>
               <p className="text-zinc-500 mb-6">Empowering the next generation through robotics and AI education.</p>
             </div>
@@ -557,7 +613,7 @@ function App() {
               </ul>
               <div className="text-sm">
                 <p className="font-medium text-white">+91 9306647832</p>
-                <a href="mailto:info@jsro.io" className="text-cyan-400 hover:underline">info@jsro.io</a>
+                <a href="mailto:info@jsro.in" className="text-cyan-400 hover:underline">info@jsro.in</a>
               </div>
             </div>
           </div>
