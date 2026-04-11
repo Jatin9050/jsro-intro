@@ -278,9 +278,9 @@ function App() {
 
   // ====================== MAIN LANDING PAGE ======================
   return (
-    <div className="min-h-screen bg-zinc-950 text-white overflow-hidden">
+    <div className="min-h-screen bg-black text-white overflow-hidden">
       {/* Navbar */}
-      <nav className="fixed top-0 w-full bg-zinc-950/90 backdrop-blur-md z-50 border-b border-zinc-800">
+      <nav className="fixed top-0 w-full bg-black z-50 border-b border-zinc-800">
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center">
             <img alt="logo" src="/logojsro.jpeg" height="100px" width="100px" />
