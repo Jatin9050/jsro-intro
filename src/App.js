@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, Users, Target, Award, Calendar, Clock, MapPin } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
+import { useParams } from "react-router-dom";
 
+const { eventName } = useParams();
+const decodedName = decodeURIComponent(eventName);
 // ==================== SUPABASE CONFIG ====================
 // Replace these with your actual Supabase credentials
 const supabaseUrl = 'https://djezyrrnmqqhopamttkb.supabase.co';     // ← Replace
@@ -38,7 +41,7 @@ function App() {
       title: "AI Robotics BootCamp",
       date: "May 5, 2026",
       time: "1 Hour per day",
-      Duration:'4 days',
+      Duration: '4 days',
       location: "Online",
       negativeFees: "₹999",
       fees: "₹499",
@@ -59,9 +62,10 @@ function App() {
       icon: "⚙️",
       color: "from-purple-400 to-pink-500",
       active: false
-      
+
     },
-    { id: 3,
+    {
+      id: 3,
       register: "boochallengetcamp",
       title: "JRC 2026 : IoT & Computer Vision Challenge",
       date: "May 22, 2026",
@@ -90,17 +94,9 @@ function App() {
   };
 
   // Handle Register Now
-  const handleRegisterNow = (event) => {
-    if (!event.active) return;
-
-    const slug = event.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '');
-
+  const handleRegisterNow = (slug) => {
+    if (!slug) return;
     window.location.href = `/${slug}`;
-    setShowEvents(false);
   };
 
   // Membership Functions
@@ -204,7 +200,7 @@ function App() {
           <div className="px-8 py-8 border-b border-zinc-700 text-center">
             <h2 className="text-3xl font-bold">Event Registration</h2>
             <p className="text-cyan-400 font-semibold mt-2 text-lg">
-              {formData.event || "Loading event..."}
+              {decodedName || "Loading event..."}
             </p>
           </div>
 
@@ -258,8 +254,10 @@ function App() {
     );
   }
 
-  // Simple Routing
-  if (window.location.pathname.startsWith('/register/')) {
+  const currentPath = window.location.pathname;
+
+  // If URL has a slug (not root and not just "/"), show RegisterPage
+  if (currentPath !== '/' && currentPath !== '') {
     return <RegisterPage />;
   }
 
@@ -333,8 +331,8 @@ function App() {
                   <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${event.color} flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform`}>
                     {event.icon}
                   </div>
-                  
-                  
+
+
 
                   <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
                   <p className="text-zinc-400 text-sm mb-4 line-clamp-2">{event.desc}</p>
@@ -350,16 +348,14 @@ function App() {
                     <span className="text-green-600">{event.fees}</span>
                   </div>
                   <button
-                    onClick={() => handleRegisterNow({event.register})}
-                    disabled={!event.active}
+                    onClick={() => handleRegisterNow(event.register)} disabled={!event.active}
                     className={`mt-6 w-full py-3 font-semibold rounded-2xl transition-all ${event.active
                       ? "bg-gradient-to-r from-cyan-400 to-purple-600 text-black hover:scale-105"
                       : "bg-gray-600 text-gray-400 cursor-not-allowed"
                       }`}
                   >
                     {event.active ? "Register Now →" : "Coming Soon"}
-                    <p className='text-xs'>{event.regitration}</p>
-                  </button>
+                    {event.registration && <p className="text-xs mt-1">{event.registration}</p>}                  </button>
                 </div>
               ))}
             </div>
