@@ -1,13 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, Users, Target, Award, Calendar, Clock, MapPin } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
-import { useParams } from "react-router-dom";
 
-const { eventName } = useParams();
-const decodedName = decodeURIComponent(eventName);
-// ==================== SUPABASE CONFIG ====================
-// Replace these with your actual Supabase credentials
-const supabaseUrl = 'https://djezyrrnmqqhopamttkb.supabase.co';     // ← Replace
+const supabaseUrl = 'https://djezyrrnmqqhopamttkb.supabase.co';
 const supabaseAnonKey = 'sb_publishable_DbgXDjtunz3CeFT2MLTKvQ_EDGFaaeW';
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -48,7 +43,7 @@ function App() {
       desc: "Online bootcamp on building AI-powered robots using Simulation",
       icon: "🤖",
       color: "from-cyan-400 to-blue-500",
-      regitration: "Register before 2 May, 2026",
+      registration: "Register before 2 May, 2026",
       active: true
     },
     {
@@ -62,7 +57,6 @@ function App() {
       icon: "⚙️",
       color: "from-purple-400 to-pink-500",
       active: false
-
     },
     {
       id: 3,
@@ -93,13 +87,11 @@ function App() {
     setIsMenuOpen(false);
   };
 
-  // Handle Register Now
   const handleRegisterNow = (slug) => {
     if (!slug) return;
     window.location.href = `/${slug}`;
   };
 
-  // Membership Functions
   const handleMembershipChange = (e) => {
     const { name, value } = e.target;
     setMembershipData(prev => ({ ...prev, [name]: value }));
@@ -137,7 +129,7 @@ function App() {
     alert("Brochure is downloading...");
   };
 
-  // ====================== REGISTER PAGE ======================
+  // ====================== REGISTER PAGE COMPONENT ======================
   function RegisterPage() {
     const [formData, setFormData] = useState({
       name: '',
@@ -152,13 +144,20 @@ function App() {
     // Extract event name from URL
     useEffect(() => {
       const path = window.location.pathname;
-      const slug = path.split('/register/')[1];
+      let slug = '';
+
+      if (path.includes('/register/')) {
+        slug = path.split('/register/')[1];
+      } else if (path !== '/' && path !== '') {
+        slug = path.split('/')[1];
+      }
 
       if (slug) {
-        const eventName = slug
+        const eventName = decodeURIComponent(slug)
           .split('-')
           .map(word => word.charAt(0).toUpperCase() + word.slice(1))
           .join(' ');
+
         setFormData(prev => ({ ...prev, event: eventName }));
       }
     }, []);
@@ -200,7 +199,7 @@ function App() {
           <div className="px-8 py-8 border-b border-zinc-700 text-center">
             <h2 className="text-3xl font-bold">Event Registration</h2>
             <p className="text-cyan-400 font-semibold mt-2 text-lg">
-              {decodedName || "Loading event..."}
+              {formData.event || "Loading event..."}
             </p>
           </div>
 
@@ -208,7 +207,11 @@ function App() {
             <div>
               <label className="block text-sm text-zinc-400 mb-2">Full Name</label>
               <input
-                type="text" name="name" value={formData.name} onChange={handleInputChange} required
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
                 className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400 focus:outline-none"
                 placeholder="Enter your full name"
               />
@@ -217,7 +220,11 @@ function App() {
             <div>
               <label className="block text-sm text-zinc-400 mb-2">Email Address</label>
               <input
-                type="email" name="email" value={formData.email} onChange={handleInputChange} required
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
                 className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400 focus:outline-none"
                 placeholder="yourname@gmail.com"
               />
@@ -226,7 +233,11 @@ function App() {
             <div>
               <label className="block text-sm text-zinc-400 mb-2">Phone Number</label>
               <input
-                type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                required
                 className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400 focus:outline-none"
                 placeholder="+91 98765 43210"
               />
@@ -235,7 +246,11 @@ function App() {
             <div>
               <label className="block text-sm text-zinc-400 mb-2">School / College / Organization</label>
               <input
-                type="text" name="school" value={formData.school} onChange={handleInputChange} required
+                type="text"
+                name="school"
+                value={formData.school}
+                onChange={handleInputChange}
+                required
                 className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400 focus:outline-none"
                 placeholder="e.g. ABC International School"
               />
@@ -256,11 +271,12 @@ function App() {
 
   const currentPath = window.location.pathname;
 
-  // If URL has a slug (not root and not just "/"), show RegisterPage
+  // If URL has a slug (not root), show RegisterPage
   if (currentPath !== '/' && currentPath !== '') {
     return <RegisterPage />;
   }
 
+  // ====================== MAIN LANDING PAGE ======================
   return (
     <div className="min-h-screen bg-zinc-950 text-white overflow-hidden">
       {/* Navbar */}
@@ -332,30 +348,32 @@ function App() {
                     {event.icon}
                   </div>
 
-
-
                   <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
                   <p className="text-zinc-400 text-sm mb-4 line-clamp-2">{event.desc}</p>
 
                   <div className="space-y-2 text-sm text-zinc-500">
-                    <div className="flex items-center gap-2"><span size={16} >Duration : {event.Duration}</span></div>
+                    <div className="flex items-center gap-2">Duration : {event.Duration}</div>
                     <div className="flex items-center gap-2"><Calendar size={16} />{event.date}</div>
                     <div className="flex items-center gap-2"><Clock size={16} />{event.time}</div>
                     <div className="flex items-center gap-2"><MapPin size={16} />{event.location}</div>
                   </div>
-                  <div className="text-xl font-bold">
+
+                  <div className="text-xl font-bold mt-4">
                     <span className="line-through text-gray-400 mr-2">{event.negativeFees}</span>
                     <span className="text-green-600">{event.fees}</span>
                   </div>
+
                   <button
-                    onClick={() => handleRegisterNow(event.register)} disabled={!event.active}
+                    onClick={() => handleRegisterNow(event.register)}
+                    disabled={!event.active}
                     className={`mt-6 w-full py-3 font-semibold rounded-2xl transition-all ${event.active
                       ? "bg-gradient-to-r from-cyan-400 to-purple-600 text-black hover:scale-105"
                       : "bg-gray-600 text-gray-400 cursor-not-allowed"
                       }`}
                   >
                     {event.active ? "Register Now →" : "Coming Soon"}
-                    {event.registration && <p className="text-xs mt-1">{event.registration}</p>}                  </button>
+                    {event.registration && <p className="text-xs mt-1">{event.registration}</p>}
+                  </button>
                 </div>
               ))}
             </div>
@@ -378,31 +396,67 @@ function App() {
             <form onSubmit={handleMembershipSubmit} className="p-8 space-y-6">
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">Full Name</label>
-                <input type="text" name="name" value={membershipData.name} onChange={handleMembershipChange} required
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400" placeholder="Enter your full name" />
+                <input
+                  type="text"
+                  name="name"
+                  value={membershipData.name}
+                  onChange={handleMembershipChange}
+                  required
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400"
+                  placeholder="Enter your full name"
+                />
               </div>
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">Email Address</label>
-                <input type="email" name="email" value={membershipData.email} onChange={handleMembershipChange} required
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400" placeholder="yourname@gmail.com" />
+                <input
+                  type="email"
+                  name="email"
+                  value={membershipData.email}
+                  onChange={handleMembershipChange}
+                  required
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400"
+                  placeholder="yourname@gmail.com"
+                />
               </div>
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">Phone Number (Optional)</label>
-                <input type="tel" name="phone" value={membershipData.phone} onChange={handleMembershipChange}
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400" placeholder="+91 98765 43210" />
+                <input
+                  type="tel"
+                  name="phone"
+                  value={membershipData.phone}
+                  onChange={handleMembershipChange}
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400"
+                  placeholder="+91 98765 43210"
+                />
               </div>
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">School / College / Organization</label>
-                <input type="text" name="school" value={membershipData.school} onChange={handleMembershipChange}
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400" placeholder="e.g. ABC International School" />
+                <input
+                  type="text"
+                  name="school"
+                  value={membershipData.school}
+                  onChange={handleMembershipChange}
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400"
+                  placeholder="e.g. ABC International School"
+                />
               </div>
               <div>
                 <label className="block text-sm text-zinc-400 mb-2">Project Link (YouTube)</label>
-                <input type="url" name="youtubeLink" value={membershipData.youtubeLink} onChange={handleMembershipChange} required
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400" placeholder="https://youtube.com/watch?v=..." />
+                <input
+                  type="url"
+                  name="youtubeLink"
+                  value={membershipData.youtubeLink}
+                  onChange={handleMembershipChange}
+                  required
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400"
+                  placeholder="https://youtube.com/watch?v=..."
+                />
               </div>
 
-              <button type="submit" className="w-full py-4 bg-gradient-to-r from-cyan-400 to-purple-600 text-black font-semibold rounded-2xl hover:scale-105 transition-all">
+              <button
+                type="submit"
+                className="w-full py-4 bg-gradient-to-r from-cyan-400 to-purple-600 text-black font-semibold rounded-2xl hover:scale-105 transition-all"
+              >
                 Submit for Guidance
               </button>
             </form>
@@ -410,7 +464,7 @@ function App() {
         </div>
       )}
 
-      {/* ====================== HERO SECTION ====================== */}
+      {/* Hero Section */}
       <section className="pt-32 pb-32 relative overflow-hidden min-h-screen flex items-center">
         <div className="absolute inset-0 z-0">
           <video src="/gifvideo.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
@@ -436,10 +490,16 @@ function App() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button onClick={() => scrollToSection('products')} className="px-10 py-4 bg-white text-black font-semibold rounded-2xl hover:bg-cyan-400 hover:scale-105 transition-all">
+            <button
+              onClick={() => scrollToSection('products')}
+              className="px-10 py-4 bg-white text-black font-semibold rounded-2xl hover:bg-cyan-400 hover:scale-105 transition-all"
+            >
               Explore Our Products
             </button>
-            <button onClick={() => setShowMembership(true)} className="px-10 py-4 border border-white/70 hover:border-white font-semibold rounded-2xl transition-all">
+            <button
+              onClick={() => setShowMembership(true)}
+              className="px-10 py-4 border border-white/70 hover:border-white font-semibold rounded-2xl transition-all"
+            >
               Join Us
             </button>
           </div>
@@ -490,7 +550,10 @@ function App() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product, i) => (
-              <div key={i} className="group bg-zinc-800/60 hover:bg-zinc-800 border border-zinc-700 hover:border-cyan-400 rounded-3xl p-8 transition-all duration-300">
+              <div
+                key={i}
+                className="group bg-zinc-800/60 hover:bg-zinc-800 border border-zinc-700 hover:border-cyan-400 rounded-3xl p-8 transition-all duration-300"
+              >
                 <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">{product.icon}</div>
                 <h3 className="text-2xl font-semibold mb-3">{product.name}</h3>
                 <p className="text-zinc-400">{product.desc}</p>
@@ -519,7 +582,10 @@ function App() {
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               {products.map((product, i) => (
-                <div key={i} className="bg-zinc-900 border border-zinc-700 hover:border-cyan-400 rounded-3xl p-10 transition-all">
+                <div
+                  key={i}
+                  className="bg-zinc-900 border border-zinc-700 hover:border-cyan-400 rounded-3xl p-10 transition-all"
+                >
                   <div className="text-7xl mb-8">{product.icon}</div>
                   <h3 className="text-3xl font-semibold mb-4">{product.name}</h3>
                   <p className="text-zinc-400 text-lg">{product.desc}</p>
@@ -571,10 +637,16 @@ function App() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="mailto:info@jsro.in" className="px-12 py-5 bg-white text-black font-semibold text-lg rounded-2xl hover:bg-cyan-400 transition-all">
+            <a
+              href="mailto:info@jsro.in"
+              className="px-12 py-5 bg-white text-black font-semibold text-lg rounded-2xl hover:bg-cyan-400 transition-all"
+            >
               Contact Us
             </a>
-            <button onClick={downloadBrochure} className="px-12 py-5 border border-white/60 hover:border-white font-semibold text-lg rounded-2xl transition-all">
+            <button
+              onClick={downloadBrochure}
+              className="px-12 py-5 border border-white/60 hover:border-white font-semibold text-lg rounded-2xl transition-all"
+            >
               Download Brochure
             </button>
           </div>
