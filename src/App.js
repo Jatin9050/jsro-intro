@@ -34,6 +34,7 @@ function App() {
   const events = [
     {
       id: 1,
+      register: "bootcamp",
       title: "AI Robotics BootCamp",
       date: "May 5, 2026",
       time: "1 Hour per day",
@@ -49,6 +50,7 @@ function App() {
     },
     {
       id: 2,
+      register: "workshop",
       title: "Advanced Automation Workshop",
       date: "May 30, 2026",
       time: "9:00 AM - 5:00 PM",
@@ -60,6 +62,7 @@ function App() {
       
     },
     { id: 3,
+      register: "boochallengetcamp",
       title: "JRC 2026 : IoT & Computer Vision Challenge",
       date: "May 22, 2026",
       time: "11:00 AM - 3:00 PM",
@@ -96,7 +99,7 @@ function App() {
       .replace(/-+/g, '-')
       .replace(/^-|-$/g, '');
 
-    window.location.href = `/register/${slug}`;
+    window.location.href = `/${slug}`;
     setShowEvents(false);
   };
 
@@ -347,7 +350,7 @@ function App() {
                     <span className="text-green-600">{event.fees}</span>
                   </div>
                   <button
-                    onClick={() => handleRegisterNow(event)}
+                    onClick={() => handleRegisterNow({event.register})}
                     disabled={!event.active}
                     className={`mt-6 w-full py-3 font-semibold rounded-2xl transition-all ${event.active
                       ? "bg-gradient-to-r from-cyan-400 to-purple-600 text-black hover:scale-105"
