@@ -34,32 +34,36 @@ function App() {
   const events = [
     {
       id: 1,
-      title: "AI Robotics Workshop",
-      date: "April 25, 2026",
-      time: "10:00 AM - 4:00 PM",
-      location: "Hisar, Haryana",
-      desc: "Hands-on workshop on building AI-powered robots using Raspberry Pi",
+      title: "AI Robotics BootCamp",
+      date: "May 5, 2026",
+      time: "1 Hour per day",
+      Duration:'4 days',
+      location: "Online",
+      negativeFees: "₹999",
+      fees: "₹499",
+      desc: "Online bootcamp on building AI-powered robots using Simulation",
       icon: "🤖",
       color: "from-cyan-400 to-blue-500",
+      regitration: "Register before 2 May, 2026",
       active: true
     },
     {
       id: 2,
-      title: "Advanced Automation Challenge",
-      date: "May 10, 2026",
+      title: "Advanced Automation Workshop",
+      date: "May 30, 2026",
       time: "9:00 AM - 5:00 PM",
       location: "Delhi NCR",
       desc: "Competitive event for students to build automated systems",
       icon: "⚙️",
       color: "from-purple-400 to-pink-500",
       active: false
+      
     },
-    {
-      id: 3,
-      title: "IoT & Computer Vision Bootcamp",
+    { id: 3,
+      title: "JRC 2026 : IoT & Computer Vision Challenge",
       date: "May 22, 2026",
       time: "11:00 AM - 3:00 PM",
-      location: "Online + Offline",
+      location: "Offline",
       desc: "Learn computer vision and IoT integration in robotics",
       icon: "📡",
       color: "from-emerald-400 to-cyan-500",
@@ -73,7 +77,7 @@ function App() {
     { name: "Raspberry Pi & IoT Kits", desc: "Advanced integration kits with sensors & connectivity", icon: "📡" },
     { name: "Custom Robotics Solutions", desc: "Tailored robots for specific industry needs", icon: "🛠️" },
     { name: "Computer Vision Camera Kit", desc: "High-precision vision system for object detection", icon: "👁️" },
-    { name: "Voice Controlled Robot", desc: "Natural language processing enabled robots", icon: "🎤" },
+    { name: "AI Companion", desc: "Natural language processing enabled robots", icon: "🎤" },
   ];
 
   const scrollToSection = (id) => {
@@ -269,8 +273,8 @@ function App() {
             <button onClick={() => setShowEvents(true)} className="hover:text-cyan-400 transition-colors">Events</button>
             <button onClick={() => setShowMembership(true)} className="hover:text-cyan-400 transition-colors">Join Us</button>
             <button onClick={() => scrollToSection('vision')} className="hover:text-cyan-400 transition-colors">Vision</button>
-            <button onClick={() => scrollToSection('about')} className="hover:text-cyan-400 transition-colors">About</button>
             <button onClick={() => scrollToSection('products')} className="hover:text-cyan-400 transition-colors">Products</button>
+            <button onClick={() => scrollToSection('about')} className="hover:text-cyan-400 transition-colors">About Us</button>
           </div>
 
           <button
@@ -291,8 +295,8 @@ function App() {
               <button onClick={() => setShowEvents(true)} className="text-left hover:text-cyan-400">Events</button>
               <button onClick={() => setShowMembership(true)} className="text-left hover:text-cyan-400">Join Us</button>
               <button onClick={() => scrollToSection('vision')} className="text-left hover:text-cyan-400">Vision</button>
-              <button onClick={() => scrollToSection('about')} className="text-left hover:text-cyan-400">About</button>
               <button onClick={() => scrollToSection('products')} className="text-left hover:text-cyan-400">Products</button>
+              <button onClick={() => scrollToSection('about')} className="text-left hover:text-cyan-400">About Us</button>
               <button onClick={() => scrollToSection('contact')} className="mt-4 px-6 py-3 bg-white text-black font-semibold rounded-full w-fit">
                 Get In Touch
               </button>
@@ -326,25 +330,32 @@ function App() {
                   <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${event.color} flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform`}>
                     {event.icon}
                   </div>
+                  
+                  
 
                   <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
                   <p className="text-zinc-400 text-sm mb-4 line-clamp-2">{event.desc}</p>
 
                   <div className="space-y-2 text-sm text-zinc-500">
+                    <div className="flex items-center gap-2"><span size={16} >Duration : {event.Duration}</span></div>
                     <div className="flex items-center gap-2"><Calendar size={16} />{event.date}</div>
                     <div className="flex items-center gap-2"><Clock size={16} />{event.time}</div>
                     <div className="flex items-center gap-2"><MapPin size={16} />{event.location}</div>
                   </div>
-
+                  <div className="text-xl font-bold">
+                    <span className="line-through text-gray-400 mr-2">{event.negativeFees}</span>
+                    <span className="text-green-600">{event.fees}</span>
+                  </div>
                   <button
                     onClick={() => handleRegisterNow(event)}
                     disabled={!event.active}
                     className={`mt-6 w-full py-3 font-semibold rounded-2xl transition-all ${event.active
-                        ? "bg-gradient-to-r from-cyan-400 to-purple-600 text-black hover:scale-105"
-                        : "bg-gray-600 text-gray-400 cursor-not-allowed"
+                      ? "bg-gradient-to-r from-cyan-400 to-purple-600 text-black hover:scale-105"
+                      : "bg-gray-600 text-gray-400 cursor-not-allowed"
                       }`}
                   >
                     {event.active ? "Register Now →" : "Coming Soon"}
+                    <p className='text-xs'>{event.regitration}</p>
                   </button>
                 </div>
               ))}
@@ -470,38 +481,6 @@ function App() {
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="about" className="py-24 bg-black">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-5xl font-bold text-center mb-16">About Us</h2>
-          <div className="grid md:grid-cols-2 gap-12">
-            <div className="bg-zinc-900 p-10 rounded-3xl border border-zinc-700 text-center">
-              <div className="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-2xl flex items-center justify-center text-7xl">
-                👨‍🔬
-              </div>
-              <h3 className="text-3xl font-bold mb-3">Meet Our Founder</h3>
-              <p className="text-2xl text-cyan-400 mb-6">Jatin Sangwan</p>
-              <p className="text-zinc-400 text-lg">
-                Robotics Mentor & Innovator<br />
-                Passionate about making robotics education accessible to everyone through practical, hands-on learning.
-              </p>
-            </div>
-
-            <div className="bg-zinc-900 p-10 rounded-3xl border border-zinc-700">
-              <div className="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-7xl">
-                🧪
-              </div>
-              <h3 className="text-3xl font-bold mb-6 text-center">JSRO - Be an Innovator</h3>
-              <p className="text-zinc-400 text-lg leading-relaxed">
-                We are dedicated to revolutionizing robotics and AI education in India.
-                Our goal is to make advanced technology affordable and accessible to students,
-                schools, and industries through innovative modules and expert guidance.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Products Section */}
       <section id="products" className="py-24 bg-zinc-900">
         <div className="max-w-7xl mx-auto px-6">
@@ -552,6 +531,38 @@ function App() {
         </div>
       )}
 
+      {/* About Section */}
+      <section id="about" className="py-24 bg-black">
+        <div className="max-w-7xl mx-auto px-6">
+          <h2 className="text-5xl font-bold text-center mb-16">About Us</h2>
+          <div className="grid md:grid-cols-2 gap-12">
+            <div className="bg-zinc-900 p-10 rounded-3xl border border-zinc-700 text-center">
+              <div className="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-2xl flex items-center justify-center text-7xl">
+                👨‍🔬
+              </div>
+              <h3 className="text-3xl font-bold mb-3">Meet Our Founder</h3>
+              <p className="text-2xl text-cyan-400 mb-6">Jatin Sangwan</p>
+              <p className="text-zinc-400 text-lg">
+                Robotics Mentor & Innovator<br />
+                Passionate about making robotics education accessible to everyone through practical, hands-on learning.
+              </p>
+            </div>
+
+            <div className="bg-zinc-900 p-10 rounded-3xl border border-zinc-700">
+              <div className="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-7xl">
+                🧪
+              </div>
+              <h3 className="text-3xl font-bold mb-6 text-center">JSRO - Be an Innovator</h3>
+              <p className="text-zinc-400 text-lg leading-relaxed">
+                We are dedicated to revolutionizing robotics and AI education in India.
+                Our goal is to make advanced technology affordable and accessible to students,
+                schools, and industries through innovative modules and expert guidance.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Contact Section */}
       <section id="contact" className="py-28 bg-gradient-to-b from-zinc-900 to-black">
         <div className="max-w-3xl mx-auto px-6 text-center">
@@ -593,7 +604,6 @@ function App() {
                 <li><a href="/" className="hover:text-white">Careers</a></li>
                 <li><a href="/" className="hover:text-white">Terms and Conditions</a></li>
                 <li><a href="/" className="hover:text-white">Privacy Policy</a></li>
-                <li><a href="/" className="hover:text-white">Refund & Returns</a></li>
               </ul>
             </div>
 
