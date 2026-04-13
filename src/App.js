@@ -2,17 +2,28 @@ import { useState, useEffect } from 'react';
 import { Menu, X, Users, Target, Award, Calendar, Clock, MapPin } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 
+import PrivacyPolicy from './Components/PrivacyPolicy';
+import TermsAndConditions from './Components/TermsAndConditions';
+import RefundPolicy from './Components/RefundPolicy';
+import ShippingPolicy from './Components/ShippingPolicy';
+import AboutUs from './Components/AboutUs';
+import { ThankYouPaymentPage } from './Components/ThankYouPaymentPage';
+
 const supabaseUrl = 'https://djezyrrnmqqhopamttkb.supabase.co';
 const supabaseAnonKey = 'sb_publishable_DbgXDjtunz3CeFT2MLTKvQ_EDGFaaeW';
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 function App() {
+  // Global states
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [registeredEvent, setRegisteredEvent] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showEvents, setShowEvents] = useState(false);
   const [showMembership, setShowMembership] = useState(false);
   const [showAllProducts, setShowAllProducts] = useState(false);
 
+  // Membership form state
   const [membershipData, setMembershipData] = useState({
     name: '',
     email: '',
@@ -23,75 +34,13 @@ function App() {
 
   const [members, setMembers] = useState([]);
 
-  // Load members from localStorage
+  // Load members from localStorage on mount
   useEffect(() => {
     const savedMembers = JSON.parse(localStorage.getItem('JSROMembers') || '[]');
     setMembers(savedMembers);
   }, []);
 
-  const events = [
-    {
-      id: 1,
-      register: "bootcamp",
-      title: "AI Robotics BootCamp",
-      date: "May 5, 2026",
-      time: "1 Hour per day",
-      Duration: '4 days',
-      location: "Online",
-      negativeFees: "₹999",
-      fees: "₹499",
-      desc: "Online bootcamp on building AI-powered robots using Simulation",
-      icon: "🤖",
-      color: "from-cyan-400 to-blue-500",
-      registration: "Register before 2 May, 2026",
-      active: true
-    },
-    {
-      id: 2,
-      register: "workshop",
-      title: "Advanced Automation Workshop",
-      date: "May 30, 2026",
-      time: "9:00 AM - 5:00 PM",
-      location: "Delhi NCR",
-      desc: "Competitive event for students to build automated systems",
-      icon: "⚙️",
-      color: "from-purple-400 to-pink-500",
-      active: false
-    },
-    {
-      id: 3,
-      register: "boochallengetcamp",
-      title: "JRC 2026 : IoT & Computer Vision Challenge",
-      date: "May 22, 2026",
-      time: "11:00 AM - 3:00 PM",
-      location: "Offline",
-      desc: "Learn computer vision and IoT integration in robotics",
-      icon: "📡",
-      color: "from-emerald-400 to-cyan-500",
-      active: false
-    }
-  ];
-
-  const products = [
-    { name: "AI Robotics Modules", desc: "Intelligent plug-and-play modules with built-in AI", icon: "🤖" },
-    { name: "Smart Automation Systems", desc: "Fully automated solutions for industrial use", icon: "⚙️" },
-    { name: "Raspberry Pi & IoT Kits", desc: "Advanced integration kits with sensors & connectivity", icon: "📡" },
-    { name: "Custom Robotics Solutions", desc: "Tailored robots for specific industry needs", icon: "🛠️" },
-    { name: "Computer Vision Camera Kit", desc: "High-precision vision system for object detection", icon: "👁️" },
-    { name: "AI Companion", desc: "Natural language processing enabled robots", icon: "🎤" },
-  ];
-
-  const scrollToSection = (id) => {
-    const element = document.getElementById(id);
-    element?.scrollIntoView({ behavior: 'smooth' });
-    setIsMenuOpen(false);
-  };
-
-  const handleRegisterNow = (slug) => {
-    if (!slug) return;
-    window.location.href = `/${slug}`;
-  };
-
+  // ====================== MEMBERSHIP FUNCTIONS ======================
   const handleMembershipChange = (e) => {
     const { name, value } = e.target;
     setMembershipData(prev => ({ ...prev, [name]: value }));
@@ -115,7 +64,14 @@ function App() {
 
     alert(`Thank you ${membershipData.name}! Your project has been submitted successfully.`);
 
-    setMembershipData({ name: '', email: '', phone: '', school: '', youtubeLink: '' });
+    // Reset form
+    setMembershipData({
+      name: '',
+      email: '',
+      phone: '',
+      school: '',
+      youtubeLink: ''
+    });
     setShowMembership(false);
   };
 
@@ -127,6 +83,17 @@ function App() {
     link.click();
     document.body.removeChild(link);
     alert("Brochure is downloading...");
+  };
+
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    element?.scrollIntoView({ behavior: 'smooth' });
+    setIsMenuOpen(false);
+  };
+
+  const handleRegisterNow = (slug) => {
+    if (!slug) return;
+    window.location.href = `/${slug}`;
   };
 
   // ====================== REGISTER PAGE COMPONENT ======================
@@ -169,6 +136,7 @@ function App() {
 
     const handleSubmit = async (e) => {
       e.preventDefault();
+
       if (!formData.name || !formData.email || !formData.phone || !formData.school) {
         alert("Please fill all fields");
         return;
@@ -183,13 +151,11 @@ function App() {
       setLoading(false);
 
       if (error) {
-        console.error("Full Supabase Error:", error);
-        alert(`Error: ${error.message}\n\nCode: ${error.code}`);
+        console.error("Supabase Error:", error);
+        alert(`Error: ${error.message}`);
       } else {
-        alert(`✅ Thank you ${formData.name}! Registration successful for ${formData.event}.`);
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 1500);
+        setRegisteredEvent(formData.event);
+        setIsSubmitted(true);        // This will show ThankYouPaymentPage
       }
     };
 
@@ -269,9 +235,21 @@ function App() {
     );
   }
 
+  // ====================== ROUTING LOGIC ======================
   const currentPath = window.location.pathname;
 
-  // If URL has a slug (not root), show RegisterPage
+  if (currentPath === '/privacy-policy') return <PrivacyPolicy />;
+  if (currentPath === '/terms-and-conditions') return <TermsAndConditions />;
+  if (currentPath === '/refund-policy') return <RefundPolicy />;
+  if (currentPath === '/shipping-policy') return <ShippingPolicy />;
+  if (currentPath === '/about-us') return <AboutUs />;
+
+  // Show Thank You + Payment page after successful registration
+  if (isSubmitted) {
+    return <ThankYouPaymentPage eventName={registeredEvent} />;
+  }
+
+  // Show RegisterPage for any non-root path
   if (currentPath !== '/' && currentPath !== '') {
     return <RegisterPage />;
   }
@@ -335,7 +313,48 @@ function App() {
             </div>
 
             <div className="p-8 grid md:grid-cols-3 gap-6">
-              {events.map((event) => (
+              {[
+                {
+                  id: 1,
+                  register: "bootcamp",
+                  title: "AI Robotics BootCamp",
+                  date: "May 5, 2026",
+                  time: "1 Hour per day",
+                  Duration: '4 days',
+                  location: "Online",
+                  negativeFees: "₹999",
+                  fees: "₹499",
+                  desc: "Online bootcamp on building AI-powered robots using Simulation",
+                  icon: "🤖",
+                  color: "from-cyan-400 to-blue-500",
+                  registration: "Register before 2 May, 2026",
+                  active: true
+                },
+                {
+                  id: 2,
+                  register: "workshop",
+                  title: "Advanced Automation Workshop",
+                  date: "May 30, 2026",
+                  time: "9:00 AM - 5:00 PM",
+                  location: "Delhi NCR",
+                  desc: "Competitive event for students to build automated systems",
+                  icon: "⚙️",
+                  color: "from-purple-400 to-pink-500",
+                  active: false
+                },
+                {
+                  id: 3,
+                  register: "boochallengetcamp",
+                  title: "JRC 2026 : IoT & Computer Vision Challenge",
+                  date: "May 22, 2026",
+                  time: "11:00 AM - 3:00 PM",
+                  location: "Offline",
+                  desc: "Learn computer vision and IoT integration in robotics",
+                  icon: "📡",
+                  color: "from-emerald-400 to-cyan-500",
+                  active: false
+                }
+              ].map((event) => (
                 <div
                   key={event.id}
                   className="group bg-zinc-800 border border-zinc-700 hover:border-cyan-400 rounded-3xl p-6 transition-all hover:scale-105"
@@ -549,7 +568,14 @@ function App() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.map((product, i) => (
+            {[
+              { name: "AI Robotics Modules", desc: "Intelligent plug-and-play modules with built-in AI", icon: "🤖" },
+              { name: "Smart Automation Systems", desc: "Fully automated solutions for industrial use", icon: "⚙️" },
+              { name: "Raspberry Pi & IoT Kits", desc: "Advanced integration kits with sensors & connectivity", icon: "📡" },
+              { name: "Custom Robotics Solutions", desc: "Tailored robots for specific industry needs", icon: "🛠️" },
+              { name: "Computer Vision Camera Kit", desc: "High-precision vision system for object detection", icon: "👁️" },
+              { name: "AI Companion", desc: "Natural language processing enabled robots", icon: "🎤" },
+            ].map((product, i) => (
               <div
                 key={i}
                 className="group bg-zinc-800/60 hover:bg-zinc-800 border border-zinc-700 hover:border-cyan-400 rounded-3xl p-8 transition-all duration-300"
@@ -581,7 +607,14 @@ function App() {
               <button onClick={() => setShowAllProducts(false)} className="text-4xl text-zinc-400 hover:text-white">✕</button>
             </div>
             <div className="grid md:grid-cols-3 gap-8">
-              {products.map((product, i) => (
+              {[
+                { name: "AI Robotics Modules", desc: "Intelligent plug-and-play modules with built-in AI", icon: "🤖" },
+                { name: "Smart Automation Systems", desc: "Fully automated solutions for industrial use", icon: "⚙️" },
+                { name: "Raspberry Pi & IoT Kits", desc: "Advanced integration kits with sensors & connectivity", icon: "📡" },
+                { name: "Custom Robotics Solutions", desc: "Tailored robots for specific industry needs", icon: "🛠️" },
+                { name: "Computer Vision Camera Kit", desc: "High-precision vision system for object detection", icon: "👁️" },
+                { name: "AI Companion", desc: "Natural language processing enabled robots", icon: "🎤" },
+              ].map((product, i) => (
                 <div
                   key={i}
                   className="bg-zinc-900 border border-zinc-700 hover:border-cyan-400 rounded-3xl p-10 transition-all"
@@ -669,22 +702,33 @@ function App() {
             <div>
               <h4 className="font-semibold mb-5 text-lg">Company</h4>
               <ul className="space-y-3 text-zinc-400">
-                <li><a href="/" className="hover:text-white">About Us</a></li>
+                <li><a href="/about-us" className="hover:text-white">About Us</a></li>
                 <li><a href="/" className="hover:text-white">Blogs</a></li>
                 <li><a href="/" className="hover:text-white">Gallery</a></li>
                 <li><a href="/" className="hover:text-white">Careers</a></li>
-                <li><a href="/" className="hover:text-white">Terms and Conditions</a></li>
-                <li><a href="/" className="hover:text-white">Privacy Policy</a></li>
+                <li><a href="/terms-and-conditions" className="hover:text-white">Terms and Conditions</a></li>
+                <li><a href="/privacy-policy" className="hover:text-white">Privacy Policy</a></li>
+                <li><a href="/refund-policy" className="hover:text-white">Refund Policy</a></li>
+                <li><a href="/shipping-policy" className="hover:text-white">Shipping Policy</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-semibold mb-5 text-lg">Support</h4>
-              <ul className="space-y-3 text-zinc-400">
-                <li><a href="/" className="hover:text-white">Contact Us</a></li>
-                <li><a href="/" className="hover:text-white">FAQs</a></li>
-                <li><a href="/" className="hover:text-white">Sitemap</a></li>
-              </ul>
+              <h4 className="font-semibold mb-5 text-lg">Contact Us</h4>
+              <div className="space-y-3 text-zinc-300">
+                <p>
+                  <span className="block font-medium text-white">Address</span>
+                  168, Adarsh Colony, Hisar Cantt, Hissar, Haryana, 125006
+                </p>
+                <p>
+                  <span className="block font-medium text-white">Email</span>
+                  <a href="mailto:info@jsro.in" className="hover:text-white transition">info@jsro.in</a>
+                </p>
+                <p>
+                  <span className="block font-medium text-white">Phone</span>
+                  <a href="tel:+917015229749" className="hover:text-white transition block">+91 7015229749</a>
+                </p>
+              </div>
             </div>
 
             <div>
@@ -700,7 +744,7 @@ function App() {
           </div>
 
           <div className="border-t border-zinc-800 mt-16 pt-8 text-center text-sm text-zinc-500">
-            © JSRO Be an Innovator 2022. All rights reserved.
+            © JSRO Be an Innovator 2026. All rights reserved.
           </div>
         </div>
       </footer>
