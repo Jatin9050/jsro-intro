@@ -298,80 +298,9 @@ export default function AIRoboticsBootcamp() {
         </div>
       </section>
 
-      {/* ── MISSION PILLARS ── */}
-      <section id="mission" style={{ padding: "80px 32px", background: "rgba(15,23,42,0.5)" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: 2, color: "#60a5fa", marginBottom: 8 }}>MISSION HIGHLIGHTS</p>
-            <h2 style={{ fontSize: 36, fontWeight: 700 }}>What You'll Build & Launch</h2>
-            <p style={{ color: "#64748b", marginTop: 10 }}>Eight core mission pillars that make this the most comprehensive student aerospace program available.</p>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
-            {MISSION_PILLARS.map(p => (
-              <div key={p.title} style={{
-                background: "#0f172a", border: "1px solid rgba(96,165,250,0.1)", borderRadius: 12,
-                padding: 24, transition: "border-color 0.2s, transform 0.2s", cursor: "default"
-              }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(96,165,250,0.4)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(96,165,250,0.1)"; e.currentTarget.style.transform = "none"; }}>
-                <div style={{ fontSize: 32, marginBottom: 12 }}>{p.icon}</div>
-                <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 8, color: "#f8fafc" }}>{p.title}</div>
-                <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>{p.desc}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+     
 
-      {/* ── NEAR SPACE VS ORBITAL ── */}
-      <section style={{ padding: "96px 32px", maxWidth: 1100, margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: 56 }}>
-          <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: 2, color: "#60a5fa", marginBottom: 8 }}>WHY NEAR SPACE?</p>
-          <h2 style={{ fontSize: 36, fontWeight: 700 }}>Near Space Satellite vs Orbital Satellite</h2>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 24, alignItems: "stretch" }}>
-          <div style={{ background: "linear-gradient(135deg, rgba(37,99,235,0.12), rgba(15,23,42,0.9))", border: "2px solid rgba(96,165,250,0.4)", borderRadius: 16, padding: "32px 28px" }}>
-            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, color: "#60a5fa", marginBottom: 16 }}>NEAR SPACE SATELLITE</div>
-            <div style={{ fontSize: 13, color: "#475569", marginBottom: 16 }}>High Altitude Balloon Mission</div>
-            {[
-              "40× lower deployment cost than orbital satellites",
-              "Rapid launch with minimal infrastructure",
-              "30–50 km altitude — above 99% atmosphere",
-              "Higher resolution imaging & data accuracy",
-              "Recoverable, reusable, eco-friendly platform",
-              "100+ sensor data points collected per mission",
-              "Suitable for schools, universities, research orgs",
-              "Real-world complete mission cycle experience",
-              "₹1/40th the cost of an orbital satellite",
-            ].map(i => (
-              <div key={i} style={{ display: "flex", gap: 10, marginBottom: 10, fontSize: 13, color: "#cbd5e1", alignItems: "flex-start" }}>
-                <span style={{ color: "#4ade80", marginTop: 1, flexShrink: 0 }}>✓</span>{i}
-              </div>
-            ))}
-          </div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0 8px" }}>
-            <div style={{ background: "rgba(96,165,250,0.15)", border: "1px solid rgba(96,165,250,0.3)", borderRadius: "50%", width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 700, color: "#60a5fa" }}>VS</div>
-          </div>
-          <div style={{ background: "rgba(15,23,42,0.6)", border: "1px solid rgba(148,163,184,0.15)", borderRadius: 16, padding: "32px 28px" }}>
-            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, color: "#475569", marginBottom: 16 }}>ORBITAL SATELLITE</div>
-            <div style={{ fontSize: 13, color: "#334155", marginBottom: 16 }}>Low Earth Orbit Mission</div>
-            {[
-              "Costs ₹2 Crore+ per mission",
-              "Years of development & launch prep",
-              "Complex regulatory approvals",
-              "No payload recovery possible",
-              "Contributes to space debris",
-              "Not accessible for student budgets",
-              "Requires dedicated launch facility",
-              "Limited hands-on student involvement",
-            ].map(i => (
-              <div key={i} style={{ display: "flex", gap: 10, marginBottom: 10, fontSize: 13, color: "#475569", alignItems: "flex-start" }}>
-                <span style={{ color: "#ef4444", marginTop: 1, flexShrink: 0 }}>✗</span>{i}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+     
 
       {/* ── MISSION ARCHITECTURE ── */}
       <section id="architecture" style={{ padding: "80px 32px", background: "rgba(15,23,42,0.5)" }}>
