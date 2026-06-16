@@ -381,11 +381,12 @@ if (currentPath === '/ai-robotics-bootcamp') {
     <div className="flex items-center gap-2">
       <Clock size={16} /> {event.time}
     </div>
-    <div className="flex items-center gap-2">
-      <MapPin size={16} /> {event.location}
-    </div>
+    
   </>
 )}
+  <div className="flex items-center gap-2">
+      <MapPin size={16} /> {event.location}
+    </div>
                   </div>
 
                   <div className="text-xl font-bold mt-4">
