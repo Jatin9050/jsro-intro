@@ -47,8 +47,6 @@ const TIMELINE = [
 ];
 
 const MENTORS = [
-  { icon: "🚀", org: "NASA", sub: "Johnson Space Center", desc: "Program mentored by George Salazar, NASA JSC — bringing real mission operations expertise to student teams.", badge: "Principal Mentor" },
-  { icon: "🛰", org: "ISRO", sub: "Certified Space Tutor", desc: "ISRO-certified curriculum with space science expertise, satellite technology guidance, and mission design support.", badge: "Certified Partner" },
   { icon: "🌐", org: "IAF", sub: "International Astronautical Federation", desc: "Proud member of the IAF — connecting students to the global space community and international aerospace standards.", badge: "Proud Member" },
   { icon: "👨‍🔬", org: "EXPERTS", sub: "Aerospace Scientists & Engineers", desc: "10–12 expert-led sessions over 6–8 months at your school or university, with on-site training, prototyping, and simulation.", badge: "10–12 Sessions" },
 ];
@@ -218,7 +216,7 @@ export default function AIRoboticsBootcamp() {
 
         <div style={{ position: "relative", zIndex: 1, textAlign: "center", maxWidth: 800 }}>
           <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
-            {["ISRO CERTIFIED", "NASA MENTORED", "IAF MEMBER"].map(b => (
+            {["IAF MEMBER"].map(b => (
               <span key={b} style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, padding: "4px 12px", borderRadius: 20, border: "1px solid rgba(96,165,250,0.4)", color: "#60a5fa", background: "rgba(96,165,250,0.08)" }}>{b}</span>
             ))}
           </div>
@@ -262,13 +260,13 @@ export default function AIRoboticsBootcamp() {
             <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: 2, color: "#60a5fa", marginBottom: 12 }}>ABOUT THE PROGRAM</p>
             <h2 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.2, marginBottom: 20 }}>Real Space Technology Education for Future Engineers</h2>
             <p style={{ color: "#94a3b8", lineHeight: 1.8, marginBottom: 16 }}>
-              <strong style={{ color: "#f8fafc" }}>Smartcircuits Innovation Pvt. Ltd.</strong> is an applied research lab focusing on R&D and training in Space Sciences, Astronomy, Rocketry, Satellite design & launch, Electronics, Robotics, AI, IoT, and emerging technologies.
+              <strong style={{ color: "#f8fafc" }}>JSRO Pvt. Ltd.</strong> is an applied research lab focusing on R&D and training in Space Sciences, Astronomy, Rocketry, Satellite design & launch, Electronics, Robotics, AI, IoT, and emerging technologies.
             </p>
             <p style={{ color: "#94a3b8", lineHeight: 1.8 }}>
               Our Near Space Satellite Program gives students hands-on experience designing, building, and launching a real satellite that travels to the stratosphere — above 99% of Earth's atmosphere — reaching altitudes of 30–50 km.
             </p>
             <div style={{ display: "flex", gap: 12, marginTop: 24, flexWrap: "wrap" }}>
-              {["NASA Mentored", "ISRO Certified", "IAF Member"].map(b => (
+              {["IAF Member"].map(b => (
                 <span key={b} style={{ padding: "6px 14px", borderRadius: 20, fontSize: 13, fontWeight: 600, background: "rgba(96,165,250,0.1)", color: "#60a5fa", border: "1px solid rgba(96,165,250,0.2)" }}>{b}</span>
               ))}
             </div>
@@ -538,7 +536,7 @@ export default function AIRoboticsBootcamp() {
       <section style={{ padding: "96px 32px", textAlign: "center" }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
-            {["NASA MENTORED", "ISRO CERTIFIED", "IAF MEMBER", "REAL MISSION"].map(b => (
+            {["IAF MEMBER", "REAL MISSION"].map(b => (
               <span key={b} style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, padding: "3px 10px", borderRadius: 20, border: "1px solid rgba(96,165,250,0.3)", color: "#60a5fa", background: "rgba(96,165,250,0.06)" }}>{b}</span>
             ))}
           </div>
@@ -585,10 +583,10 @@ export default function AIRoboticsBootcamp() {
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
                 <span style={{ fontSize: 20 }}>🛰</span>
-                <span style={{ fontWeight: 700, fontSize: 16 }}>SMARTCIRCUITS INNOVATION</span>
+                <span style={{ fontWeight: 700, fontSize: 16 }}>JSRO</span>
               </div>
               <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.7 }}>
-                Smartcircuits Innovation is at the forefront of transforming STEM, Space Science and Technology through bold innovation.
+                JSRO is at the forefront of transforming STEM, Space Science and Technology through bold innovation.
               </p>
               <div style={{ display: "flex", gap: 14, marginTop: 20 }}>
                 {["Facebook", "Twitter", "Instagram", "LinkedIn"].map(s => (
@@ -610,7 +608,7 @@ export default function AIRoboticsBootcamp() {
             ))}
           </div>
           <div style={{ borderTop: "1px solid rgba(96,165,250,0.08)", paddingTop: 24, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-            <span style={{ fontSize: 12, color: "#334155" }}>© 2025 Smartcircuits Innovation Pvt. Ltd.</span>
+            <span style={{ fontSize: 12, color: "#334155" }}>© 2025 JSRO Pvt. Ltd.</span>
             <div style={{ display: "flex", gap: 20 }}>
               {["Privacy Policy", "Disclaimer", "Terms", "Refund Policy"].map(l => (
                 <span key={l} style={{ fontSize: 12, color: "#334155", cursor: "pointer" }}>{l}</span>
