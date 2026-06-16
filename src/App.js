@@ -370,7 +370,7 @@ if (currentPath === '/ai-robotics-bootcamp') {
                   <p className="text-zinc-400 text-sm mb-4 line-clamp-2">{event.desc}</p>
 
                   <div className="space-y-2 text-sm text-zinc-500">
-                    {event.Duration && (
+                    {event.time && (
   <>
     <div className="flex items-center gap-2">
       Duration : {event.Duration}
