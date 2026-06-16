@@ -15,16 +15,7 @@ const STATS = [
   { value: "1/40th", label: "Cost of Orbital Sat" },
 ];
 
-const MISSION_PILLARS = [
-  { icon: "🚀", title: "Satellite Design", desc: "Design a 1U CubeSat-spec satellite from scratch using aerospace engineering principles and 3D-printed PLA structure." },
-  { icon: "🛰", title: "Payload Development", desc: "Integrate sensors, camera, flight controller, GPS/GSM, and communication modules into your mission payload." },
-  { icon: "📡", title: "Telemetry Systems", desc: "Build and operate a LoRaWAN-based communication system transmitting live data from near space to ground station." },
-  { icon: "🌎", title: "GPS Tracking", desc: "Implement real-time GPS+GSM tracking to monitor satellite coordinates, altitude, and trajectory live." },
-  { icon: "📷", title: "Space Imaging", desc: "Capture high-resolution images of Earth's curvature and atmospheric layers from 30–50 km altitude." },
-  { icon: "☁️", title: "Atmospheric Research", desc: "Collect atmospheric data including temperature (−50°C), pressure (1/100 sea level), humidity, and UV radiation." },
-  { icon: "🔬", title: "Scientific Experiments", desc: "Design and conduct custom scientific experiments in near space conditions — radiation, biology, materials, and more." },
-  { icon: "🎈", title: "HAB Launch", desc: "Execute a real launch using a Helium CPR 1200 balloon with full ATC/Air Force/Ministry of Defence clearances." },
-];
+
 
 const COMPONENTS = [
   { num: "01", tag: "SENSING", icon: "🌡", title: "Sensor Suite", desc: "Multi-parameter environmental sensing array for atmospheric data collection during ascent and descent.", tags: ["Temperature", "Pressure", "Humidity", "UV", "IMU", "Gas"] },
@@ -50,11 +41,6 @@ const MENTORS = [
   { icon: "👨‍🔬", org: "EXPERTS", sub: "Aerospace Scientists & Engineers", desc: "10–12 expert-led sessions over 6–8 months at your school or university, with on-site training, prototyping, and simulation.", badge: "10–12 Sessions" },
 ];
 
-const TESTIMONIALS = [
-  { quote: "Congratulations to all the students at Dikshant School for their DikshantSat-I High Altitude Balloon Satellite. This is a landmark achievement in student space exploration.", name: "Prof. Chris Welch", role: "International Space University, France" },
-  { quote: "This is so awesome, congrats to the whole team… so proud. Seeing young students build and launch real satellites is inspiring for the entire nation.", name: "Shantanu Moitra", role: "Renowned Music Director" },
-  { quote: "The students surprised me with their eagerness to learn and their commitment to executing a complete space mission. This program raises the bar for STEM education worldwide.", name: "George Salazar", role: "NASA Johnson Space Center" },
-];
 
 function useCountUp(target, duration = 2000, start = false) {
   const [count, setCount] = useState(0);
