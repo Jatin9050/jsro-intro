@@ -452,11 +452,11 @@ export default function AIRoboticsBootcamp() {
             Your school, university or organization could be the next to launch a real satellite. Join India's most advanced student aerospace program today.
           </p>
           <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="https://wa.me/917015229749" target="_blank" rel="noopener noreferrer"
+            <a href="https://wa.me/9518808504" target="_blank" rel="noopener noreferrer"
               style={{ ...btnStyle, background: "#2563eb", color: "#fff", border: "none", fontSize: 16 }}>
               🚀 Join the Program
             </a>
-            <a href="https://wa.me/917015229749" target="_blank" rel="noopener noreferrer"
+            <a href="https://wa.me/9518808504" target="_blank" rel="noopener noreferrer"
               style={{ ...btnStyle, background: "rgba(37,99,235,0.1)", color: "#60a5fa", border: "1px solid rgba(96,165,250,0.3)" }}>
               💬 WhatsApp Us
             </a>
