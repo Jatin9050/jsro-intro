@@ -47,7 +47,6 @@ const TIMELINE = [
 ];
 
 const MENTORS = [
-  { icon: "🌐", org: "IAF", sub: "International Astronautical Federation", desc: "Proud member of the IAF — connecting students to the global space community and international aerospace standards.", badge: "Proud Member" },
   { icon: "👨‍🔬", org: "EXPERTS", sub: "Aerospace Scientists & Engineers", desc: "10–12 expert-led sessions over 6–8 months at your school or university, with on-site training, prototyping, and simulation.", badge: "10–12 Sessions" },
 ];
 
@@ -216,9 +215,7 @@ export default function AIRoboticsBootcamp() {
 
         <div style={{ position: "relative", zIndex: 1, textAlign: "center", maxWidth: 800 }}>
           <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
-            {["IAF MEMBER"].map(b => (
-              <span key={b} style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, padding: "4px 12px", borderRadius: 20, border: "1px solid rgba(96,165,250,0.4)", color: "#60a5fa", background: "rgba(96,165,250,0.08)" }}>{b}</span>
-            ))}
+           
           </div>
 
           <h1 style={{ fontSize: "clamp(36px, 6vw, 68px)", fontWeight: 800, lineHeight: 1.1, marginBottom: 20, background: "linear-gradient(135deg, #f8fafc 0%, #93c5fd 50%, #60a5fa 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -266,9 +263,7 @@ export default function AIRoboticsBootcamp() {
               Our Near Space Satellite Program gives students hands-on experience designing, building, and launching a real satellite that travels to the stratosphere — above 99% of Earth's atmosphere — reaching altitudes of 30–50 km.
             </p>
             <div style={{ display: "flex", gap: 12, marginTop: 24, flexWrap: "wrap" }}>
-              {["IAF Member"].map(b => (
-                <span key={b} style={{ padding: "6px 14px", borderRadius: 20, fontSize: 13, fontWeight: 600, background: "rgba(96,165,250,0.1)", color: "#60a5fa", border: "1px solid rgba(96,165,250,0.2)" }}>{b}</span>
-              ))}
+             
             </div>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
@@ -517,7 +512,7 @@ export default function AIRoboticsBootcamp() {
       <section style={{ padding: "96px 32px", textAlign: "center" }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
-            {["IAF MEMBER", "REAL MISSION"].map(b => (
+            {[ "REAL MISSION"].map(b => (
               <span key={b} style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, padding: "3px 10px", borderRadius: 20, border: "1px solid rgba(96,165,250,0.3)", color: "#60a5fa", background: "rgba(96,165,250,0.06)" }}>{b}</span>
             ))}
           </div>
