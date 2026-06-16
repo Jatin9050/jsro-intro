@@ -370,10 +370,22 @@ if (currentPath === '/ai-robotics-bootcamp') {
                   <p className="text-zinc-400 text-sm mb-4 line-clamp-2">{event.desc}</p>
 
                   <div className="space-y-2 text-sm text-zinc-500">
-                    <div className="flex items-center gap-2">Duration : {event.Duration}</div>
-                    <div className="flex items-center gap-2"><Calendar size={16} />{event.date}</div>
-                    <div className="flex items-center gap-2"><Clock size={16} />{event.time}</div>
-                    <div className="flex items-center gap-2"><MapPin size={16} />{event.location}</div>
+                    {event.Duration && (
+  <>
+    <div className="flex items-center gap-2">
+      Duration : {event.Duration}
+    </div>
+    <div className="flex items-center gap-2">
+      <Calendar size={16} /> {event.date}
+    </div>
+    <div className="flex items-center gap-2">
+      <Clock size={16} /> {event.time}
+    </div>
+    <div className="flex items-center gap-2">
+      <MapPin size={16} /> {event.location}
+    </div>
+  </>
+)}
                   </div>
 
                   <div className="text-xl font-bold mt-4">
