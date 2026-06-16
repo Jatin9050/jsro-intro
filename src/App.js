@@ -319,7 +319,7 @@ if (currentPath === '/ai-robotics-bootcamp') {
                 {
                   id: 1,
                   register: "ai-robotics-bootcamp",
-                  title: "AI Robotics BootCamp",
+                  title: "Cansat Program",
                   date: "May 5, 2026",
                   time: "1 Hour per day",
                   Duration: '4 days',
