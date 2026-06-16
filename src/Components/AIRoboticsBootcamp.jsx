@@ -175,7 +175,7 @@ export default function AIRoboticsBootcamp() {
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <span style={{ fontSize: 20 }}>🛰</span>
-          <span style={{ fontWeight: 700, fontSize: 16, color: "#f8fafc" }}>Smartcircuits</span>
+          <span style={{ fontWeight: 700, fontSize: 16, color: "#f8fafc" }}>JSRO</span>
           <span style={{ fontSize: 11, background: "rgba(96,165,250,0.15)", color: "#60a5fa", padding: "2px 8px", borderRadius: 20, border: "1px solid rgba(96,165,250,0.3)" }}>SPACE PROGRAM</span>
         </div>
         <div style={{ display: "flex", gap: 24 }}>
