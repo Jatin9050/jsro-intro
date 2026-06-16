@@ -512,26 +512,7 @@ export default function AIRoboticsBootcamp() {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ── */}
-      <section style={{ padding: "80px 32px", background: "rgba(15,23,42,0.5)" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: 2, color: "#60a5fa", marginBottom: 8 }}>TESTIMONIALS</p>
-            <h2 style={{ fontSize: 36, fontWeight: 700 }}>What the World Is Saying</h2>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
-            {TESTIMONIALS.map(t => (
-              <div key={t.name} style={{ background: "#0f172a", border: "1px solid rgba(96,165,250,0.1)", borderRadius: 16, padding: 28 }}>
-                <div style={{ color: "#fbbf24", fontSize: 16, marginBottom: 16 }}>★★★★★</div>
-                <p style={{ color: "#cbd5e1", lineHeight: 1.8, fontSize: 14, marginBottom: 20, fontStyle: "italic" }}>"{t.quote}"</p>
-                <div style={{ fontWeight: 600, fontSize: 14, color: "#f8fafc" }}>{t.name}</div>
-                <div style={{ fontSize: 12, color: "#475569", marginTop: 4 }}>{t.role}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
+    
       {/* ── CTA ── */}
       <section style={{ padding: "96px 32px", textAlign: "center" }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
