@@ -59,15 +59,6 @@ const TESTIMONIALS = [
   { quote: "The students surprised me with their eagerness to learn and their commitment to executing a complete space mission. This program raises the bar for STEM education worldwide.", name: "George Salazar", role: "NASA Johnson Space Center" },
 ];
 
-const GALLERY_IMGS = [
-  { src: "https://smartckts.com/public/storage/media/1780660619_Untitled_design__73_.png", alt: "Balloon Launch Night" },
-  { src: "https://smartckts.com/public/storage/media/1780661491_IMG-20190314-WA0027.jpg", alt: "Students building satellite" },
-  { src: "https://smartckts.com/public/storage/media/1780662054_20190322_214018.jpg", alt: "Ground station operations" },
-  { src: "https://smartckts.com/public/storage/media/1780661711_WhatsApp_Image_2026-06-05_at_17_43_21.jpeg", alt: "Earth curvature from near space" },
-  { src: "https://smartckts.com/public/storage/media/1780661952_WhatsApp_Image_2026-06-05_at_17_43_19__1_.jpeg", alt: "Payload integration and testing" },
-  { src: "https://smartckts.com/public/storage/media/1780661641_WhatsApp_Image_2026-06-05_at_17_43_19.jpeg", alt: "Recovery mission" },
-];
-
 function useCountUp(target, duration = 2000, start = false) {
   const [count, setCount] = useState(0);
   useEffect(() => {
@@ -520,26 +511,6 @@ export default function AIRoboticsBootcamp() {
             <AnimatedStat target={20} suffix=" students" label="Student Team Size" started={statsStarted} />
             <AnimatedStat target={100} suffix="+ pts" label="Sensor Data Points Captured" started={statsStarted} />
           </div>
-        </div>
-      </section>
-
-      {/* ── GALLERY ── */}
-      <section id="gallery" style={{ padding: "96px 32px", maxWidth: 1100, margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: 48 }}>
-          <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: 2, color: "#60a5fa", marginBottom: 8 }}>MISSION GALLERY</p>
-          <h2 style={{ fontSize: 36, fontWeight: 700 }}>From Lab to Near Space</h2>
-          <p style={{ color: "#64748b", marginTop: 10 }}>Real missions, real students, real results — India's first school-launched high altitude balloon satellite.</p>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
-          {GALLERY_IMGS.map((img, i) => (
-            <div key={i} style={{ borderRadius: 12, overflow: "hidden", aspectRatio: "4/3", background: "#0f172a", border: "1px solid rgba(96,165,250,0.1)" }}>
-              <img src={img.src} alt={img.alt} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform 0.4s" }}
-                onMouseEnter={e => e.target.style.transform = "scale(1.05)"}
-                onMouseLeave={e => e.target.style.transform = "scale(1)"}
-                onError={e => { e.target.style.display = "none"; }}
-              />
-            </div>
-          ))}
         </div>
       </section>
 
