@@ -33,9 +33,7 @@ function App() {
   });
 
   const [members, setMembers] = useState([]);
-if (currentPath === '/ai-robotics-bootcamp') {
-  return <AIRoboticsBootcamp />;
-}
+
   // Load members from localStorage on mount
   useEffect(() => {
     const savedMembers = JSON.parse(localStorage.getItem('JSROMembers') || '[]');
@@ -239,6 +237,10 @@ if (currentPath === '/ai-robotics-bootcamp') {
 
   // ====================== ROUTING LOGIC ======================
   const currentPath = window.location.pathname;
+
+if (currentPath === '/ai-robotics-bootcamp') {
+  return <AIRoboticsBootcamp />;
+}
 
   if (currentPath === '/privacy-policy') return <PrivacyPolicy />;
   if (currentPath === '/terms-and-conditions') return <TermsAndConditions />;
