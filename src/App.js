@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, Users, Target, Award, Calendar, Clock, MapPin } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
-
+import AIRoboticsBootcamp from './Components/AIRoboticsBootcamp';
 import PrivacyPolicy from './Components/PrivacyPolicy';
 import TermsAndConditions from './Components/TermsAndConditions';
 import RefundPolicy from './Components/RefundPolicy';
@@ -33,7 +33,9 @@ function App() {
   });
 
   const [members, setMembers] = useState([]);
-
+if (currentPath === '/ai-robotics-bootcamp') {
+  return <AIRoboticsBootcamp />;
+}
   // Load members from localStorage on mount
   useEffect(() => {
     const savedMembers = JSON.parse(localStorage.getItem('JSROMembers') || '[]');
@@ -316,7 +318,7 @@ function App() {
               {[
                 {
                   id: 1,
-                  register: "bootcamp",
+                  register: "ai-robotics-bootcamp",
                   title: "AI Robotics BootCamp",
                   date: "May 5, 2026",
                   time: "1 Hour per day",
