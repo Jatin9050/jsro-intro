@@ -323,15 +323,10 @@ if (currentPath === '/ai-robotics-bootcamp') {
                   register: "ai-robotics-bootcamp",
                   title: "Cansat Program",
                   date: "May 5, 2026",
-                  time: "1 Hour per day",
-                  Duration: '4 days',
-                  location: "Online",
-                  negativeFees: "",
-                  fees: "",
-                  desc: "Online bootcamp on building AI-powered robots using Simulation",
+                  location: "Offline",
+                  desc: "Offline bootcamp on building AI-powered robots using Simulation",
                   icon: "🤖",
                   color: "from-cyan-400 to-blue-500",
-                  registration: "Register before 2 May, 2026",
                   active: true
                 },
                 {
