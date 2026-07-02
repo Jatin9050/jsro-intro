@@ -238,9 +238,9 @@ function App() {
   // ====================== ROUTING LOGIC ======================
   const currentPath = window.location.pathname;
 
-if (currentPath === '/ai-robotics-bootcamp') {
-  return <AIRoboticsBootcamp />;
-}
+  if (currentPath === '/ai-robotics-bootcamp') {
+    return <AIRoboticsBootcamp />;
+  }
 
   if (currentPath === '/privacy-policy') return <PrivacyPolicy />;
   if (currentPath === '/terms-and-conditions') return <TermsAndConditions />;
@@ -323,16 +323,17 @@ if (currentPath === '/ai-robotics-bootcamp') {
                   register: "ai-robotics-bootcamp",
                   title: "Cansat Program",
                   date: "May 5, 2026",
+                  time: "9:00 AM - 5:00 PM",
                   location: "Offline",
                   desc: "Offline bootcamp on building AI-powered robots using Simulation",
                   icon: "🤖",
                   color: "from-cyan-400 to-blue-500",
-                  active: true
+                  active: false
                 },
                 {
                   id: 2,
                   register: "workshop",
-                  title: "Advanced Automation Workshop",
+                  title: "Innovation Challenge",
                   date: "May 30, 2026",
                   time: "9:00 AM - 5:00 PM",
                   location: "Delhi NCR",
@@ -370,23 +371,23 @@ if (currentPath === '/ai-robotics-bootcamp') {
                   <p className="text-zinc-400 text-sm mb-4 line-clamp-2">{event.desc}</p>
 
                   <div className="space-y-2 text-sm text-zinc-500">
-                    {event.time && (
-  <>
-    <div className="flex items-center gap-2">
-      Duration : {event.Duration}
-    </div>
-    <div className="flex items-center gap-2">
-      <Calendar size={16} /> {event.date}
-    </div>
-    <div className="flex items-center gap-2">
-      <Clock size={16} /> {event.time}
-    </div>
-    
-  </>
-)}
-  <div className="flex items-center gap-2">
-      <MapPin size={16} /> {event.location}
-    </div>
+                    {!event.time && (
+                      <>
+                        <div className="flex items-center gap-2">
+                          Duration : {event.Duration}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Calendar size={16} /> {event.date}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock size={16} /> {event.time}
+                        </div>
+
+                      </>
+                    )}
+                    <div className="flex items-center gap-2">
+                      <MapPin size={16} /> {event.location}
+                    </div>
                   </div>
 
                   <div className="text-xl font-bold mt-4">
@@ -683,7 +684,8 @@ if (currentPath === '/ai-robotics-bootcamp') {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="mailto:info@jsro.in"
+              // href="mailto:info@jsro.in"
+              href="https://wa.me/7988049218" target="_blank" rel="noopener noreferrer"
               className="px-12 py-5 bg-white text-black font-semibold text-lg rounded-2xl hover:bg-cyan-400 transition-all"
             >
               Contact Us
