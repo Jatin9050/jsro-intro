@@ -307,8 +307,8 @@ function App() {
       {/* Events Modal */}
       {showEvents && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] flex items-center justify-center p-4">
-          <div className="bg-zinc-900 border border-zinc-700 rounded-3xl max-w-4xl w-full overflow-hidden">
-            <div className="flex items-center justify-between px-8 py-6 border-b border-zinc-700">
+          <div className="bg-zinc-900 border border-zinc-700 rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between px-8 py-6 border-b border-zinc-700 shrink-0">
               <div>
                 <h2 className="text-3xl font-bold">Upcoming Events</h2>
                 <p className="text-zinc-400 mt-1">Choose an event to register</p>
@@ -316,98 +316,97 @@ function App() {
               <button onClick={() => setShowEvents(false)} className="text-3xl text-zinc-400 hover:text-white">✕</button>
             </div>
 
-            <div className="p-8 grid md:grid-cols-3 gap-6">
-              {[
-                {
-                  id: 1,
-                  register: "ai-robotics-bootcamp",
-                  title: "Cansat Program",
-                  date: "May 5, 2026",
-                  time: "9:00 AM - 5:00 PM",
-                  location: "Offline",
-                  desc: "Offline bootcamp on building AI-powered robots using Simulation",
-                  icon: "🤖",
-                  color: "from-cyan-400 to-blue-500",
-                  active: false
-                },
-                {
-                  id: 2,
-                  register: "workshop",
-                  title: "Innovation Challenge",
-                  date: "May 30, 2026",
-                  time: "9:00 AM - 5:00 PM",
-                  location: "Delhi NCR",
-                  desc: "Competitive event for students to build automated systems",
-                  icon: "⚙️",
-                  color: "from-purple-400 to-pink-500",
-                  active: false
-                },
-                {
-                  id: 3,
-                  register: "boochallengetcamp",
-                  title: "JRC 2026 : IoT & Computer Vision Challenge",
-                  date: "May 22, 2026",
-                  time: "11:00 AM - 3:00 PM",
-                  location: "Offline",
-                  desc: "Learn computer vision and IoT integration in robotics",
-                  icon: "📡",
-                  color: "from-emerald-400 to-cyan-500",
-                  active: false
-                }
-              ].map((event) => (
-                <div
-                  key={event.id}
-                  className="group bg-zinc-800 border border-zinc-700 hover:border-cyan-400 rounded-3xl p-6 transition-all hover:scale-105"
-                >
-                  <span className={`inline-block px-3 py-1 mb-3 rounded-full text-xs font-semibold ${event.active ? "bg-green-500 text-black" : "bg-yellow-500 text-black"}`}>
-                    {event.active ? "🔴 Live" : "Upcoming"}
-                  </span>
+            <div className="p-8 grid md:grid-cols-3 gap-6 overflow-y-auto">              {[
+              {
+                id: 1,
+                register: "ai-robotics-bootcamp",
+                title: "Cansat Program",
+                date: "May 5, 2026",
+                time: "9:00 AM - 5:00 PM",
+                location: "Offline",
+                desc: "Offline bootcamp on building AI-powered robots using Simulation",
+                icon: "🤖",
+                color: "from-cyan-400 to-blue-500",
+                active: false
+              },
+              {
+                id: 2,
+                register: "workshop",
+                title: "Innovation Challenge",
+                date: "May 30, 2026",
+                time: "9:00 AM - 5:00 PM",
+                location: "Delhi NCR",
+                desc: "Competitive event for students to build automated systems",
+                icon: "⚙️",
+                color: "from-purple-400 to-pink-500",
+                active: false
+              },
+              {
+                id: 3,
+                register: "boochallengetcamp",
+                title: "JRC 2026 : IoT & Computer Vision Challenge",
+                date: "May 22, 2026",
+                time: "11:00 AM - 3:00 PM",
+                location: "Offline",
+                desc: "Learn computer vision and IoT integration in robotics",
+                icon: "📡",
+                color: "from-emerald-400 to-cyan-500",
+                active: false
+              }
+            ].map((event) => (
+              <div
+                key={event.id}
+                className="group bg-zinc-800 border border-zinc-700 hover:border-cyan-400 rounded-3xl p-6 transition-all hover:scale-105"
+              >
+                <span className={`inline-block px-3 py-1 mb-3 rounded-full text-xs font-semibold ${event.active ? "bg-green-500 text-black" : "bg-yellow-500 text-black"}`}>
+                  {event.active ? "🔴 Live" : "Upcoming"}
+                </span>
 
-                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${event.color} flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform`}>
-                    {event.icon}
-                  </div>
-
-                  <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
-                  <p className="text-zinc-400 text-sm mb-4 line-clamp-2">{event.desc}</p>
-
-                  <div className="space-y-2 text-sm text-zinc-500">
-                    {!event.time && (
-                      <>
-                        <div className="flex items-center gap-2">
-                          Duration : {event.Duration}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Calendar size={16} /> {event.date}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Clock size={16} /> {event.time}
-                        </div>
-
-                      </>
-                    )}
-                    <div className="flex items-center gap-2">
-                      <MapPin size={16} /> {event.location}
-                    </div>
-                  </div>
-
-                  <div className="text-xl font-bold mt-4">
-                    <span className="line-through text-gray-400 mr-2">{event.negativeFees}</span>
-                    <span className="text-green-600">{event.fees}</span>
-                  </div>
-
-                  <button
-                    onClick={() => handleRegisterNow(event.register)}
-                    disabled={!event.active}
-                    className={`mt-6 w-full py-3 font-semibold rounded-2xl transition-all ${event.active
-                      ? "bg-gradient-to-r from-cyan-400 to-purple-600 text-black hover:scale-105"
-                      : "bg-gray-600 text-gray-400 cursor-not-allowed"
-                      }`}
-                  >
-                    {event.active ? "Register Now →" : "Coming Soon"}
-                    {event.registration && <p className="text-xs mt-1">{event.registration}</p>}
-                  </button>
+                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${event.color} flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform`}>
+                  {event.icon}
                 </div>
-              ))}
+
+                <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
+                <p className="text-zinc-400 text-sm mb-4 line-clamp-2">{event.desc}</p>
+
+                <div className="space-y-2 text-sm text-zinc-500">
+                  {!event.time && (
+                    <>
+                      <div className="flex items-center gap-2">
+                        Duration : {event.Duration}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Calendar size={16} /> {event.date}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock size={16} /> {event.time}
+                      </div>
+
+                    </>
+                  )}
+                  <div className="flex items-center gap-2">
+                    <MapPin size={16} /> {event.location}
+                  </div>
+                </div>
+
+                <div className="text-xl font-bold mt-4">
+                  <span className="line-through text-gray-400 mr-2">{event.negativeFees}</span>
+                  <span className="text-green-600">{event.fees}</span>
+                </div>
+
+                <button
+                  onClick={() => handleRegisterNow(event.register)}
+                  disabled={!event.active}
+                  className={`mt-6 w-full py-3 font-semibold rounded-2xl transition-all ${event.active
+                    ? "bg-gradient-to-r from-cyan-400 to-purple-600 text-black hover:scale-105"
+                    : "bg-gray-600 text-gray-400 cursor-not-allowed"
+                    }`}
+                >
+                  {event.active ? "Register Now →" : "Coming Soon"}
+                  {event.registration && <p className="text-xs mt-1">{event.registration}</p>}
+                </button>
+              </div>
+            ))}
             </div>
           </div>
         </div>
@@ -582,7 +581,7 @@ function App() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { name: "AI Robotics Modules", desc: "Intelligent plug-and-play modules with built-in AI", icon: "🤖" },
+              { name: "AI & Computer Vision", desc: "Intelligent plug-and-play modules with built-in AI", icon: "🤖" },
               { name: "Smart Automation Systems", desc: "Fully automated solutions for industrial use", icon: "⚙️" },
               { name: "Raspberry Pi & IoT Kits", desc: "Advanced integration kits with sensors & connectivity", icon: "📡" },
               { name: "Custom Robotics Solutions", desc: "Tailored robots for specific industry needs", icon: "🛠️" },
@@ -625,7 +624,7 @@ function App() {
                 { name: "Smart Automation Systems", desc: "Fully automated solutions for industrial use", icon: "⚙️" },
                 { name: "Raspberry Pi & IoT Kits", desc: "Advanced integration kits with sensors & connectivity", icon: "📡" },
                 { name: "Custom Robotics Solutions", desc: "Tailored robots for specific industry needs", icon: "🛠️" },
-                { name: "Computer Vision Camera Kit", desc: "High-precision vision system for object detection", icon: "👁️" },
+                { name: "3D Printing", desc: "3D Prinitng Services", icon: "👁️" },
                 { name: "AI Companion", desc: "Natural language processing enabled robots", icon: "🎤" },
               ].map((product, i) => (
                 <div
@@ -646,30 +645,19 @@ function App() {
       <section id="about" className="py-24 bg-black">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-5xl font-bold text-center mb-16">About Us</h2>
-          <div className="grid md:grid-cols-2 gap-12">
+          <div>
             <div className="bg-zinc-900 p-10 rounded-3xl border border-zinc-700 text-center">
-              <div className="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-2xl flex items-center justify-center text-7xl">
-                👨‍🔬
-              </div>
-              <h3 className="text-3xl font-bold mb-3">Meet Our Founder</h3>
-              <p className="text-2xl text-cyan-400 mb-6">Jatin Sangwan</p>
+
               <p className="text-zinc-400 text-lg">
-                Robotics Mentor & Innovator<br />
-                Passionate about making robotics education accessible to everyone through practical, hands-on learning.
+                At JSRO, we believe that innovation begins with curiosity. Our mission is to make robotics, artificial intelligence, drones, IoT, and emerging technologies accessible through practical, hands-on learning and real-world innovation.
+
+                Founded with the vision of inspiring the next generation of engineers, creators, and problem-solvers, JSRO provides robotics education, STEM workshops, competition-ready robotics kits, 3D printing services, drone technology training, and research & development solutions.
+
+                We don’t just teach technology—we help people build it. Every workshop, project, and product is designed to encourage creativity, critical thinking, and engineering skills that prepare learners for the future.
               </p>
             </div>
 
-            <div className="bg-zinc-900 p-10 rounded-3xl border border-zinc-700">
-              <div className="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-7xl">
-                🧪
-              </div>
-              <h3 className="text-3xl font-bold mb-6 text-center">JSRO - Be an Innovator</h3>
-              <p className="text-zinc-400 text-lg leading-relaxed">
-                We are dedicated to revolutionizing robotics and AI education in India.
-                Our goal is to make advanced technology affordable and accessible to students,
-                schools, and industries through innovative modules and expert guidance.
-              </p>
-            </div>
+
           </div>
         </div>
       </section>
