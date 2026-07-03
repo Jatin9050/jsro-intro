@@ -90,13 +90,13 @@ function App() {
     youtubeLink: ''
   });
 
-  const [members, setMembers] = useState([]);
+  // const [members, setMembers] = useState([]);
 
   // Load members from localStorage on mount
-  useEffect(() => {
-    const savedMembers = JSON.parse(localStorage.getItem('JSROMembers') || '[]');
-    setMembers(savedMembers);
-  }, []);
+  // useEffect(() => {
+  //   const savedMembers = JSON.parse(localStorage.getItem('JSROMembers') || '[]');
+  //   setMembers(savedMembers);
+  // }, []);
 
   // ====================== MEMBERSHIP FUNCTIONS ======================
   const handleMembershipChange = (e) => {
