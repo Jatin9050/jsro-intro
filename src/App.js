@@ -21,8 +21,66 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showEvents, setShowEvents] = useState(false);
   const [showMembership, setShowMembership] = useState(false);
+  const [bookWorkshop, setBookWorkshop] = useState(false);
   const [showAllProducts, setShowAllProducts] = useState(false);
+  const [workshopData, setWorkshopData] = useState({
+    schoolName: "",
+    contactNo: "",
+    schoolEmail: ""
+  });
 
+  const handleWorkshopChange = (e) => {
+    const { name, value } = e.target;
+
+    setWorkshopData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleWorkshopSubmit = async (e) => {
+    e.preventDefault();
+
+    if (
+      !workshopData.schoolName ||
+      !workshopData.contactNo ||
+      !workshopData.schoolEmail
+    ) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    setWorkshopLoading(true);
+
+    const { error } = await supabase
+      .from("workshop_bookings")
+      .insert([
+        {
+          school_name: workshopData.schoolName,
+          contact_no: workshopData.contactNo,
+          school_email: workshopData.schoolEmail,
+        },
+      ]);
+
+    setWorkshopLoading(false);
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    alert("Workshop request submitted successfully!");
+
+    setWorkshopData({
+      schoolName: "",
+      contactNo: "",
+      schoolEmail: "",
+    });
+
+    setBookWorkshop(false);
+  };
+
+  const [workshopLoading, setWorkshopLoading] = useState(false);
   // Membership form state
   const [membershipData, setMembershipData] = useState({
     name: '',
@@ -46,21 +104,34 @@ function App() {
     setMembershipData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleMembershipSubmit = (e) => {
+  const [membershipLoading, setMembershipLoading] = useState(false);
+
+  const handleMembershipSubmit = async (e) => {
     e.preventDefault();
     if (!membershipData.name || !membershipData.email || !membershipData.youtubeLink) {
       alert("Please fill Name, Email and YouTube Project Link");
       return;
     }
 
-    const newMember = {
-      ...membershipData,
-      date: new Date().toLocaleDateString()
-    };
+    setMembershipLoading(true);
 
-    const updatedMembers = [...members, newMember];
-    setMembers(updatedMembers);
-    localStorage.setItem('JSROMembers', JSON.stringify(updatedMembers));
+    const { error } = await supabase
+      .from('join_us_submissions')
+      .insert([{
+        name: membershipData.name,
+        email: membershipData.email,
+        phone: membershipData.phone,
+        school: membershipData.school,
+        youtube_link: membershipData.youtubeLink
+      }]);
+
+    setMembershipLoading(false);
+
+    if (error) {
+      console.error("Supabase Error:", error);
+      alert(`Error: ${error.message}`);
+      return;
+    }
 
     alert(`Thank you ${membershipData.name}! Your project has been submitted successfully.`);
 
@@ -272,6 +343,7 @@ function App() {
             <button onClick={() => setShowEvents(true)} className="hover:text-cyan-400 transition-colors">Events</button>
             <button onClick={() => setShowMembership(true)} className="hover:text-cyan-400 transition-colors">Join Us</button>
             <button onClick={() => scrollToSection('vision')} className="hover:text-cyan-400 transition-colors">Vision</button>
+            <button onClick={() => setBookWorkshop(true)} className="hover:text-cyan-400 transition-colors">Book A Workshop</button>
             <button onClick={() => scrollToSection('products')} className="hover:text-cyan-400 transition-colors">Products</button>
             <button onClick={() => scrollToSection('about')} className="hover:text-cyan-400 transition-colors">About Us</button>
           </div>
@@ -486,9 +558,99 @@ function App() {
 
               <button
                 type="submit"
-                className="w-full py-4 bg-gradient-to-r from-cyan-400 to-purple-600 text-black font-semibold rounded-2xl hover:scale-105 transition-all"
+                disabled={membershipLoading}
+                className="w-full py-4 bg-gradient-to-r from-cyan-400 to-purple-600 text-black font-semibold rounded-2xl hover:scale-105 transition-all disabled:opacity-70"
               >
-                Submit for Guidance
+                {membershipLoading ? "Submitting..." : "Submit for Guidance"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {bookWorkshop && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+          <div className="bg-zinc-900 border border-zinc-700 rounded-3xl max-w-lg w-full overflow-hidden">
+
+            <div className="flex items-center justify-between px-8 py-6 border-b border-zinc-700">
+              <div>
+                <h2 className="text-3xl font-bold">
+                  Book a Workshop
+                </h2>
+
+                <p className="text-zinc-400 mt-1">
+                  Fill in your school details
+                </p>
+              </div>
+
+              <button
+                onClick={() => setBookWorkshop(false)}
+                className="text-3xl text-zinc-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form
+              onSubmit={handleWorkshopSubmit}
+              className="p-8 space-y-6"
+            >
+              <div>
+                <label className="block text-sm text-zinc-400 mb-2">
+                  School Name
+                </label>
+
+                <input
+                  type="text"
+                  name="schoolName"
+                  value={workshopData.schoolName}
+                  onChange={handleWorkshopChange}
+                  required
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400"
+                  placeholder="ABC Public School"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-zinc-400 mb-2">
+                  Contact Number
+                </label>
+
+                <input
+                  type="tel"
+                  name="contactNo"
+                  value={workshopData.contactNo}
+                  onChange={handleWorkshopChange}
+                  required
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400"
+                  placeholder="+91 9876543210"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-zinc-400 mb-2">
+                  School Email
+                </label>
+
+                <input
+                  type="email"
+                  name="schoolEmail"
+                  value={workshopData.schoolEmail}
+                  onChange={handleWorkshopChange}
+                  required
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-cyan-400"
+                  placeholder="principal@school.com"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={workshopLoading}
+                className="w-full py-4 bg-gradient-to-r from-cyan-400 to-purple-600 text-black font-semibold rounded-2xl hover:scale-105 transition-all disabled:opacity-70"
+              >
+                {workshopLoading
+                  ? "Submitting..."
+                  : "Book Workshop"}
               </button>
             </form>
           </div>
