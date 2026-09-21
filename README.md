@@ -73,14 +73,31 @@ Two visual worlds, documented in [DESIGN.md](DESIGN.md):
 
 Product truth lives in [PRODUCT.md](PRODUCT.md).
 
+## Security
+
+Row level security is enforced on all three tables. The publishable key in the
+browser bundle can **insert only**, and only into the form columns — it cannot
+read, update or delete anything, and it cannot set the payment or workflow
+flags. Verified against the live project.
+
+The site has no login. All write authority lives in Postgres grants and
+policies, never in the browser. Client-side validation is convenience only.
+
+Security headers (CSP, HSTS, nosniff, frame-ancestors, Referrer-Policy,
+Permissions-Policy) are set in `vercel.json`.
+
 ## Known issues
 
-1. **Supabase row level security is open.** The browser key can read, modify and
-   delete every row in all three tables, including personal data. Fix in
-   [supabase/001_lock_down_rls.sql](supabase/001_lock_down_rls.sql) — run it.
-2. **A `.env` was committed to this public repo** (`jsro-backend/src/.env`,
-   commit `99ba844`). Untracked now, but still in history. Rotate those values.
-3. **Razorpay is not integrated.** Fees are quoted on request until it is.
+1. **No rate limiting on the public forms.** Anyone can POST registrations in a
+   loop and fill the 500 MB free tier or flood the inbox. Deferred — the fix is
+   a captcha (Cloudflare Turnstile or hCaptcha) on the three forms.
+2. **Razorpay is not integrated.** Fees are quoted on request until it is. When
+   it lands, `payment` / `paid` must be written only by `backend/` using the
+   service role key. A flag the browser can set is not a payment record.
+3. **28 npm advisories, all from `react-scripts`' build toolchain.** None ship
+   in the browser bundle — checked. `npm audit fix --force` would break the
+   build for no security gain. The real fix is migrating off Create React App,
+   which is unmaintained.
 4. `RefundPolicy` shows an effective date of 16th August 2015 — likely a typo.
 5. Contact details were unified to `jsro.ai@gmail.com`; the print brochure still
    shows `info@jsro.in`.
