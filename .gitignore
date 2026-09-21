@@ -13,18 +13,16 @@
 
 # misc
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env
+# env files — every variant, at any depth. Examples stay tracked.
 .env
-.env.local
+.env.*
+!.env.example
+!**/.env.example
 
 # screenshots and scratch output from design/QA passes
 /output
