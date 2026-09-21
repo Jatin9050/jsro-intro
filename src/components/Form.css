@@ -1,0 +1,53 @@
+/* Shared form styling: workshop booking, join-us, event registration. */
+
+.jsro-form { display: grid; gap: var(--space-standard); max-width: 520px; }
+.jsro-form-row { display: grid; gap: 8px; }
+.jsro-form-row label { font-size: .78rem; font-weight: 700; letter-spacing: .02em; }
+.jsro-form-row input,
+.jsro-form-row textarea {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule-strong);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 1rem;
+  padding: 12px 0;
+  transition: border-color .2s ease;
+  width: 100%;
+}
+.jsro-form-row input::placeholder,
+.jsro-form-row textarea::placeholder { color: var(--ink-muted); opacity: .7; }
+.jsro-form-row input:focus-visible,
+.jsro-form-row textarea:focus-visible {
+  border-bottom-color: var(--signal);
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+.jsro-form-row input[aria-invalid="true"],
+.jsro-form-row textarea[aria-invalid="true"] { border-bottom-color: var(--signal); }
+.jsro-form-hint { color: var(--ink-muted); font-size: .8rem; margin: 0; }
+
+.jsro-form-status {
+  border-left: 1px solid var(--signal);
+  font-size: .9rem;
+  line-height: 1.5;
+  margin: 0;
+  padding-left: 14px;
+}
+.jsro-form-status[data-tone="error"] { color: var(--signal); }
+.jsro-form-status[data-tone="success"] { color: var(--ink); }
+
+.jsro-form-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 18px; }
+
+@media (max-width: 500px) {
+  .jsro-form { gap: 22px; }
+}
+
+/* Field-level errors sit under the control they describe. */
+.jsro-field-error {
+  color: var(--signal);
+  font-size: .8rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0;
+}

@@ -1,0 +1,13 @@
+{
+  "name": "jsro-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "JSRO server — payment orders, signature verification, and any write the browser must not be trusted with.",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js"
+  },
+  "engines": { "node": ">=20" }
+}

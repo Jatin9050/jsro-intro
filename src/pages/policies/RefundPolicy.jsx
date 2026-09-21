@@ -1,13 +1,18 @@
-import React from 'react';
+import { site } from '../../data/site';
+import SiteHeader from '../../components/SiteHeader';
+import SiteFooter from '../../components/SiteFooter';
 
-const RefundPolicy = () => {
+export default function RefundPolicy() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-white py-20">
-      <div className="max-w-4xl mx-auto px-6">
-        <h1 className="text-5xl font-bold text-center mb-6">Refund Policy</h1>
-        <p className="text-center text-zinc-400 mb-12">Effective Date: 16th August 2015</p>
-        
-        <div className="prose prose-invert max-w-none text-zinc-300 text-lg leading-relaxed space-y-6">
+    <div className="jsro-page">
+      <SiteHeader />
+
+      <main id="main-content" className="jsro-main jsro-measure">
+        <p className="jsro-effective">Effective Date: 16th August 2015</p>
+        <h1 className="jsro-page-title">Refund Policy</h1>
+
+        <div className="jsro-prose">
+
 
           <p>
             At JSRO, we strive to deliver high-quality educational experiences through our STEM programs, 
@@ -64,8 +69,8 @@ const RefundPolicy = () => {
             <h2>5. How to Request a Refund</h2>
             <p>To initiate a refund request (if applicable), please contact us at:</p>
             <p>
-              📧 Info@jsro.in<br />
-              📞 +91-9306647832
+              <a href={`mailto:${site.email}`}>{site.email}</a><br />
+              <a href={`tel:${site.phone}`}>{site.phoneDisplay}</a>
             </p>
             <p>
               Include your name, program details, payment reference, and reason for the request.
@@ -79,11 +84,10 @@ const RefundPolicy = () => {
               Changes will be reflected on our official platforms with the updated effective date.
             </p>
           </div>
-
         </div>
-      </div>
+      </main>
+
+      <SiteFooter />
     </div>
   );
-};
-
-export default RefundPolicy;
+}

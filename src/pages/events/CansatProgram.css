@@ -1,0 +1,371 @@
+/* ============================================================================
+   CANSAT PROGRAMME — "THE SOUNDING RECORD"
+   A replacement visual world for this surface only, pinned by the user.
+   It deliberately shares nothing with the homepage's graphite fieldbook:
+   buff chart stock instead of iron, a printed grid instead of 1px rules,
+   recorder-pen oxblood instead of International Orange, and a condensed
+   grotesque + typewriter pairing instead of Helvetica Neue.
+
+   Every high-altitude balloon flight is a radiosonde sounding, so the page is
+   built as the strip chart one produces: time runs down the long axis, the
+   pen's horizontal position is altitude, and the record unrolls as you scroll.
+   ========================================================================== */
+
+.sounding {
+  --stock: #f2eddf;          /* chart paper */
+  --stock-deep: #e8e1cf;     /* the darker band down the margin */
+  --grid-fine: #cfd6c9;      /* printed minor grid */
+  --grid-major: #a9b6a6;     /* printed major grid */
+  --ink: #221f1a;            /* form ink */
+  --ink-soft: #6a6459;       /* secondary form ink */
+  --pen: #a52f1c;            /* recorder pen, oxblood */
+  --pen-wet: #c8402a;        /* the live pen tip */
+  --stamp: #1c4a74;          /* rubber stamp blue */
+  /* the sign-off block inverts the record: ink ground, stock text */
+  --stock-soft: #cfc8b8;     /* secondary text on the inverted ground */
+  --stock-faint: #9a9285;    /* form labels on the inverted ground */
+  --rule-inverted: #4a443b;  /* the ruled line on the inverted ground */
+
+  --rail: clamp(56px, 8vw, 116px);
+
+  background-color: var(--stock);
+  /* the printed grid of the chart stock */
+  background-image:
+    linear-gradient(to right, var(--grid-fine) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-fine) 1px, transparent 1px),
+    linear-gradient(to right, var(--grid-major) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-major) 1px, transparent 1px);
+  background-size: 22px 22px, 22px 22px, 110px 110px, 110px 110px;
+  color: var(--ink);
+  font-family: "Archivo Narrow", "Helvetica Neue", Arial, sans-serif;
+  min-height: 100vh;
+  min-width: 320px;
+  overflow-x: hidden;
+  position: relative;
+  -webkit-tap-highlight-color: rgba(165, 47, 28, .22);
+  touch-action: manipulation;
+}
+
+.sounding a { color: inherit; }
+
+/* Typewritten apparatus: every label, key, unit and stamp on the form. */
+.sounding .mono,
+.sounding dt,
+.sounding .key,
+.sounding .tick-label,
+.sounding .unit { font-family: "Courier Prime", "Courier New", monospace; }
+
+/* ---------------------------------------------------------------- masthead */
+
+.record-head {
+  border-bottom: 2px solid var(--ink);
+  display: grid;
+  gap: 4px 28px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 18px clamp(16px, 4vw, 44px) 14px;
+  position: relative;
+  z-index: 3;
+}
+.record-head .cell { border-left: 1px solid var(--grid-major); padding-left: 12px; }
+.record-head .cell:first-child { border-left: 0; padding-left: 0; }
+.record-head dt {
+  color: var(--ink-soft);
+  font-size: .64rem;
+  letter-spacing: .14em;
+  margin: 0;
+  text-transform: uppercase;
+}
+.record-head dd { font-size: .92rem; font-weight: 600; letter-spacing: -.01em; margin: 3px 0 0; }
+
+/* ------------------------------------------------------------- the trace rail */
+
+.chart {
+  padding-left: var(--rail);
+  position: relative;
+}
+
+/* the time axis, ruled down the whole record */
+.chart::before {
+  background: var(--stock-deep);
+  border-right: 1px solid var(--grid-major);
+  content: "";
+  inset: 0 auto 0 0;
+  position: absolute;
+  width: var(--rail);
+  z-index: 0;
+}
+
+.trace-layer { bottom: 0; left: 0; pointer-events: none; position: absolute; top: 0; width: var(--rail); z-index: 1; }
+.trace-layer svg { display: block; height: 100%; width: 100%; }
+.trace-path {
+  fill: none;
+  stroke: var(--pen);
+  stroke-linecap: round;
+  stroke-width: 2.25;
+  vector-effect: non-scaling-stroke;
+}
+.trace-shadow { stroke: rgba(165, 47, 28, .16); stroke-width: 7; }
+
+/* ------------------------------------------------------------------ stations */
+
+.station {
+  padding: clamp(46px, 7vw, 104px) clamp(16px, 4vw, 60px) clamp(46px, 7vw, 104px) clamp(20px, 3.5vw, 60px);
+  position: relative;
+  z-index: 2;
+}
+.station + .station { border-top: 1px dashed var(--grid-major); }
+
+.tick {
+  align-items: baseline;
+  display: flex;
+  gap: 14px;
+  left: 0;
+  position: absolute;
+  top: clamp(46px, 7vw, 104px);
+  transform: translateX(calc(-1 * var(--rail)));
+  width: var(--rail);
+}
+.tick-label {
+  color: var(--pen);
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  padding-left: 8px;
+  white-space: nowrap;
+}
+
+.station-key {
+  color: var(--ink-soft);
+  font-size: .66rem;
+  letter-spacing: .2em;
+  margin: 0 0 18px;
+  text-transform: uppercase;
+}
+
+.station h2 {
+  font-size: clamp(2rem, 5.2vw, 4.6rem);
+  font-weight: 700;
+  letter-spacing: -.035em;
+  line-height: .96;
+  margin: 0;
+  max-width: 17ch;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.station > p {
+  font-size: clamp(1rem, 1.2vw, 1.12rem);
+  line-height: 1.6;
+  margin: 22px 0 0;
+  max-width: 58ch;
+}
+
+/* ---------------------------------------------------------------- the launch */
+
+.launch { padding-top: clamp(40px, 5vw, 76px); }
+.launch h1 {
+  font-size: clamp(2.6rem, 7.4vw, 7rem);
+  font-weight: 700;
+  letter-spacing: -.045em;
+  line-height: .9;
+  margin: 0;
+  max-width: 15ch;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.launch h1 span { color: var(--pen); display: block; }
+.launch .lede { font-size: clamp(1.02rem, 1.3vw, 1.2rem); line-height: 1.6; margin: 26px 0 0; max-width: 54ch; }
+
+/* a rubber stamp, struck slightly off-square as a stamp always is */
+.stamp {
+  border: 2px solid var(--stamp);
+  color: var(--stamp);
+  display: inline-block;
+  font-family: "Courier Prime", "Courier New", monospace;
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  margin-bottom: 26px;
+  opacity: .88;
+  padding: 7px 14px;
+  text-transform: uppercase;
+  transform: rotate(-1.6deg);
+}
+.stamp[data-open="false"] { border-color: var(--ink-soft); color: var(--ink-soft); }
+
+.actions { align-items: center; display: flex; flex-wrap: wrap; gap: 24px; margin-top: 38px; }
+
+.action {
+  background: var(--pen);
+  border: 2px solid var(--pen);
+  color: var(--stock) !important;
+  display: inline-flex;
+  align-items: center;
+  font-family: "Courier Prime", "Courier New", monospace;
+  font-size: .82rem;
+  font-weight: 700;
+  gap: 12px;
+  letter-spacing: .1em;
+  min-height: 52px;
+  padding: 0 22px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background .18s ease, color .18s ease;
+}
+.action:hover { background: transparent; color: var(--pen) !important; }
+
+.action-quiet {
+  border-bottom: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  font-size: .9rem;
+  font-weight: 600;
+  gap: 8px;
+  padding-bottom: 3px;
+  text-decoration: none;
+  transition: color .18s ease, border-color .18s ease;
+}
+.action-quiet:hover { border-color: var(--pen); color: var(--pen); }
+
+/* ------------------------------------------------------------- the instrument */
+
+.units { display: grid; gap: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 46px; }
+.unit { border-left: 1px solid var(--grid-major); padding: 0 22px 34px; }
+.unit:nth-child(3n + 1) { border-left: 0; padding-left: 0; }
+.unit:nth-child(n + 4) { border-top: 1px solid var(--grid-major); padding-top: 26px; }
+.unit .key { color: var(--pen); display: block; font-size: .68rem; font-weight: 700; letter-spacing: .16em; }
+.unit h3 { font-size: 1.06rem; font-weight: 700; letter-spacing: -.01em; margin: 12px 0 0; text-transform: uppercase; }
+.unit p { color: var(--ink-soft); font-size: .88rem; line-height: 1.55; margin: 9px 0 0; }
+.unit ul { display: flex; flex-wrap: wrap; gap: 5px 10px; list-style: none; margin: 14px 0 0; padding: 0; }
+.unit li {
+  border: 1px solid var(--grid-major);
+  font-family: "Courier Prime", "Courier New", monospace;
+  font-size: .68rem;
+  padding: 2px 7px;
+}
+
+/* --------------------------------------------------------------- the readings */
+
+.readings { display: grid; gap: 0 clamp(18px, 3vw, 46px); grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 44px; }
+.readings > div { border-top: 2px solid var(--ink); padding: 14px 0 22px; }
+.readings dt { color: var(--ink-soft); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; }
+.readings dd {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: -.03em;
+  margin: 8px 0 0;
+}
+
+/* ------------------------------------------------------------------- returns */
+
+.returns { counter-reset: ret; display: grid; gap: 0; margin-top: 44px; }
+.returns article { border-top: 1px solid var(--grid-major); display: grid; gap: 18px clamp(20px, 4vw, 54px); grid-template-columns: 62px minmax(0, 1fr) minmax(0, 210px); padding: 24px 0; }
+.returns article:last-child { border-bottom: 1px solid var(--grid-major); }
+.returns .key { color: var(--pen); font-size: .82rem; font-weight: 700; }
+.returns h3 { font-size: clamp(1.15rem, 1.9vw, 1.7rem); font-weight: 700; letter-spacing: -.02em; margin: 0; text-transform: uppercase; }
+.returns p { color: var(--ink-soft); font-size: .92rem; line-height: 1.55; margin: 8px 0 0; }
+.returns .unit-note { color: var(--ink-soft); font-family: "Courier Prime", "Courier New", monospace; font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; }
+
+/* --------------------------------------------------------------- preparation */
+
+.phases { display: grid; gap: 0; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 44px; }
+.phase { border-left: 1px solid var(--grid-major); border-top: 2px solid var(--ink); padding: 14px 20px 26px; }
+.phase:nth-child(4n + 1) { border-left: 0; padding-left: 0; }
+.phase .key { color: var(--pen); font-size: .7rem; font-weight: 700; letter-spacing: .14em; }
+.phase h3 { font-size: 1.02rem; font-weight: 700; letter-spacing: -.01em; margin: 10px 0 0; text-transform: uppercase; }
+.phase p { color: var(--ink-soft); font-size: .85rem; line-height: 1.5; margin: 7px 0 0; }
+
+/* ------------------------------------------------------------------ sign-off */
+
+.signoff { background: var(--ink); color: var(--stock); }
+.signoff h2 { color: var(--stock); max-width: 14ch; }
+.signoff p { color: var(--stock-soft); }
+.signoff .station-key { color: var(--stock-faint); }
+.signoff .action { background: var(--pen-wet); border-color: var(--pen-wet); color: var(--stock) !important; }
+.signoff .action:hover { background: transparent; color: var(--pen-wet) !important; }
+.signoff .action-quiet { border-color: var(--stock); color: var(--stock); }
+.signoff .action-quiet:hover { border-color: var(--pen-wet); color: var(--pen-wet); }
+.signoff .tick-label { color: var(--pen-wet); }
+
+/* the form's own footer line, as a completed record would carry */
+.signoff-rule {
+  border-top: 1px solid var(--rule-inverted);
+  display: grid;
+  gap: 10px 32px;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  margin-top: clamp(46px, 6vw, 84px);
+  padding-top: 20px;
+}
+.signoff-rule dt { color: var(--stock-faint); font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; }
+.signoff-rule dd { color: var(--stock); font-size: .88rem; margin: 5px 0 0; }
+
+/* ------------------------------------------------------------------- chrome */
+
+.sounding-nav {
+  align-items: center;
+  border-bottom: 1px solid var(--grid-major);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  justify-content: space-between;
+  padding: 13px clamp(16px, 4vw, 44px);
+  position: relative;
+  z-index: 3;
+}
+.sounding-nav .back {
+  align-items: center;
+  display: inline-flex;
+  font-family: "Courier Prime", "Courier New", monospace;
+  font-size: .72rem;
+  font-weight: 700;
+  gap: 8px;
+  letter-spacing: .1em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.sounding-nav .back:hover { color: var(--pen); }
+.sounding-nav .ident { font-family: "Courier Prime", "Courier New", monospace; font-size: .72rem; letter-spacing: .1em; color: var(--ink-soft); }
+
+.sounding a:focus-visible, .sounding button:focus-visible {
+  outline: 2px solid var(--stamp);
+  outline-offset: 3px;
+}
+.signoff a:focus-visible { outline-color: var(--pen-wet); }
+
+.sounding [id] { scroll-margin-top: 24px; }
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .units { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .unit:nth-child(3n + 1) { border-left: 1px solid var(--grid-major); padding-left: 22px; }
+  .unit:nth-child(2n + 1) { border-left: 0; padding-left: 0; }
+  .unit:nth-child(n + 3) { border-top: 1px solid var(--grid-major); padding-top: 26px; }
+  .phases { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .phase:nth-child(4n + 1) { border-left: 1px solid var(--grid-major); padding-left: 20px; }
+  .phase:nth-child(2n + 1) { border-left: 0; padding-left: 0; }
+  .readings { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 900px) {
+  .record-head { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 14px; }
+  .record-head .cell:nth-child(3) { border-left: 0; padding-left: 0; }
+  .returns article { grid-template-columns: 44px minmax(0, 1fr); }
+  .returns .unit-note { grid-column: 2; }
+}
+
+@media (max-width: 560px) {
+  .sounding { background-size: 16px 16px, 16px 16px, 80px 80px, 80px 80px; }
+  .units, .phases, .readings { grid-template-columns: minmax(0, 1fr); }
+  .unit, .phase { border-left: 0 !important; padding-left: 0 !important; }
+  .unit + .unit, .phase + .phase { border-top: 1px solid var(--grid-major); }
+  .record-head { grid-template-columns: 1fr; }
+  .record-head .cell { border-left: 0; padding-left: 0; }
+  .actions { align-items: flex-start; flex-direction: column; gap: 20px; }
+  .tick-label { font-size: .6rem; padding-left: 5px; }
+  .readings dd { font-size: 1.6rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trace-path { stroke-dasharray: none !important; stroke-dashoffset: 0 !important; }
+}

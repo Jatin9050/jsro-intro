@@ -1,13 +1,18 @@
-import React from 'react';
+import { addressOneLine, site } from '../../data/site';
+import SiteHeader from '../../components/SiteHeader';
+import SiteFooter from '../../components/SiteFooter';
 
-const PrivacyPolicy = () => {
+export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-white py-20">
-      <div className="max-w-4xl mx-auto px-6">
-        <h1 className="text-5xl font-bold text-center mb-6">Privacy Policy</h1>
-        <p className="text-center text-zinc-400 mb-12">Effective Date: 10th April 2026</p>
-        
-        <div className="prose prose-invert max-w-none text-zinc-300 text-lg leading-relaxed space-y-6">
+    <div className="jsro-page">
+      <SiteHeader />
+
+      <main id="main-content" className="jsro-main jsro-measure">
+        <p className="jsro-effective">Effective Date: 10th April 2026</p>
+        <h1 className="jsro-page-title">Privacy Policy</h1>
+
+        <div className="jsro-prose">
+
           
           <p>
             At JSRO, we are committed to safeguarding the privacy of our users and ensuring the security of personal information. 
@@ -81,16 +86,16 @@ const PrivacyPolicy = () => {
             <h2>7. Contact Information</h2>
             <p>For any inquiries or concerns regarding this Privacy Policy, please contact:</p>
             <p>
-              <strong>JSRO</strong><br />
-              📧 info@jsro.in<br />
-              📞 +91-9306647832
+              <strong>{site.legalName}</strong><br />
+              <a href={`mailto:${site.email}`}>{site.email}</a><br />
+              <a href={`tel:${site.phone}`}>{site.phoneDisplay}</a><br />
+              {addressOneLine}
             </p>
           </div>
-
         </div>
-      </div>
+      </main>
+
+      <SiteFooter />
     </div>
   );
-};
-
-export default PrivacyPolicy;
+}

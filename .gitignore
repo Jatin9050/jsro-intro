@@ -21,3 +21,17 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# local env
+.env
+.env.local
+
+# screenshots and scratch output from design/QA passes
+/output
+
+# source material — the print brochure is 11 MB, too large for git.
+# Keep it locally; serve an optimised copy from public/ instead.
+/docs/JSRO_Brochure_print.pdf
+
+# impeccable tool state
+/.impeccable

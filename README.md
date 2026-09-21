@@ -1,72 +1,75 @@
-# Getting Started with Create React App
+# JSRO
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Website for **JSRO — Jatin Space & Robotics Organization**: practical technology
+education in robotics, AI, IoT, drones, 3D printing and space sciences.
 
-## Available Scripts
+Live: https://jsro-intro.vercel.app · Founder: Jatin Sangwan
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Layout
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```
+src/
+  data/        site.js, events.js      single source of truth — never hard-code facts
+  lib/         supabase.js, formErrors.js
+  components/  SiteHeader, SiteFooter, EventList, forms
+  pages/
+    events/    CansatProgram, InnovationChallenge, JrcChallenge
+    policies/  privacy, terms, refunds, shipping
+  styles/      tokens.css              the graphite design system
+jsro-backend/  server scaffold — Razorpay, service-role writes (not deployed)
+supabase/      SQL migrations
+docs/          source material (brochure, company profile)
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Running it
 
-### `npm test`
+```bash
+npm install
+npm start          # http://localhost:3000
+npm test
+npm run build
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Supabase credentials fall back to the live project. To point elsewhere, copy
+`.env.example` to `.env.local`.
 
-### `npm run build`
+## Routes
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Path | Page |
+|---|---|
+| `/` | Homepage |
+| `/events/cansat-program` | CanSat / Near Space Satellite |
+| `/events/innovation-challenge` | Innovation Challenge |
+| `/events/jrc-2026` | JRC 2026 — IoT & Computer Vision |
+| `/events/:slug/register` | Registration |
+| `/thank-you`, `/about-us` | |
+| `/privacy-policy`, `/terms-and-conditions`, `/refund-policy`, `/shipping-policy` | |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Old URLs (`/ai-robotics-bootcamp`, `/workshop`, `/boochallengetcamp`) redirect to
+their current event. Unknown paths reach a 404. `vercel.json` rewrites all paths
+to `index.html` so deep links survive a refresh.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Design
 
-### `npm run eject`
+Two visual worlds, documented in [DESIGN.md](DESIGN.md):
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **The graphite fieldbook** — every surface except one. Warm iron ground,
+  International Orange signal, Helvetica Neue, 1px rules.
+- **The sounding record** — the CanSat programme page only, by explicit
+  direction. Chart stock, recorder oxblood, Archivo Narrow + Courier Prime.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Product truth lives in [PRODUCT.md](PRODUCT.md).
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Known issues
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# jsro-intro
-# jsro-intro
+1. **Supabase row level security is open.** The browser key can read, modify and
+   delete every row in all three tables, including personal data. Fix in
+   [supabase/001_lock_down_rls.sql](supabase/001_lock_down_rls.sql) — run it.
+2. **A `.env` was committed to this public repo** (`jsro-backend/src/.env`,
+   commit `99ba844`). Untracked now, but still in history. Rotate those values.
+3. **Razorpay is not integrated.** Fees are quoted on request until it is.
+4. `RefundPolicy` shows an effective date of 16th August 2015 — likely a typo.
+5. Contact details were unified to `jsro.ai@gmail.com`; the print brochure still
+   shows `info@jsro.in`.

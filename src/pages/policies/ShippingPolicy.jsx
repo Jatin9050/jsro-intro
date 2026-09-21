@@ -1,13 +1,18 @@
-import React from 'react';
+import { site, whatsappUrl } from '../../data/site';
+import SiteHeader from '../../components/SiteHeader';
+import SiteFooter from '../../components/SiteFooter';
 
-const ShippingPolicy = () => {
+export default function ShippingPolicy() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-white py-20">
-      <div className="max-w-4xl mx-auto px-6">
-        <h1 className="text-5xl font-bold text-center mb-6">Shipping Policy</h1>
-        <p className="text-center text-zinc-400 mb-12">Last Updated: 10 April 2026</p>
-        
-        <div className="prose prose-invert max-w-none text-zinc-300 text-lg leading-relaxed space-y-6">
+    <div className="jsro-page">
+      <SiteHeader />
+
+      <main id="main-content" className="jsro-main jsro-measure">
+        <p className="jsro-effective">Last Updated: 10 April 2026</p>
+        <h1 className="jsro-page-title">Shipping Policy</h1>
+
+        <div className="jsro-prose">
+
 
           <div>
             <h2>Order Processing</h2>
@@ -81,20 +86,18 @@ const ShippingPolicy = () => {
             <h2>Contact Us</h2>
             <p>For any shipping-related queries:</p>
             <p>
-              📧 Email: info@jsro.in<br />
-              📱 WhatsApp: 9306647832<br />
-              🌐 Website: https://jsro.in
+              Email: <a href={`mailto:${site.email}`}>{site.email}</a><br />
+              WhatsApp: <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">{site.phoneDisplay}</a>
             </p>
           </div>
 
           <p>
             By placing an order with JSRO, you agree to this Shipping Policy.
           </p>
-
         </div>
-      </div>
+      </main>
+
+      <SiteFooter />
     </div>
   );
-};
-
-export default ShippingPolicy;
+}

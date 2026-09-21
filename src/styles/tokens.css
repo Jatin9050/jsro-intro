@@ -1,0 +1,153 @@
+/* The JSRO graphite design system. Every surface reads from these tokens.
+   Documented in DESIGN.md — change values there and here together. */
+
+:root {
+  --void: #141210;
+  --void-raised: #1d1a17;
+  --void-deep: #0c0b09;
+  --ink: #f2efea;
+  --ink-muted: #a39c93;
+  --rule: #3a342d;
+  --rule-strong: #5c544a;
+  --signal: #ff4f00;
+  --signal-bright: #ff7a45;
+  --lit-top: #e2dbcf;
+  --lit-face: #a89f93;
+  --lit-side: #5a5249;
+  --shadow-contact: rgba(0, 0, 0, .62);
+  --void-lift: #241f1b;
+
+  --gutter: 4vw;
+  --space-compact: 14px;
+  --space-standard: 29px;
+  --space-section: clamp(74px, 10vw, 150px);
+
+  --font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* ---- shared primitives ---- */
+
+.skip-link {
+  background: var(--signal);
+  color: var(--void) !important;
+  font-weight: 700;
+  left: 12px;
+  padding: 10px 14px;
+  position: fixed;
+  text-decoration: none;
+  top: -60px;
+  transition: top .18s ease;
+  z-index: 100;
+}
+.skip-link:focus-visible { top: 12px; }
+
+
+.jsro-page {
+  background: var(--void);
+  color: var(--ink);
+  font-family: var(--font);
+  min-height: 100vh;
+  min-width: 320px;
+  -webkit-tap-highlight-color: rgba(255, 79, 0, .28);
+  touch-action: manipulation;
+}
+
+/* Anchored sections and headings must clear the top edge when jumped to. */
+[id] { scroll-margin-top: 28px; }
+
+/* Numbers that sit in a column line up. */
+.jsro-tabular { font-variant-numeric: tabular-nums; }
+
+.jsro-page a { color: inherit; }
+
+.jsro-main { padding: clamp(56px, 8vw, 120px) var(--gutter) var(--space-section); }
+
+.jsro-measure { margin: 0 auto; max-width: 760px; }
+
+.jsro-page-title {
+  font-size: clamp(2.6rem, 6vw, 5rem);
+  font-weight: 500;
+  letter-spacing: -.06em;
+  line-height: .92;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.jsro-page-intro {
+  color: var(--ink-muted);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  margin: 26px 0 0;
+}
+
+.jsro-effective {
+  color: var(--signal);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  margin: 0 0 22px;
+}
+
+/* Long-form legal and editorial copy. */
+.jsro-prose { margin-top: clamp(44px, 6vw, 72px); }
+.jsro-prose > * + * { margin-top: 22px; }
+.jsro-prose h2 {
+  border-top: 1px solid var(--rule);
+  font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+  font-weight: 600;
+  letter-spacing: -.02em;
+  margin-top: 52px;
+  padding-top: 26px;
+}
+.jsro-prose h3 { font-size: 1.05rem; font-weight: 600; margin-top: 32px; }
+.jsro-prose p, .jsro-prose li { color: var(--ink-muted); font-size: 1rem; line-height: 1.6; }
+.jsro-prose ul, .jsro-prose ol { margin: 0; padding-left: 20px; }
+.jsro-prose li + li { margin-top: 10px; }
+.jsro-prose strong { color: var(--ink); font-weight: 600; }
+.jsro-prose a { color: var(--signal); text-underline-offset: 3px; }
+
+/* Actions, shared with the homepage's contract. */
+.jsro-action {
+  align-items: center;
+  background: var(--signal);
+  color: var(--void) !important;
+  display: inline-flex;
+  font-size: .9rem;
+  font-weight: 700;
+  gap: 12px;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 21px;
+  text-decoration: none;
+  transition: background .2s ease, transform .2s ease;
+}
+.jsro-action:hover { background: var(--signal-bright); transform: translateY(-2px); }
+.jsro-action[disabled], .jsro-action:disabled {
+  background: var(--rule); color: var(--ink-muted) !important; cursor: not-allowed; transform: none;
+}
+
+.jsro-quiet-action {
+  align-items: center;
+  display: inline-flex;
+  font-size: .9rem;
+  font-weight: 600;
+  gap: 7px;
+  text-decoration: none;
+}
+.jsro-quiet-action:hover { color: var(--signal); }
+
+.jsro-page a:focus-visible,
+.jsro-page button:focus-visible,
+.jsro-page input:focus-visible,
+.jsro-page select:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jsro-page *, .jsro-page *::before, .jsro-page *::after {
+    animation-duration: .01ms !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}

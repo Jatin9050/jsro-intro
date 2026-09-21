@@ -1,0 +1,79 @@
+.event-hero {
+  border-bottom: 1px solid var(--rule);
+  padding: clamp(48px, 7vw, 104px) var(--gutter) clamp(56px, 8vw, 110px);
+}
+.event-hero a.event-back { color: var(--ink-muted); display: flex; margin-bottom: 34px; width: fit-content; }
+.event-hero-title {
+  font-size: clamp(2.8rem, 7vw, 7rem);
+  font-weight: 600;
+  letter-spacing: -.07em;
+  line-height: .86;
+  margin: 0;
+  max-width: 16ch;
+  text-wrap: balance;
+}
+.event-hero-summary {
+  color: var(--ink-muted);
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  line-height: 1.45;
+  margin: 34px 0 0;
+  max-width: 540px;
+}
+.event-hero-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 25px; margin-top: 44px; }
+
+.event-facts { border-bottom: 1px solid var(--rule); padding: clamp(40px, 5vw, 72px) var(--gutter); }
+.event-facts dl {
+  display: grid;
+  gap: 0 clamp(24px, 4vw, 64px);
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  margin: 0;
+}
+.event-facts dl > div { border-top: 1px solid var(--rule); padding: 20px 0; }
+.event-facts dt {
+  color: var(--ink-muted);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.event-facts dd { font-size: 1.05rem; font-variant-numeric: tabular-nums; font-weight: 500; margin: 10px 0 0; }
+.event-facts dd[data-pending="true"] { color: var(--ink-muted); font-weight: 400; }
+
+.event-contact { padding: var(--space-section) var(--gutter); }
+.event-contact h2 {
+  font-size: clamp(2rem, 4.2vw, 4rem);
+  font-weight: 500;
+  letter-spacing: -.06em;
+  line-height: .95;
+  margin: 0;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+.event-contact p { color: var(--ink-muted); font-size: 1.05rem; line-height: 1.55; margin: 26px 0 0; max-width: 520px; }
+
+@media (max-width: 500px) {
+  .event-hero-actions { align-items: flex-start; flex-direction: column; gap: 22px; }
+}
+
+/* Registration status is the first mark on the page, not a line of body text. */
+.event-status-tag {
+  align-items: center;
+  background: var(--signal);
+  color: var(--void);
+  display: inline-flex;
+  font-size: .74rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  margin: 0 0 26px;
+  min-height: 32px;
+  padding: 0 13px;
+  text-transform: uppercase;
+}
+.event-status-tag[data-open="false"] {
+  background: transparent;
+  border: 1px solid var(--rule-strong);
+  color: var(--ink-muted);
+}
+
+.event-fee-link { color: var(--signal); text-decoration: none; }
+.event-fee-link:hover { text-decoration: underline; text-underline-offset: 4px; }
