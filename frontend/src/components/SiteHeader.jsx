@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
-import { site } from '../data/site';
+import { site } from '@jsro/shared/site';
 import './SiteChrome.css';
 
 const SECTIONS = [

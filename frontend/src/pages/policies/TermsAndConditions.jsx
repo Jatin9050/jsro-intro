@@ -1,4 +1,4 @@
-import { addressOneLine, site } from '../../data/site';
+import { addressOneLine, site } from '@jsro/shared/site';
 import SiteHeader from '../../components/SiteHeader';
 import SiteFooter from '../../components/SiteFooter';
 

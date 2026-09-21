@@ -3,7 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
-import { site, whatsappUrl } from '../data/site';
+import { site, whatsappUrl } from '@jsro/shared/site';
 
 export default function AboutUs() {
   return (

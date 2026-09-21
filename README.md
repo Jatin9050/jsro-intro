@@ -9,31 +9,42 @@ Live: https://jsro-intro.vercel.app · Founder: Jatin Sangwan
 
 ## Layout
 
+An npm-workspaces monorepo.
+
 ```
-src/
-  data/        site.js, events.js      single source of truth — never hard-code facts
-  lib/         supabase.js, formErrors.js
-  components/  SiteHeader, SiteFooter, EventList, forms
-  pages/
-    events/    CansatProgram, InnovationChallenge, JrcChallenge
-    policies/  privacy, terms, refunds, shipping
-  styles/      tokens.css              the graphite design system
-jsro-backend/  server scaffold — Razorpay, service-role writes (not deployed)
-supabase/      SQL migrations
-docs/          source material (brochure, company profile)
+frontend/            the website (Create React App)
+  src/
+    components/      SiteHeader, SiteFooter, EventList, forms
+    lib/             supabase.js, formErrors.js
+    pages/
+      events/        CansatProgram, InnovationChallenge, JrcChallenge
+      policies/      privacy, terms, refunds, shipping
+    styles/          tokens.css — the graphite design system
+backend/             server scaffold: Razorpay, service-role writes (not deployed)
+packages/
+  shared/            @jsro/shared — facts both sides must agree on
+docs/                brochure and company profile
+supabase/            SQL migrations
 ```
+
+`@jsro/shared` holds `site.js` and `events.js`. The frontend renders from them;
+the backend will price a Razorpay order from the same event list, so they cannot
+drift apart.
 
 ## Running it
 
 ```bash
-npm install
-npm start          # http://localhost:3000
+npm install          # installs every workspace
+npm start            # frontend on http://localhost:3000
 npm test
-npm run build
+npm run build        # -> frontend/build
+npm run server       # backend on :8080
 ```
 
-Supabase credentials fall back to the live project. To point elsewhere, copy
-`.env.example` to `.env.local`.
+One lockfile lives at the repo root; nested ones are ignored on purpose.
+
+Vercel builds with `npm run build --workspace=frontend` and serves
+`frontend/build`, configured in `vercel.json`.
 
 ## Routes
 

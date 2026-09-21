@@ -1,4 +1,4 @@
-import { site } from '../../data/site';
+import { site } from '@jsro/shared/site';
 import SiteHeader from '../../components/SiteHeader';
 import SiteFooter from '../../components/SiteFooter';
 

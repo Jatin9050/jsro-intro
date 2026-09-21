@@ -4,7 +4,7 @@ import { ArrowUpRight } from 'lucide-react';
 
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
-import { getEvent, eventPath } from '../data/events';
+import { getEvent, eventPath } from '@jsro/shared/events';
 import { supabase, TABLES } from '../lib/supabase';
 import { collectErrors, focusFirstError, isEmail } from '../lib/formErrors';
 import '../components/Form.css';

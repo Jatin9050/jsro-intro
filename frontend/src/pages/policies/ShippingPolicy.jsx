@@ -1,4 +1,4 @@
-import { site, whatsappUrl } from '../../data/site';
+import { site, whatsappUrl } from '@jsro/shared/site';
 import SiteHeader from '../../components/SiteHeader';
 import SiteFooter from '../../components/SiteFooter';
 

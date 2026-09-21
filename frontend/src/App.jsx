@@ -7,7 +7,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 
-import { legacyRedirects } from './data/events';
+import { legacyRedirects } from '@jsro/shared/events';
 
 import Home from './pages/Home';
 import AboutUs from './pages/AboutUs';

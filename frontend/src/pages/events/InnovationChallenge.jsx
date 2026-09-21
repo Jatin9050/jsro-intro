@@ -1,5 +1,5 @@
 import EventScaffold from './EventScaffold';
-import { getEvent } from '../../data/events';
+import { getEvent } from '@jsro/shared/events';
 
 const EVENT = getEvent('innovation-challenge');
 

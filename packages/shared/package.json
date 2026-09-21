@@ -1,0 +1,14 @@
+{
+  "name": "@jsro/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Facts both the site and the server must agree on: the organisation, and the events.",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./site": "./site.js",
+    "./events": "./events.js"
+  },
+  "sideEffects": false
+}

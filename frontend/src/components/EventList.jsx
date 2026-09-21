@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { MoveUpRight } from 'lucide-react';
-import { events, eventPath, eventStatusLabel } from '../data/events';
+import { events, eventPath, eventStatusLabel } from '@jsro/shared/events';
 import './EventList.css';
 
 export default function EventList() {

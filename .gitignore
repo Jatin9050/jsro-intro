@@ -33,3 +33,8 @@ yarn-error.log*
 
 # impeccable tool state
 /.impeccable
+
+# workspaces keep a single lockfile at the root
+frontend/package-lock.json
+backend/package-lock.json
+packages/*/package-lock.json

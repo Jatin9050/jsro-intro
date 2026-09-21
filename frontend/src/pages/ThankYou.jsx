@@ -3,8 +3,8 @@ import { ArrowUpRight } from 'lucide-react';
 
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
-import { getEvent } from '../data/events';
-import { site, whatsappUrl } from '../data/site';
+import { getEvent } from '@jsro/shared/events';
+import { site, whatsappUrl } from '@jsro/shared/site';
 
 export default function ThankYou() {
   const { state } = useLocation();

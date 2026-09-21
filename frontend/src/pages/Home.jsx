@@ -8,7 +8,7 @@ import SiteFooter from '../components/SiteFooter';
 import EventList from '../components/EventList';
 import WorkshopForm from '../components/WorkshopForm';
 import JoinUsForm from '../components/JoinUsForm';
-import { site, whatsappUrl } from '../data/site';
+import { site, whatsappUrl } from '@jsro/shared/site';
 import './Home.css';
 
 const DIRECTION_CONTRACT = `

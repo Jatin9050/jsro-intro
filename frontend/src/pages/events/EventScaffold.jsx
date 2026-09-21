@@ -3,8 +3,8 @@ import { ArrowUpRight } from 'lucide-react';
 
 import SiteHeader from '../../components/SiteHeader';
 import SiteFooter from '../../components/SiteFooter';
-import { eventStatusLabel, registerPath } from '../../data/events';
-import { site, whatsappUrl } from '../../data/site';
+import { eventStatusLabel, registerPath } from '@jsro/shared/events';
+import { site, whatsappUrl } from '@jsro/shared/site';
 import './EventScaffold.css';
 
 /*

@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight, MoveRight } from 'lucide-react';
 
 import SiteFooter from '../../components/SiteFooter';
-import { getEvent, registerPath, eventStatusLabel } from '../../data/events';
-import { site, whatsappUrl } from '../../data/site';
+import { getEvent, registerPath, eventStatusLabel } from '@jsro/shared/events';
+import { site, whatsappUrl } from '@jsro/shared/site';
 import './CansatProgram.css';
 
 const EVENT = getEvent('cansat-program');

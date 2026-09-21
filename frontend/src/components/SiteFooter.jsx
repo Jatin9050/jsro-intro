@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { addressOneLine, legalLinks, site } from '../data/site';
+import { addressOneLine, legalLinks, site } from '@jsro/shared/site';
 import './SiteChrome.css';
 
 export default function SiteFooter() {
