@@ -1,0 +1,3 @@
+# Supabase CLI project config.
+# The project ref is not a secret — it is the subdomain of your API URL.
+project_id = "djezyrrnmqqhopamttkb"

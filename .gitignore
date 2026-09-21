@@ -38,3 +38,6 @@ yarn-error.log*
 frontend/package-lock.json
 backend/package-lock.json
 packages/*/package-lock.json
+
+# Supabase CLI scratch — pooler-url holds a live DB connection string
+supabase/.temp/
