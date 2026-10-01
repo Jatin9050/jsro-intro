@@ -122,6 +122,14 @@
   transition: background .2s ease, transform .2s ease;
 }
 .jsro-action:hover { background: var(--signal-bright); transform: translateY(-2px); }
+.jsro-action-pending {
+  background: transparent;
+  border: 1px solid var(--rule-strong);
+  color: var(--ink-muted) !important;
+  cursor: default;
+}
+.jsro-action-pending:hover { background: transparent; transform: none; }
+
 .jsro-action[disabled], .jsro-action:disabled {
   background: var(--rule); color: var(--ink-muted) !important; cursor: not-allowed; transform: none;
 }

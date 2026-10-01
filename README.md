@@ -99,5 +99,7 @@ Permissions-Policy) are set in `vercel.json`.
    build for no security gain. The real fix is migrating off Create React App,
    which is unmaintained.
 4. `RefundPolicy` shows an effective date of 16th August 2015 — likely a typo.
-5. Contact details were unified to `jsro.ai@gmail.com`; the print brochure still
-   shows `info@jsro.in`.
+5. All three events are marked **Coming soon**. Registration is not linked from
+   anywhere, and `/events/:slug/register` refuses to show a form while
+   `registrationOpen` is false in `@jsro/shared/events`. Flip that one flag per
+   event to reopen it.

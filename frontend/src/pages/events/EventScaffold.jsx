@@ -3,7 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 
 import SiteHeader from '../../components/SiteHeader';
 import SiteFooter from '../../components/SiteFooter';
-import { eventStatusLabel, registerPath } from '@jsro/shared/events';
+import { eventStatusLabel } from '@jsro/shared/events';
 import { site, whatsappUrl } from '@jsro/shared/site';
 import './EventScaffold.css';
 
@@ -40,9 +40,9 @@ export default function EventScaffold({ event, children }) {
           <p className="event-hero-summary">{event.summary}</p>
 
           <div className="event-hero-actions">
-            <Link className="jsro-action" to={registerPath(event)}>
-              Register your interest <ArrowUpRight size={19} strokeWidth={1.75} aria-hidden="true" />
-            </Link>
+            <span className="jsro-action jsro-action-pending" aria-disabled="true">
+              Registration opens soon
+            </span>
             <a className="jsro-quiet-action" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
               Ask a question <ArrowUpRight size={18} strokeWidth={1.7} aria-hidden="true" />
             </a>
@@ -75,14 +75,14 @@ export default function EventScaffold({ event, children }) {
         <section className="event-contact">
           <h2>Want the full outline?</h2>
           <p>
-            The detailed programme for this event is being finalised. Register your
-            interest and JSRO will send it to you first, or message the team directly.
+            The detailed programme for this event is being finalised, and registration has
+            not opened yet. Message the team and JSRO will send the outline first.
           </p>
           <div className="event-hero-actions">
-            <Link className="jsro-action" to={registerPath(event)}>
-              Register your interest <ArrowUpRight size={19} strokeWidth={1.75} aria-hidden="true" />
-            </Link>
             <a className="jsro-quiet-action" href={`mailto:${site.email}`}>{site.email}</a>
+            <a className="jsro-quiet-action" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+              WhatsApp <ArrowUpRight size={18} strokeWidth={1.7} aria-hidden="true" />
+            </a>
           </div>
         </section>
       </main>

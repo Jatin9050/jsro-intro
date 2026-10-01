@@ -2,10 +2,8 @@
 // Everything in the app reads from here — never hard-code a phone number,
 // an address or an email into a component again.
 //
-// Confirmed by JSRO: jsro.ai@gmail.com (the brochure address) is the contact
-// email for every surface. info@jsro.in and info@smartckts.com are retired.
-// The phone numbers below are still the ones inherited from the old site and
-// have not been confirmed.
+// Confirmed by JSRO: info@jsro.in is the contact email for every surface, and
+// the Anvay Complex address below is the current premises.
 
 export const site = {
   name: 'JSRO',
@@ -15,7 +13,7 @@ export const site = {
   founder: 'Jatin Sangwan',
   founderRole: 'Founder & Mentor, JSRO',
 
-  email: 'jsro.ai@gmail.com',
+  email: 'info@jsro.in',
   phone: '+917015229749',
   phoneDisplay: '+91 70152 29749',
   // Confirmed by the printed brochure (Brochure.pdf).
@@ -25,7 +23,8 @@ export const site = {
   instagramHandle: '@jsro.in',
 
   address: {
-    line: '168, Adarsh Colony, Hisar Cantt',
+    line: '1st Floor, Shop No. 3, Anvay Complex',
+    landmark: 'OP Jindal Marg (Near Kia Showroom)',
     city: 'Hisar',
     state: 'Haryana',
     postcode: '125006',
@@ -47,9 +46,9 @@ export const site = {
 
 export const addressOneLine = [
   site.address.line,
+  site.address.landmark,
   site.address.city,
-  site.address.state,
-  site.address.postcode,
+  `${site.address.state} - ${site.address.postcode}`,
 ].join(', ');
 
 export const whatsappUrl = `https://wa.me/${site.whatsapp}`;

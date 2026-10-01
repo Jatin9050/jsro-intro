@@ -5,6 +5,7 @@ import { ArrowUpRight } from 'lucide-react';
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
 import { getEvent, eventPath } from '@jsro/shared/events';
+import { site } from '@jsro/shared/site';
 import { supabase, TABLES } from '../lib/supabase';
 import { collectErrors, focusFirstError, isEmail } from '../lib/formErrors';
 import '../components/Form.css';
@@ -30,6 +31,28 @@ export default function EventRegister() {
   const [status, setStatus] = useState(null);
   const [saving, setSaving] = useState(false);
   const formRef = useRef(null);
+
+  if (event && !event.registrationOpen) {
+    return (
+      <div className="jsro-page">
+        <SiteHeader />
+        <main id="main-content" className="jsro-main jsro-measure">
+          <p className="jsro-effective">Coming soon</p>
+          <h1 className="jsro-page-title">Registration for {event.title} has not opened yet.</h1>
+          <p className="jsro-page-intro">
+            JSRO is finalising dates and cost. Message the team and they will send the
+            outline as soon as it is ready.
+          </p>
+          <p style={{ marginTop: 34 }}>
+            <a className="jsro-action" href={`mailto:${site.email}?subject=${encodeURIComponent(event.title)}`}>
+              Email JSRO <ArrowUpRight size={19} strokeWidth={1.75} aria-hidden="true" />
+            </a>
+          </p>
+        </main>
+        <SiteFooter />
+      </div>
+    );
+  }
 
   if (!event) {
     return (

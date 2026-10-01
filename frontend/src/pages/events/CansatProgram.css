@@ -213,6 +213,17 @@
 }
 .action:hover { background: transparent; color: var(--pen) !important; }
 
+/* Registration not yet open: reads as a struck-through form field, not a button. */
+.action-pending {
+  background: transparent;
+  border: 1px dashed var(--ink-soft);
+  color: var(--ink-soft) !important;
+  cursor: default;
+}
+.action-pending:hover { background: transparent; color: var(--ink-soft) !important; }
+.signoff .action-pending { border-color: var(--stock-faint); color: var(--stock-faint) !important; }
+.signoff .action-pending:hover { background: transparent; color: var(--stock-faint) !important; }
+
 .action-quiet {
   border-bottom: 1px solid var(--ink);
   display: inline-flex;

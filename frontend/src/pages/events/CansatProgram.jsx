@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, MoveRight } from 'lucide-react';
+import { MoveRight } from 'lucide-react';
 
 import SiteFooter from '../../components/SiteFooter';
-import { getEvent, registerPath, eventStatusLabel } from '@jsro/shared/events';
+import { getEvent, eventStatusLabel } from '@jsro/shared/events';
 import { site, whatsappUrl } from '@jsro/shared/site';
 import './CansatProgram.css';
 
@@ -231,9 +231,7 @@ export default function CansatProgram() {
           </p>
 
           <div className="actions">
-            <Link className="action" to={registerPath(EVENT)}>
-              Register <ArrowUpRight size={17} strokeWidth={2.2} aria-hidden="true" />
-            </Link>
+            <span className="action action-pending" aria-disabled="true">Registration opens soon</span>
             <a className="action-quiet" href="#preparation">See the eight phases</a>
           </div>
         </section>
@@ -334,14 +332,12 @@ export default function CansatProgram() {
           <p className="station-key">{station(5).key}</p>
           <h2 id="signoff-title">Put your team on the record</h2>
           <p>
-            Registration is open. Fees are quoted per institution and team size — tell JSRO about
-            your group and the team will come back with the outline and the cost.
+            Registration for this programme has not opened yet. Tell JSRO about your group
+            and the team will come back with dates, the outline and the cost.
           </p>
 
           <div className="actions">
-            <Link className="action" to={registerPath(EVENT)}>
-              Register <ArrowUpRight size={17} strokeWidth={2.2} aria-hidden="true" />
-            </Link>
+            <span className="action action-pending" aria-disabled="true">Registration opens soon</span>
             <a
               className="action-quiet"
               href={`mailto:${site.email}?subject=${encodeURIComponent('Near Space Satellite Programme')}`}

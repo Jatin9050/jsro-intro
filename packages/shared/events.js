@@ -26,7 +26,7 @@ export const events = [
     time: null,
     location: 'Offline',
     fee: null,
-    registrationOpen: true,
+    registrationOpen: false,
     hasDetailPage: true,
     legacySlugs: ['ai-robotics-bootcamp'],
   },
@@ -43,7 +43,7 @@ export const events = [
     time: '9:00 AM – 5:00 PM',
     location: 'Delhi NCR',
     fee: null,
-    registrationOpen: true,
+    registrationOpen: false,
     hasDetailPage: true,
     legacySlugs: ['workshop'],
   },
@@ -60,7 +60,7 @@ export const events = [
     time: '11:00 AM – 3:00 PM',
     location: 'Offline',
     fee: null,
-    registrationOpen: true,
+    registrationOpen: false,
     hasDetailPage: true,
     legacySlugs: ['boochallengetcamp', 'bootcamp'],
   },
@@ -77,7 +77,7 @@ export const legacyRedirects = events.flatMap((event) =>
 );
 
 export const eventStatusLabel = (event) =>
-  event.registrationOpen ? 'Registration open' : 'Registration opens soon';
+  event.registrationOpen ? 'Registration open' : 'Coming soon';
 
 // Until pricing is published, the fee line points at JSRO instead of a number.
 export const hasPublishedFee = (event) => Boolean(event.fee);
