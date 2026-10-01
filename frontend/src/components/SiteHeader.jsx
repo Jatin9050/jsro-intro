@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
-import { site } from '@jsro/shared/site';
+import { site, whatsappUrl } from '@jsro/shared/site';
 import './SiteChrome.css';
 
 const SECTIONS = [
@@ -41,9 +41,23 @@ export default function SiteHeader() {
             {section.label}
           </a>
         ))}
+        <a
+          className="nav-direct"
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => setOpen(false)}
+        >
+          Talk to {site.name} on WhatsApp
+        </a>
       </nav>
 
-      <a className="header-cta" href={href('#contact')}>
+      <a
+        className="header-cta"
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         Talk to {site.name} <ArrowUpRight size={17} strokeWidth={1.8} aria-hidden="true" />
       </a>
 

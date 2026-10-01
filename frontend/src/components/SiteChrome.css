@@ -59,6 +59,7 @@
 .header-cta:hover { color: var(--signal); }
 
 .menu-toggle { background: transparent; border: 0; color: var(--ink); display: none; padding: 8px; }
+.nav-direct { display: none; }
 
 .site-footer {
   align-items: center;
@@ -96,6 +97,7 @@
     z-index: 2;
   }
   .site-navigation a { border-top: 1px solid var(--rule); font-size: 1.15rem; padding: 16px 0; }
+  .site-navigation .nav-direct { color: var(--signal); display: block; font-weight: 700; }
   .site-navigation[data-open="true"] {
     opacity: 1;
     pointer-events: auto;
