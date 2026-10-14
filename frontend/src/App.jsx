@@ -12,6 +12,8 @@ import { legacyRedirects } from '@jsro/shared/events';
 import Home from './pages/Home';
 import AboutUs from './pages/AboutUs';
 import EventRegister from './pages/EventRegister';
+import EventSubmit from './pages/EventSubmit';
+import Admin from './pages/Admin';
 import ThankYou from './pages/ThankYou';
 import NotFound from './pages/NotFound';
 
@@ -56,10 +58,12 @@ export default function App() {
         <Route path="/events/innovation-challenge" element={<InnovationChallenge />} />
         <Route path="/events/jrc-2026" element={<JrcChallenge />} />
         <Route path="/events/:slug/register" element={<EventRegister />} />
+        <Route path="/events/:slug/submit" element={<EventSubmit />} />
         <Route path="/events" element={<Navigate to="/#events" replace />} />
 
         <Route path="/thank-you" element={<ThankYou />} />
         <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/admin" element={<Admin />} />
 
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />

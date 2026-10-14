@@ -1,0 +1,60 @@
+.submit-main {
+  display: grid;
+  gap: clamp(40px, 6vw, 96px);
+  grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr);
+  margin: 0 auto;
+  max-width: 1200px;
+}
+.submit-intro .jsro-quiet-action { color: var(--ink-muted); display: flex; margin-bottom: 26px; width: fit-content; }
+.submit-intro .jsro-page-intro { color: var(--signal); font-weight: 600; }
+.submit-note { color: var(--ink-muted); font-size: .95rem; line-height: 1.55; margin: 22px 0 0; max-width: 40ch; }
+.submit-intro { align-self: start; position: sticky; top: 28px; }
+
+.submit-form { max-width: 640px; }
+.submit-form fieldset { border: 0; display: grid; gap: var(--space-standard); margin: 0; min-width: 0; padding: 0; }
+.submit-form fieldset + fieldset { border-top: 1px solid var(--rule); padding-top: var(--space-standard); }
+.submit-form legend {
+  color: var(--signal);
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  margin-bottom: 6px;
+  padding: 0;
+  text-transform: uppercase;
+}
+.fieldset-hint { margin-top: -14px; }
+
+.jsro-form-row select {
+  background-color: var(--void);
+  border: 0;
+  border-bottom: 1px solid var(--rule-strong);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 1rem;
+  padding: 12px 0;
+  width: 100%;
+}
+.jsro-form-row select:focus-visible { border-bottom-color: var(--signal); outline: 2px solid var(--signal); outline-offset: 3px; }
+.jsro-form-row textarea { line-height: 1.5; resize: vertical; }
+.jsro-form-row input[type="file"] { border-bottom: 0; color: var(--ink-muted); font-size: .92rem; padding: 6px 0; }
+.jsro-form-row input[type="file"]::file-selector-button {
+  background: transparent;
+  border: 1px solid var(--rule-strong);
+  color: var(--ink);
+  cursor: pointer;
+  font-family: var(--font);
+  font-weight: 600;
+  margin-right: 14px;
+  padding: 10px 16px;
+}
+.file-chosen { align-items: center; color: var(--ink); display: flex; font-size: .9rem; gap: 8px; margin: 0; }
+
+.sr-only {
+  border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px;
+  overflow: hidden; padding: 0; position: absolute; white-space: nowrap; width: 1px;
+}
+
+@media (max-width: 860px) {
+  .submit-main { grid-template-columns: 1fr; }
+  .submit-intro { position: static; }
+}

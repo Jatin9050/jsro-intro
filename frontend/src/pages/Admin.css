@@ -1,0 +1,51 @@
+.admin { min-height: 100vh; }
+.admin-signin { margin: 0 auto; max-width: 420px; padding: clamp(64px, 12vh, 140px) var(--gutter); }
+.admin-signin h1 { font-size: 2rem; font-weight: 600; letter-spacing: -.04em; margin: 0 0 34px; }
+
+.admin-bar {
+  align-items: center;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  padding: 16px var(--gutter);
+}
+.admin-brand { font-weight: 700; letter-spacing: -.02em; }
+.admin-signout { background: none; border: 0; color: var(--ink-muted); cursor: pointer; font-family: var(--font); }
+
+.admin-main { padding: 0 var(--gutter) 80px; }
+.admin-tabs { border-bottom: 1px solid var(--rule); display: flex; flex-wrap: wrap; gap: 4px; padding-top: 18px; }
+.admin-tab {
+  align-items: center;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--font);
+  font-size: .92rem;
+  font-weight: 600;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 14px;
+}
+.admin-tab[aria-selected="true"] { border-bottom-color: var(--signal); color: var(--ink); }
+.admin-tab:hover { color: var(--ink); }
+.admin-count { background: var(--void-raised); border: 1px solid var(--rule); font-size: .74rem; font-variant-numeric: tabular-nums; padding: 1px 7px; }
+
+.admin-panel-head { align-items: center; display: flex; flex-wrap: wrap; gap: 18px; justify-content: space-between; margin: 32px 0 20px; }
+.admin-panel-head h1 { font-size: 1.6rem; font-weight: 600; letter-spacing: -.03em; margin: 0; }
+.admin-panel-head .jsro-action { border: 0; cursor: pointer; font-family: var(--font); }
+
+/* Tables overflow on narrow screens; scroll the table, never the page. */
+.admin-table-wrap { border: 1px solid var(--rule); max-width: 100%; overflow-x: auto; }
+.admin-table-wrap:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+.admin-table { border-collapse: collapse; font-size: .86rem; min-width: 100%; }
+.admin-table th, .admin-table td { border-bottom: 1px solid var(--rule); padding: 10px 14px; text-align: left; vertical-align: top; }
+.admin-table th { background: var(--void-raised); color: var(--ink-muted); font-size: .72rem; font-weight: 700; letter-spacing: .05em; position: sticky; text-transform: uppercase; top: 0; white-space: nowrap; }
+.admin-table td { color: var(--ink); max-width: 340px; overflow-wrap: anywhere; }
+.admin-table tbody tr:hover td { background: var(--void-raised); }
+.admin-table td a, .admin-file { align-items: center; color: var(--signal); display: inline-flex; gap: 5px; text-decoration: none; }
+.admin-file { background: none; border: 0; cursor: pointer; font-family: var(--font); font-size: .86rem; font-weight: 600; padding: 0; }
+.admin-inert { color: var(--ink-muted); }
+.admin-empty { color: var(--ink-muted); padding: 40px 0; }

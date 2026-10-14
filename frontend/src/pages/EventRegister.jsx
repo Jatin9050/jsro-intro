@@ -6,7 +6,7 @@ import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
 import { getEvent, eventPath } from '@jsro/shared/events';
 import { site } from '@jsro/shared/site';
-import { supabase, TABLES } from '../lib/supabase';
+import { supabase } from '../lib/supabase';
 import { collectErrors, focusFirstError, isEmail } from '../lib/formErrors';
 import '../components/Form.css';
 import './EventRegister.css';
@@ -102,24 +102,28 @@ export default function EventRegister() {
     setSaving(true);
     setStatus(null);
 
-    const { error } = await supabase.from(TABLES.eventRegistrations).insert([
-      {
-        name: values.name,
-        email: values.email,
-        phone: values.phone,
-        school: values.school,
-        event: event.title,
-      },
-    ]);
+    // The database generates the registration code and enforces whether
+    // registration is open. Direct inserts into the table are not permitted.
+    const { data: code, error } = await supabase.rpc('register_participant', {
+      p_event_slug: event.slug,
+      p_name: values.name,
+      p_email: values.email,
+      p_phone: values.phone,
+      p_school: values.school,
+    });
 
     setSaving(false);
 
     if (error) {
-      setStatus({ tone: 'error', message: `That did not send: ${error.message}. Try again, or email JSRO directly.` });
+      // P0001 messages are written for the visitor; anything else is a fault.
+      const message = error.code === 'P0001'
+        ? error.message
+        : 'Registration could not be completed. Check your connection and try again, or email JSRO.';
+      setStatus({ tone: 'error', message });
       return;
     }
 
-    navigate('/thank-you', { state: { eventSlug: event.slug, name: values.name } });
+    navigate('/thank-you', { state: { eventSlug: event.slug, name: values.name, code } });
   };
 
   return (

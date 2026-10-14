@@ -1,0 +1,27 @@
+.reg-code {
+  border: 1px solid var(--rule-strong);
+  margin: 40px 0 8px;
+  padding: clamp(24px, 4vw, 36px);
+}
+.reg-code-label {
+  color: var(--ink-muted);
+  font-size: .74rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  margin: 0;
+  text-transform: uppercase;
+}
+.reg-code-value {
+  color: var(--signal);
+  font-size: clamp(1.9rem, 5vw, 3.2rem);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: .04em;
+  margin: 12px 0 0;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+.reg-code-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 18px; margin-top: 24px; }
+.reg-code-actions .jsro-action { border: 0; cursor: pointer; font-family: var(--font); }
+.reg-code-live { color: var(--ink-muted); font-size: .86rem; }
+.reg-code-note { color: var(--ink-muted); font-size: .92rem; line-height: 1.55; margin: 22px 0 0; max-width: 56ch; }

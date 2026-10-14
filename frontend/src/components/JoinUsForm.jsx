@@ -53,7 +53,8 @@ export default function JoinUsForm() {
     setSaving(false);
 
     if (error) {
-      setStatus({ tone: 'error', message: `That did not send: ${error.message}. Try again, or email JSRO directly.` });
+      // Never echo the raw database error: it names tables and constraints.
+      setStatus({ tone: 'error', message: 'That did not send. Check your connection and try again, or email JSRO directly.' });
       return;
     }
 

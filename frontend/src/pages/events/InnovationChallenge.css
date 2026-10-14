@@ -1,0 +1,253 @@
+/* ============================================================================
+   INNOVATION CHALLENGE — "THE BOARD"
+   A visual world scoped to this route, like CanSat's sounding record. It shares
+   nothing with the graphite homepage or the CanSat chart paper.
+   Board grammar: solder-mask fields, copper traces turning only at 45 degrees,
+   silkscreen type, round shapes only for pads and vias.
+   ========================================================================== */
+
+.board {
+  --mask: #0f3d2e;
+  --mask-raised: #165040;
+  --mask-deep: #0a2c21;
+  --copper: #d99a55;
+  --copper-dim: #6f5434;
+  --silk: #f1f4ec;
+  --silk-dim: #a8c3b5;
+  --silk-line: rgba(241, 244, 236, .22);
+  --gutter: clamp(16px, 4.5vw, 72px);
+
+  background: var(--mask);
+  color: var(--silk);
+  font-family: "Figtree", "Helvetica Neue", Arial, sans-serif;
+  min-height: 100vh;
+  min-width: 320px;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: rgba(217, 154, 85, .25);
+  touch-action: manipulation;
+}
+.board a { color: inherit; }
+.board h1, .board h2, .board h3, .board-ident, .silk-tag, .copper-btn,
+.step-via, .alloc-num, .faq-trigger { font-family: "Chakra Petch", "Helvetica Neue", Arial, sans-serif; }
+.board [id] { scroll-margin-top: 24px; }
+.board a:focus-visible, .board button:focus-visible { outline: 2px solid var(--copper); outline-offset: 3px; }
+
+/* --------------------------------------------------------------- nav */
+.board-nav {
+  align-items: center;
+  border-bottom: 1px solid var(--silk-line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  justify-content: space-between;
+  padding: 14px var(--gutter);
+}
+.board-back { align-items: center; display: inline-flex; font-size: .9rem; font-weight: 600; gap: 8px; text-decoration: none; }
+.board-back:hover { color: var(--copper); }
+.board-ident { color: var(--silk-dim); font-size: .86rem; font-weight: 600; letter-spacing: .02em; }
+
+/* -------------------------------------------------------------- hero */
+.board-hero {
+  align-items: center;
+  display: grid;
+  gap: clamp(32px, 5vw, 72px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: calc(100dvh - 56px);
+  padding: clamp(40px, 6vw, 88px) var(--gutter) clamp(48px, 6vw, 88px);
+}
+.silk-tag {
+  border: 1.5px solid var(--silk);
+  display: inline-block;
+  font-size: .9rem;
+  font-weight: 600;
+  margin: 0 0 26px;
+  padding: 6px 14px;
+}
+.board-hero h1 {
+  font-size: clamp(2.5rem, 5.4vw, 5rem);
+  font-weight: 700;
+  letter-spacing: -.02em;
+  line-height: .98;
+  margin: 0;
+  max-width: 14ch;
+  text-wrap: balance;
+}
+.hero-lede { color: var(--silk-dim); font-size: clamp(1.02rem, 1.25vw, 1.16rem); line-height: 1.6; margin: 26px 0 0; max-width: 52ch; }
+
+/* facts as copper pads */
+.hero-pads { display: flex; flex-wrap: wrap; gap: 12px; margin: 36px 0 0; }
+.hero-pads > div { border: 1.5px solid var(--copper); border-radius: 999px; padding: 10px 20px 10px 16px; display: flex; align-items: baseline; gap: 10px; }
+.hero-pads > div::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--copper); align-self: center; box-shadow: inset 0 0 0 2.5px var(--mask); }
+.hero-pads dt { color: var(--silk-dim); font-size: .82rem; }
+.hero-pads dd { font-size: 1rem; font-weight: 600; margin: 0; }
+
+.board-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 22px; margin-top: 36px; }
+.copper-btn {
+  align-items: center;
+  background: var(--copper);
+  color: var(--mask-deep) !important;
+  display: inline-flex;
+  font-size: .95rem;
+  font-weight: 700;
+  gap: 10px;
+  min-height: 50px;
+  padding: 0 22px;
+  text-decoration: none;
+  transition: background .18s ease, transform .18s ease;
+}
+.copper-btn:active { transform: translateY(1px); }
+.copper-btn.is-pending { background: transparent; border: 1.5px dashed var(--copper); color: var(--copper) !important; cursor: default; }
+.silk-link { border-bottom: 1px solid var(--silk-line); font-weight: 600; padding-bottom: 3px; text-decoration: none; transition: border-color .18s, color .18s; }
+.silk-link:hover { border-color: var(--copper); color: var(--copper); }
+
+/* the board drawing */
+.board-art { margin: 0; }
+.board-art svg { display: block; height: auto; width: 100%; }
+.trace-idle path { fill: none; stroke: var(--copper-dim); stroke-linecap: round; stroke-linejoin: round; stroke-width: 6; }
+.trace-live { fill: none; stroke: var(--copper); stroke-linecap: round; stroke-linejoin: round; stroke-width: 7; }
+.mount circle:first-child { fill: none; stroke: var(--silk-line); stroke-width: 2; }
+.mount circle:last-child { fill: var(--mask-deep); }
+.chip-body { fill: #1b1f1d; stroke: var(--silk); stroke-width: 1.5; }
+.chip .pin { fill: var(--copper); }
+.chip-dot { fill: var(--silk-dim); }
+.pad circle:first-child, .via-live circle:first-child { fill: var(--copper); }
+.hole { fill: var(--mask-deep); }
+.via-live { transform-box: fill-box; transform-origin: center; }
+.silk-text { fill: var(--silk); font-family: "Chakra Petch", sans-serif; font-size: 17px; font-weight: 600; }
+.silk-small { fill: var(--silk-dim); font-family: "Chakra Petch", sans-serif; font-size: 13px; }
+
+/* ----------------------------------------------------------- sections */
+.board-section { padding: clamp(64px, 9vw, 128px) var(--gutter); }
+.board-section.is-raised { background: var(--mask-raised); }
+.board-section h2 {
+  font-size: clamp(1.9rem, 3.6vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -.015em;
+  line-height: 1.02;
+  margin: 0;
+  text-wrap: balance;
+}
+.section-head { align-items: end; display: grid; gap: 18px 48px; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); margin-bottom: clamp(36px, 5vw, 60px); }
+.section-head p, .section-note { color: var(--silk-dim); font-size: 1rem; line-height: 1.55; margin: 0; max-width: 46ch; }
+.section-note { margin-top: 14px; }
+
+.board-about { display: grid; gap: 28px clamp(32px, 6vw, 96px); grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+.board-prose p { color: var(--silk-dim); font-size: 1.06rem; line-height: 1.65; margin: 0 0 18px; max-width: 62ch; }
+
+.board-split { display: grid; gap: clamp(40px, 6vw, 96px); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+/* ---------------------------------------------------- categories (pins) */
+.pin-list { display: grid; gap: 0 clamp(28px, 4vw, 64px); grid-template-columns: repeat(2, minmax(0, 1fr)); list-style: none; margin: 0; padding: 0; }
+.pin-list li { align-items: start; border-top: 1px solid var(--silk-line); column-gap: 16px; display: grid; grid-template-columns: 22px minmax(0, 1fr); padding: 20px 0; }
+.pin-pad { background: var(--copper); border-radius: 50%; box-shadow: inset 0 0 0 4.5px var(--mask-raised); grid-row: span 2; height: 18px; margin-top: 3px; width: 18px; }
+.pin-name { font-size: 1.08rem; font-weight: 600; }
+.pin-detail { color: var(--silk-dim); font-size: .94rem; line-height: 1.5; margin-top: 4px; }
+
+/* ------------------------------------------------------- the 7 steps */
+.steps-board { position: relative; }
+.steps-svg { height: 60px; left: 0; position: absolute; top: 0; width: 100%; }
+.steps-svg .trace-live { stroke-width: 5; }
+.steps-row { display: grid; gap: 0 14px; grid-template-columns: repeat(7, minmax(0, 1fr)); list-style: none; margin: 0; padding: 0; position: relative; }
+.steps-row li { display: flex; flex-direction: column; }
+.step-via {
+  align-items: center;
+  align-self: flex-start;
+  background: var(--copper);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 6px var(--copper), inset 0 0 0 9px var(--mask);
+  color: var(--mask-deep);
+  display: flex;
+  font-size: 1.05rem;
+  font-weight: 700;
+  height: 60px;
+  justify-content: center;
+  width: 60px;
+}
+.step-via span { background: var(--copper); border-radius: 50%; display: grid; height: 38px; place-items: center; width: 38px; }
+.step-title { font-size: 1.04rem; font-weight: 600; margin-top: 18px; }
+.step-detail { color: var(--silk-dim); font-size: .9rem; line-height: 1.5; margin-top: 6px; }
+
+/* ----------------------------------------------------------- scorecard */
+.alloc { display: flex; gap: 6px; height: 72px; }
+.alloc-pad {
+  align-items: flex-end;
+  background: var(--copper);
+  border-radius: 6px;
+  display: flex;
+  min-width: 0;
+  opacity: var(--tint);
+  padding: 8px 10px;
+  transform-origin: bottom center;
+}
+.alloc-num { color: var(--mask-deep); font-size: 1.3rem; font-weight: 700; }
+.score-rows { display: grid; gap: 0 clamp(24px, 5vw, 64px); grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 36px 0 0; }
+.score-row { align-items: baseline; border-top: 1px solid var(--silk-line); display: flex; gap: 16px; justify-content: space-between; padding: 15px 0; }
+.score-row dt { align-items: center; display: flex; gap: 12px; font-size: 1rem; }
+.score-key { background: var(--copper); border-radius: 50%; flex-shrink: 0; height: 12px; opacity: var(--tint); width: 12px; }
+.score-row dd { font-size: 1.05rem; font-variant-numeric: tabular-nums; font-weight: 600; margin: 0; }
+
+/* -------------------------------------------------------------- lists */
+.silk-list { list-style: none; margin: 28px 0 0; padding: 0; }
+.silk-list li { border-top: 1px solid var(--silk-line); color: var(--silk-dim); font-size: .98rem; line-height: 1.5; padding: 13px 0 13px 26px; position: relative; }
+.silk-list li::before { border: 1.5px solid var(--copper); border-radius: 50%; content: ""; height: 9px; left: 2px; position: absolute; top: 19px; width: 9px; }
+.silk-list.is-numbered { counter-reset: rule; }
+.silk-list.is-numbered li { counter-increment: rule; padding-left: 34px; }
+.silk-list.is-numbered li::before { border: 0; color: var(--copper); content: counter(rule); font-family: "Chakra Petch", sans-serif; font-weight: 700; height: auto; left: 0; top: 12px; width: auto; }
+
+.benefit-list, .spec-list { margin: 28px 0 0; }
+.benefit-list > div, .spec-list > div { border-top: 1px solid var(--silk-line); padding: 14px 0; }
+.benefit-list dt, .spec-list dt { font-size: 1rem; font-weight: 600; }
+.benefit-list dd, .spec-list dd { color: var(--silk-dim); font-size: .92rem; line-height: 1.5; margin: 4px 0 0; }
+
+/* ---------------------------------------------------------------- faq */
+.faq { max-width: 74ch; }
+.faq-item { border-top: 1px solid var(--silk-line); }
+.faq-item:last-child { border-bottom: 1px solid var(--silk-line); }
+.faq h3 { margin: 0; }
+.faq-trigger {
+  align-items: center; background: none; border: 0; color: var(--silk); cursor: pointer;
+  display: flex; font-size: clamp(1rem, 1.3vw, 1.12rem); font-weight: 600; gap: 20px;
+  justify-content: space-between; min-height: 58px; padding: 16px 0; text-align: left; width: 100%;
+}
+.faq-trigger:hover, .faq-item[data-open="true"] .faq-trigger { color: var(--copper); }
+.faq-trigger svg { color: var(--copper); flex-shrink: 0; }
+.faq-panel { overflow: hidden; }
+.faq-panel p { color: var(--silk-dim); font-size: .98rem; line-height: 1.6; margin: 0 0 20px; max-width: 64ch; }
+
+/* -------------------------------------------------------------- close */
+.board-close { background: var(--copper); color: var(--mask-deep); padding: clamp(64px, 9vw, 128px) var(--gutter); }
+.board-close h2 { font-family: "Chakra Petch", sans-serif; font-size: clamp(2.2rem, 5.2vw, 4.6rem); font-weight: 700; letter-spacing: -.02em; line-height: 1; margin: 0; max-width: 15ch; text-wrap: balance; }
+.board-close p { font-size: 1.06rem; font-weight: 500; line-height: 1.55; margin: 24px 0 0; max-width: 52ch; }
+.copper-btn.on-copper { border-color: var(--mask-deep); color: var(--mask-deep) !important; }
+.close-link { align-items: center; border-bottom: 1.5px solid var(--mask-deep); display: inline-flex; font-weight: 600; gap: 7px; padding-bottom: 3px; text-decoration: none; }
+.close-link:hover { opacity: .7; }
+.board-close a:focus-visible { outline-color: var(--mask-deep); }
+
+/* --------------------------------------------------------- responsive */
+@media (max-width: 1080px) {
+  .steps-svg { display: none; }
+  .steps-row { gap: 0; grid-template-columns: 1fr; }
+  /* The trace is its own copper line, run through the via centres. */
+  .steps-row li { padding: 0 0 30px 84px; position: relative; }
+  .steps-row li:last-child { padding-bottom: 0; }
+  .steps-row li::before { background: var(--copper); bottom: 0; content: ""; left: 27.5px; position: absolute; top: 30px; width: 5px; }
+  .steps-row li:last-child::before { display: none; }
+  .steps-row li + li::after { background: var(--copper); content: ""; height: 6px; left: 27.5px; position: absolute; top: 0; width: 5px; }
+  .step-via { left: 0; position: absolute; top: 0; z-index: 1; }
+  .step-title { margin-top: 14px; }
+}
+@media (max-width: 900px) {
+  .board-hero { grid-template-columns: 1fr; min-height: 0; }
+  .board-art { max-width: 520px; }
+  .section-head, .board-about, .board-split { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .pin-list, .score-rows { grid-template-columns: 1fr; }
+  .alloc { gap: 3px; height: 56px; }
+  .alloc-pad { padding: 6px; }
+  .alloc-num { font-size: .95rem; }
+  .board-actions { align-items: flex-start; flex-direction: column; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .board *, .board *::before, .board *::after { transition-duration: .01ms !important; }
+}

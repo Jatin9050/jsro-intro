@@ -33,17 +33,23 @@ export const events = [
   {
     id: 'innovation-challenge',
     slug: 'innovation-challenge',
-    title: 'Innovation Challenge',
+    title: 'JSRO Innovation Challenge 2026',
     shortTitle: 'Innovation Challenge',
     summary:
-      'A competitive event where student teams design and build automated systems.',
-    focus: 'Robotics & automation',
-    date: 'May 30, 2026',
+      'An online competition where students identify a real-world problem and propose a technology-driven solution.',
+    // Corrected from the 2026 content brief. The previous values (Delhi NCR,
+    // 9:00-17:00, May 30) predate it and described a different, offline event.
+    focus: 'Open innovation',
+    date: null,          // brief leaves every milestone as [DATE]
     duration: null,
-    time: '9:00 AM – 5:00 PM',
-    location: 'Delhi NCR',
-    fee: null,
+    time: null,
+    location: 'Online',
+    fee: '\u20B9100',
     registrationOpen: false,
+    // The brief's flow ends in a project upload; the other two events do not.
+    acceptsSubmissions: true,
+    // UI only — the database's event_settings.submissions_open is what enforces it.
+    submissionsOpen: false,
     hasDetailPage: true,
     legacySlugs: ['workshop'],
   },
@@ -70,6 +76,7 @@ export const getEvent = (slug) => events.find((event) => event.slug === slug);
 
 export const eventPath = (event) => `/events/${event.slug}`;
 export const registerPath = (event) => `/events/${event.slug}/register`;
+export const submitPath = (event) => `/events/${event.slug}/submit`;
 
 // Old URL -> current slug, used to build the redirect routes.
 export const legacyRedirects = events.flatMap((event) =>
