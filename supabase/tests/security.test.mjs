@@ -62,6 +62,9 @@ const imposter = (await db.query(`insert into auth.users (email, email_confirmed
 await expectOk('stranger who signed up sees 0 registrations', () => as('authenticated', stranger, 'select * from public.event_registrations'), r => r.rows.length === 0);
 await expectOk('unconfirmed account using the admin email sees 0', () => as('authenticated', imposter, 'select * from public.event_registrations'), r => r.rows.length === 0);
 await expectOk('confirmed admin sees the registrations', () => as('authenticated', admin, 'select * from public.event_registrations'), r => r.rows.length >= 1);
+// Supabase's default privileges grant anon EXECUTE on every new public
+// function; `revoke ... from public` does not undo that explicit grant.
+await expectOk('anon has no EXECUTE on is_admin()', () => db.query(`select has_function_privilege('anon','public.is_admin()','execute') v`), r => r.rows[0].v === false);
 await expectOk('is_admin() false for stranger', () => as('authenticated', stranger, 'select public.is_admin() a'), r => r.rows[0].a === false);
 await expectOk('is_admin() true for admin', () => as('authenticated', admin, 'select public.is_admin() a'), r => r.rows[0].a === true);
 await expectErr('anon cannot read the admin allow-list', () => as('anon', null, 'select * from public.admins'), 'permission denied');
@@ -120,6 +123,13 @@ await expectErr('root of bucket refused', () => up(`x.pdf`), 'row-level security
 await expectOk('2nd file accepted', () => up(`${code}/doc2.pdf`));
 await expectOk('3rd file accepted', () => up(`${code}/doc3.pdf`));
 await expectErr('4th file refused (storage-flood cap)', () => up(`${code}/doc4.pdf`), 'row-level security');
+// Found against production: a single multi-row insert (and, through the API,
+// parallel uploads) slipped past the 3-file cap because the count ran on a
+// snapshot taken before the statement's own rows existed.
+const second = (await reg('innovation-challenge', 'Burst Tester', 'burst@example.com', '9123456780', 'KV Hisar')).rows[0].code;
+await expectErr('4 files in ONE statement refused (cap holds within a statement)', () => as('anon', null,
+  `insert into storage.objects (bucket_id, name) select 'submissions', $1 || '/' || g || '.pdf' from generate_series(1, 4) g`, [second]), 'row-level security');
+await expectOk('...and none of the 4 were stored', () => db.query(`select count(*)::int n from storage.objects where name like $1`, [second + '/%']), r => r.rows[0].n === 0);
 await expectOk('anon cannot list anyone\'s files', () => as('anon', null, `select * from storage.objects where bucket_id='submissions'`), r => r.rows.length === 0);
 await expectOk('anon delete affects 0 files', () => as('anon', null, `delete from storage.objects where bucket_id='submissions' returning id`), r => r.rows.length === 0);
 await expectOk('anon overwrite affects 0 files', () => as('anon', null, `update storage.objects set name='hijack.pdf' where bucket_id='submissions' returning id`), r => r.rows.length === 0);
