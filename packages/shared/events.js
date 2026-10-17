@@ -45,7 +45,8 @@ export const events = [
     time: null,
     location: 'Online',
     fee: '\u20B9100',
-    registrationOpen: true, // keep in step with event_settings.registration_open in Supabase
+    registrationOpen: false, // keep in step with event_settings.registration_open in Supabase
+    closedLabel: 'Registration opens soon',
     // The brief's flow ends in a project upload; the other two events do not.
     acceptsSubmissions: true,
     // UI only — the database's event_settings.submissions_open is what enforces it.
@@ -87,7 +88,7 @@ export const legacyRedirects = events.flatMap((event) =>
 );
 
 export const eventStatusLabel = (event) =>
-  event.registrationOpen ? 'Registration open' : 'Coming soon';
+  event.registrationOpen ? 'Registration open' : event.closedLabel || 'Coming soon';
 
 // Until pricing is published, the fee line points at JSRO instead of a number.
 export const hasPublishedFee = (event) => Boolean(event.fee);
