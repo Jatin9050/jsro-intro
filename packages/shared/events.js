@@ -27,6 +27,10 @@ export const events = [
     location: 'Offline',
     fee: null,
     registrationOpen: false,
+    // Held back: not shown in the homepage list, and its page says it opens
+    // soon. Remove this line (and the ComingSoon route in App.jsx) to bring
+    // the full CanSat page back.
+    unlisted: true,
     hasDetailPage: true,
     legacySlugs: ['ai-robotics-bootcamp'],
   },
@@ -71,6 +75,9 @@ export const events = [
     legacySlugs: ['boochallengetcamp', 'bootcamp'],
   },
 ];
+
+// The events the homepage shows.
+export const listedEvents = events.filter((event) => !event.unlisted);
 
 export const getEvent = (slug) => events.find((event) => event.slug === slug);
 

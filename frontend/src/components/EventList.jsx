@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import { MoveUpRight } from 'lucide-react';
-import { events, eventPath, eventStatusLabel } from '@jsro/shared/events';
+import { listedEvents, eventPath, eventStatusLabel } from '@jsro/shared/events';
 import './EventList.css';
 
 export default function EventList() {
   return (
     <ol className="event-list">
-      {events.map((event) => (
+      {listedEvents.map((event) => (
         <li key={event.id}>
           <Link className="event-row jsro-reveal" to={eventPath(event)}>
             <i className="event-rule" aria-hidden="true" />

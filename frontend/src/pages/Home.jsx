@@ -8,6 +8,7 @@ import SiteFooter from '../components/SiteFooter';
 import EventList from '../components/EventList';
 import WorkshopForm from '../components/WorkshopForm';
 import JoinUsForm from '../components/JoinUsForm';
+import { listedEvents } from '@jsro/shared/events';
 import { site, whatsappUrl } from '@jsro/shared/site';
 import './Home.css';
 
@@ -247,7 +248,7 @@ export default function Home() {
 
         <section id="events" className="events-section" aria-labelledby="events-title">
           <div className="section-heading jsro-reveal">
-            <h2 id="events-title">Three ways in.</h2>
+            <h2 id="events-title">{listedEvents.length === 2 ? 'Two ways in.' : 'Ways in.'}</h2>
             <p>Each programme runs on its own timeline. Open one to see what it involves.</p>
           </div>
           <EventList />

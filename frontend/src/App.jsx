@@ -17,7 +17,7 @@ import Admin from './pages/Admin';
 import ThankYou from './pages/ThankYou';
 import NotFound from './pages/NotFound';
 
-import CansatProgram from './pages/events/CansatProgram';
+import EventSoon from './pages/events/EventSoon';
 import InnovationChallenge from './pages/events/InnovationChallenge';
 import JrcChallenge from './pages/events/JrcChallenge';
 
@@ -54,7 +54,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
 
-        <Route path="/events/cansat-program" element={<CansatProgram />} />
+        <Route path="/events/cansat-program" element={<EventSoon slug="cansat-program" />} />
         <Route path="/events/innovation-challenge" element={<InnovationChallenge />} />
         <Route path="/events/jrc-2026" element={<JrcChallenge />} />
         <Route path="/events/:slug/register" element={<EventRegister />} />
