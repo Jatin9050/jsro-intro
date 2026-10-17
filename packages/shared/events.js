@@ -71,6 +71,7 @@ export const events = [
     location: 'Offline',
     fee: null,
     registrationOpen: false,
+    unlisted: true, // held back, like the CanSat program
     hasDetailPage: true,
     legacySlugs: ['boochallengetcamp', 'bootcamp'],
   },

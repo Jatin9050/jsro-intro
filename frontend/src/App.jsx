@@ -19,7 +19,6 @@ import NotFound from './pages/NotFound';
 
 import EventSoon from './pages/events/EventSoon';
 import InnovationChallenge from './pages/events/InnovationChallenge';
-import JrcChallenge from './pages/events/JrcChallenge';
 
 import PrivacyPolicy from './pages/policies/PrivacyPolicy';
 import TermsAndConditions from './pages/policies/TermsAndConditions';
@@ -56,7 +55,7 @@ export default function App() {
 
         <Route path="/events/cansat-program" element={<EventSoon slug="cansat-program" />} />
         <Route path="/events/innovation-challenge" element={<InnovationChallenge />} />
-        <Route path="/events/jrc-2026" element={<JrcChallenge />} />
+        <Route path="/events/jrc-2026" element={<EventSoon slug="jrc-2026" />} />
         <Route path="/events/:slug/register" element={<EventRegister />} />
         <Route path="/events/:slug/submit" element={<EventSubmit />} />
         <Route path="/events" element={<Navigate to="/#events" replace />} />
