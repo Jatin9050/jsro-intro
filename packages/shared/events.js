@@ -27,10 +27,6 @@ export const events = [
     location: 'Offline',
     fee: null,
     registrationOpen: false,
-    // Held back: not shown in the homepage list, and its page says it opens
-    // soon. Remove this line (and the ComingSoon route in App.jsx) to bring
-    // the full CanSat page back.
-    unlisted: true,
     hasDetailPage: true,
     legacySlugs: ['ai-robotics-bootcamp'],
   },
@@ -49,7 +45,7 @@ export const events = [
     time: null,
     location: 'Online',
     fee: '\u20B9100',
-    registrationOpen: false,
+    registrationOpen: true, // keep in step with event_settings.registration_open in Supabase
     // The brief's flow ends in a project upload; the other two events do not.
     acceptsSubmissions: true,
     // UI only — the database's event_settings.submissions_open is what enforces it.
@@ -71,13 +67,12 @@ export const events = [
     location: 'Offline',
     fee: null,
     registrationOpen: false,
-    unlisted: true, // held back, like the CanSat program
     hasDetailPage: true,
     legacySlugs: ['boochallengetcamp', 'bootcamp'],
   },
 ];
 
-// The events the homepage shows.
+// The events the homepage shows. Set `unlisted: true` on an event to hide it.
 export const listedEvents = events.filter((event) => !event.unlisted);
 
 export const getEvent = (slug) => events.find((event) => event.slug === slug);

@@ -248,7 +248,7 @@ export default function Home() {
 
         <section id="events" className="events-section" aria-labelledby="events-title">
           <div className="section-heading jsro-reveal">
-            <h2 id="events-title">{{ 1: 'One way in.', 2: 'Two ways in.' }[listedEvents.length] || 'Ways in.'}</h2>
+            <h2 id="events-title">{{ 1: 'One way in.', 2: 'Two ways in.', 3: 'Three ways in.' }[listedEvents.length] || 'Ways in.'}</h2>
             <p>Each programme runs on its own timeline. Open one to see what it involves.</p>
           </div>
           <EventList />

@@ -4,7 +4,7 @@ import { animate, stagger, svg, utils } from 'animejs';
 import { ArrowUpRight, Minus, MoveRight, Plus } from 'lucide-react';
 
 import SiteFooter from '../../components/SiteFooter';
-import { getEvent, eventStatusLabel } from '@jsro/shared/events';
+import { getEvent, eventStatusLabel, registerPath } from '@jsro/shared/events';
 import { site, whatsappUrl } from '@jsro/shared/site';
 import {
   about, benefits, categories, eligibility, faqs, hero,
@@ -13,6 +13,18 @@ import {
 import './InnovationChallenge.css';
 
 const EVENT = getEvent('innovation-challenge');
+
+function RegisterButton({ onCopper = false }) {
+  const tone = onCopper ? ' on-copper' : '';
+  if (!EVENT.registrationOpen) {
+    return <span className={`copper-btn is-pending${tone}`} aria-disabled="true">Registration opens soon</span>;
+  }
+  return (
+    <Link className={`copper-btn${tone}`} to={registerPath(EVENT)}>
+      Register now <ArrowUpRight size={17} strokeWidth={2} aria-hidden="true" />
+    </Link>
+  );
+}
 
 /*
  * THE BOARD. A world of its own, scoped to this route, like CanSat.
@@ -277,7 +289,7 @@ export default function InnovationChallenge() {
               ))}
             </dl>
             <div className="board-actions hero-in">
-              <span className="copper-btn is-pending" aria-disabled="true">Registration opens soon</span>
+              <RegisterButton />
               <a className="silk-link" href="#scoring">How entries are scored</a>
             </div>
           </div>
@@ -371,11 +383,13 @@ export default function InnovationChallenge() {
         <section className="board-close" aria-labelledby="close-title">
           <h2 id="close-title">Don’t just have an idea. Build it.</h2>
           <p>
-            Entry is {FEE} and the whole challenge runs online. Registration has not opened
-            yet — message JSRO and you will hear the moment it does.
+            Entry is {FEE} and the whole challenge runs online.{' '}
+            {EVENT.registrationOpen
+              ? 'Register now to get your registration code, or message JSRO with any question.'
+              : 'Registration has not opened yet — message JSRO and you will hear the moment it does.'}
           </p>
           <div className="board-actions">
-            <span className="copper-btn is-pending on-copper" aria-disabled="true">Registration opens soon</span>
+            <RegisterButton onCopper />
             <a className="close-link" href={`mailto:${site.email}?subject=${encodeURIComponent('JSRO Innovation Challenge 2026')}`}>{site.email}</a>
             <a className="close-link" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
               WhatsApp <ArrowUpRight size={17} strokeWidth={1.8} aria-hidden="true" />

@@ -219,6 +219,7 @@
 .board-close h2 { font-family: "Chakra Petch", sans-serif; font-size: clamp(2.2rem, 5.2vw, 4.6rem); font-weight: 700; letter-spacing: -.02em; line-height: 1; margin: 0; max-width: 15ch; text-wrap: balance; }
 .board-close p { font-size: 1.06rem; font-weight: 500; line-height: 1.55; margin: 24px 0 0; max-width: 52ch; }
 .copper-btn.on-copper { border-color: var(--mask-deep); color: var(--mask-deep) !important; }
+.copper-btn.on-copper:not(.is-pending) { background: var(--mask-deep); border-color: transparent; color: var(--copper) !important; }
 .close-link { align-items: center; border-bottom: 1.5px solid var(--mask-deep); display: inline-flex; font-weight: 600; gap: 7px; padding-bottom: 3px; text-decoration: none; }
 .close-link:hover { opacity: .7; }
 .board-close a:focus-visible { outline-color: var(--mask-deep); }
