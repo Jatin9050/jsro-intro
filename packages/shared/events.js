@@ -45,7 +45,7 @@ export const events = [
     time: null,
     location: 'Online',
     fee: '\u20B9100',
-    registrationOpen: false, // keep in step with event_settings.registration_open in Supabase
+    registrationOpen: true, // keep in step with event_settings.registration_open in Supabase
     closedLabel: 'Registration opens soon',
     // The brief's flow ends in a project upload; the other two events do not.
     acceptsSubmissions: true,
@@ -54,7 +54,7 @@ export const events = [
     // UI only. Online payment is switched on in the database: set
     // event_settings.fee_paise for this event (see the payments migration), and
     // flip this to true so the thank-you page links to the payment page.
-    paymentsOpen: false,
+    paymentsOpen: true,
     hasDetailPage: true,
     legacySlugs: ['workshop'],
   },
