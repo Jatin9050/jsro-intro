@@ -87,9 +87,11 @@ export function route(handler, { deps = dependencies } = {}) {
 
 /*
  * The webhook route. Unlike the others it needs the exact bytes Razorpay sent,
- * so it reads the raw body itself (the Vercel function turns body parsing off).
- * If a platform has already parsed the body, the bytes are gone and the
- * signature cannot be checked: that fails closed, with a log line saying why.
+ * so it reads the raw stream itself.
+ *
+ * It must never read `request.body`: on Vercel that is a lazy property, and
+ * merely looking at it parses the body and uses up the stream. If the bytes
+ * are gone anyway the signature cannot match, so the request is refused (400).
  */
 const WEBHOOK_MAX_BYTES = 256 * 1024;
 
@@ -99,25 +101,18 @@ export function webhookRoute({ deps = () => ({ webhookSecret: readWebhookSecret(
 
     let raw;
     try {
-      if (request.body !== undefined && request.body !== null && !Buffer.isBuffer(request.body)) {
-        console.error('razorpay webhook: body was already parsed, so its signature cannot be checked');
-        return send(response, 500, { error: 'Webhook is not set up correctly.' });
+      const chunks = [];
+      let size = 0;
+      for await (const chunk of request) {
+        size += chunk.length;
+        if (size > WEBHOOK_MAX_BYTES) return send(response, 413, { error: 'Too large.' });
+        chunks.push(chunk);
       }
-      if (Buffer.isBuffer(request.body)) {
-        raw = request.body;
-      } else {
-        const chunks = [];
-        let size = 0;
-        for await (const chunk of request) {
-          size += chunk.length;
-          if (size > WEBHOOK_MAX_BYTES) return send(response, 413, { error: 'Too large.' });
-          chunks.push(chunk);
-        }
-        raw = Buffer.concat(chunks);
-      }
+      raw = Buffer.concat(chunks);
     } catch {
       return send(response, 400, { error: 'Could not read the request.' });
     }
+    if (!raw.length) console.error('razorpay webhook: empty body (was it already consumed?)');
 
     try {
       const signature = request.headers['x-razorpay-signature'];

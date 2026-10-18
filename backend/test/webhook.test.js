@@ -184,14 +184,31 @@ test('http: a database failure is a 500 (Razorpay retries) and leaks nothing', a
   });
 });
 
-test('http: a body a platform already parsed fails closed, never "succeeds"', async () => {
+test('http: the route never reads request.body (on Vercel that lazy property consumes the stream)', async () => {
   const { db, calls } = fakeDb();
   const handler = webhookRoute({ deps: () => ({ webhookSecret: SECRET, db }) });
+  const raw = Buffer.from(JSON.stringify(captured()));
+  let touched = false;
+  const request = {
+    method: 'POST',
+    headers: { 'x-razorpay-signature': sign(raw) },
+    get body() { touched = true; return {}; }, // what Vercel does: parse on first access
+    async *[Symbol.asyncIterator]() { yield raw; },
+  };
   const written = {};
-  const response = { writeHead(status) { written.status = status; }, end() {} };
-  await handler({ method: 'POST', headers: { 'x-razorpay-signature': 'a'.repeat(64) }, body: captured() }, response);
-  assert.equal(written.status, 500);
-  assert.deepEqual(calls.marked, []);
+  await handler(request, { writeHead(status) { written.status = status; }, end() {} });
+  assert.equal(touched, false);
+  assert.equal(written.status, 200);
+  assert.equal(calls.marked.length, 1);
+});
+
+test('http: an empty body (already consumed upstream) is refused, never recorded', async () => {
+  const { db, calls } = fakeDb();
+  await withRoute({ webhookSecret: SECRET, db }, async (base) => {
+    const response = await fetch(base, { method: 'POST', headers: { 'x-razorpay-signature': sign(Buffer.alloc(0)) } });
+    assert.equal(response.status, 400, 'a valid signature over nothing is still not a payment');
+    assert.deepEqual(calls.marked, []);
+  });
 });
 
 test('config: the webhook secret is required, and named when missing', () => {
