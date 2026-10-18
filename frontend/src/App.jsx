@@ -13,6 +13,7 @@ import Home from './pages/Home';
 import AboutUs from './pages/AboutUs';
 import EventRegister from './pages/EventRegister';
 import EventSubmit from './pages/EventSubmit';
+import EventPay from './pages/EventPay';
 import Admin from './pages/Admin';
 import ThankYou from './pages/ThankYou';
 import NotFound from './pages/NotFound';
@@ -58,6 +59,7 @@ export default function App() {
         <Route path="/events/jrc-2026" element={<EventSoon slug="jrc-2026" />} />
         <Route path="/events/:slug/register" element={<EventRegister />} />
         <Route path="/events/:slug/submit" element={<EventSubmit />} />
+        <Route path="/events/:slug/pay" element={<EventPay />} />
         <Route path="/events" element={<Navigate to="/#events" replace />} />
 
         <Route path="/thank-you" element={<ThankYou />} />

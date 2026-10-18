@@ -51,6 +51,10 @@ export const events = [
     acceptsSubmissions: true,
     // UI only — the database's event_settings.submissions_open is what enforces it.
     submissionsOpen: false,
+    // UI only. Online payment is switched on in the database: set
+    // event_settings.fee_paise for this event (see the payments migration), and
+    // flip this to true so the thank-you page links to the payment page.
+    paymentsOpen: false,
     hasDetailPage: true,
     legacySlugs: ['workshop'],
   },
@@ -81,6 +85,7 @@ export const getEvent = (slug) => events.find((event) => event.slug === slug);
 export const eventPath = (event) => `/events/${event.slug}`;
 export const registerPath = (event) => `/events/${event.slug}/register`;
 export const submitPath = (event) => `/events/${event.slug}/submit`;
+export const payPath = (event) => `/events/${event.slug}/pay`;
 
 // Old URL -> current slug, used to build the redirect routes.
 export const legacyRedirects = events.flatMap((event) =>

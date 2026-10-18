@@ -1,34 +1,49 @@
 /*
- * JSRO server — scaffold.
+ * JSRO server.
  *
  * It exists for the work the browser must not be trusted with:
  *
  *   1. Creating a Razorpay order (the key secret is server-only).
  *   2. Verifying the payment signature Razorpay returns.
- *   3. Writing `payment` / `paid` on a row, using the Supabase service role.
+ *   3. Writing `payment` on a row, using the Supabase service role.
  *
- * Nothing is implemented yet — the payment flow has not been specified. This
- * file fixes the shape so the work lands in one obvious place.
+ * The logic lives in ./payments and is the same code the Vercel functions in
+ * /api run in production. This file is the local way to run it:
+ *
+ *   npm run server          (reads backend/.env)
+ *
+ * and `npm start` in the frontend proxies /api to it.
  */
 
 import { createServer } from 'node:http';
 
+import { createOrderRoute, verifyPaymentRoute, webhookHttp } from './payments/http.js';
+
 const port = Number(process.env.PORT) || 8080;
 
+const routes = {
+  '/api/create-order': createOrderRoute,
+  '/api/verify-payment': verifyPaymentRoute,
+  '/api/razorpay-webhook': webhookHttp,
+};
+
 const server = createServer((request, response) => {
-  if (request.url === '/health') {
+  const { pathname } = new URL(request.url, 'http://localhost');
+
+  if (pathname === '/health') {
     response.writeHead(200, { 'content-type': 'application/json' });
     response.end(JSON.stringify({ ok: true, service: 'jsro-backend' }));
     return;
   }
 
-  response.writeHead(501, { 'content-type': 'application/json' });
-  response.end(
-    JSON.stringify({
-      error: 'Not implemented',
-      detail: 'Payment routes are not built yet. See jsro-backend/README.md.',
-    })
-  );
+  const handle = routes[pathname];
+  if (handle) {
+    handle(request, response);
+    return;
+  }
+
+  response.writeHead(404, { 'content-type': 'application/json' });
+  response.end(JSON.stringify({ error: 'Not found' }));
 });
 
 server.listen(port, () => {

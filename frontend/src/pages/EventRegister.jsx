@@ -123,7 +123,7 @@ export default function EventRegister() {
       return;
     }
 
-    navigate('/thank-you', { state: { eventSlug: event.slug, name: values.name, code } });
+    navigate('/thank-you', { state: { eventSlug: event.slug, name: values.name, email: values.email, code } });
   };
 
   return (

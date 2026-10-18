@@ -2,17 +2,21 @@
   "name": "backend",
   "version": "0.1.0",
   "private": true,
-  "description": "JSRO server \u2014 payment orders, signature verification, and any write the browser must not be trusted with.",
+  "description": "JSRO server — payment orders, signature verification, and any write the browser must not be trusted with.",
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "dev": "node --watch src/index.js",
-    "start": "node src/index.js"
+    "dev": "node --watch --env-file=.env src/index.js",
+    "start": "node --env-file=.env src/index.js",
+    "test": "node --test test/"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
-    "@jsro/shared": "*"
+    "@jsro/shared": "*",
+    "@supabase/supabase-js": "^2.109.0",
+    "razorpay": "^2.9.8",
+    "ws": "^8.22.0"
   }
 }

@@ -4,7 +4,7 @@ import { ArrowUpRight, Check, Copy } from 'lucide-react';
 
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
-import { getEvent, submitPath } from '@jsro/shared/events';
+import { getEvent, payPath, submitPath } from '@jsro/shared/events';
 import { site, whatsappUrl } from '@jsro/shared/site';
 import './ThankYou.css';
 
@@ -76,10 +76,18 @@ export default function ThankYou() {
           )}
 
           <h2>About payment</h2>
-          <p>
-            Online payment is not live on this site yet, so nothing is owed right now. JSRO
-            will tell you the fee and how to pay it when your place is confirmed.
-          </p>
+          {event?.paymentsOpen && event.fee ? (
+            <p>
+              The entry fee is {event.fee}. You can{' '}
+              <Link to={payPath(event)} state={{ code, email: state?.email }}>pay it online</Link>{' '}
+              now, or later with your registration code.
+            </p>
+          ) : (
+            <p>
+              Online payment is not live on this site yet, so nothing is owed right now. JSRO
+              will tell you the fee and how to pay it when your place is confirmed.
+            </p>
+          )}
 
           <h2>If you need JSRO</h2>
           <p>

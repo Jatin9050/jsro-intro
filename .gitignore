@@ -41,3 +41,4 @@ packages/*/package-lock.json
 
 # Supabase CLI scratch — pooler-url holds a live DB connection string
 supabase/.temp/
+.vercel
