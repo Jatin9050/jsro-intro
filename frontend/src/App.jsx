@@ -5,6 +5,7 @@ import {
   Route,
   Routes,
   useLocation,
+  useParams,
 } from 'react-router-dom';
 
 import { legacyRedirects } from '@jsro/shared/events';
@@ -13,7 +14,6 @@ import Home from './pages/Home';
 import AboutUs from './pages/AboutUs';
 import EventRegister from './pages/EventRegister';
 import EventSubmit from './pages/EventSubmit';
-import EventPay from './pages/EventPay';
 import Admin from './pages/Admin';
 import ThankYou from './pages/ThankYou';
 import NotFound from './pages/NotFound';
@@ -47,6 +47,11 @@ function ScrollBehaviour() {
   return null;
 }
 
+function PayRedirect() {
+  const { slug } = useParams();
+  return <Navigate to={`/events/${slug}/register`} replace />;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -59,7 +64,8 @@ export default function App() {
         <Route path="/events/jrc-2026" element={<EventSoon slug="jrc-2026" />} />
         <Route path="/events/:slug/register" element={<EventRegister />} />
         <Route path="/events/:slug/submit" element={<EventSubmit />} />
-        <Route path="/events/:slug/pay" element={<EventPay />} />
+        {/* The separate payment page is gone: paying is part of registering. */}
+        <Route path="/events/:slug/pay" element={<PayRedirect />} />
         <Route path="/events" element={<Navigate to="/#events" replace />} />
 
         <Route path="/thank-you" element={<ThankYou />} />

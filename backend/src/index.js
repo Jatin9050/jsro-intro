@@ -17,7 +17,7 @@
 
 import { createServer } from 'node:http';
 
-import { createOrderRoute, verifyPaymentRoute, webhookHttp } from './payments/http.js';
+import { createOrderRoute, findRegistrationRoute, verifyPaymentRoute, webhookHttp } from './payments/http.js';
 
 const port = Number(process.env.PORT) || 8080;
 
@@ -25,6 +25,7 @@ const routes = {
   '/api/create-order': createOrderRoute,
   '/api/verify-payment': verifyPaymentRoute,
   '/api/razorpay-webhook': webhookHttp,
+  '/api/find-registration': findRegistrationRoute,
 };
 
 const server = createServer((request, response) => {

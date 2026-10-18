@@ -6,7 +6,7 @@ import { test } from 'node:test';
 
 import { ConfigError, readConfig } from '../src/payments/config.js';
 import { createDb } from '../src/payments/db.js';
-import { createOrder, verifyPayment } from '../src/payments/handlers.js';
+import { createOrder, findRegistration, verifyPayment } from '../src/payments/handlers.js';
 import { route } from '../src/payments/http.js';
 import { sign, signatureMatches } from '../src/payments/signature.js';
 
@@ -19,10 +19,11 @@ const PAYMENT = 'pay_TestPayment0001';
 
 /* ---- fakes: no network, every call recorded ---- */
 function fakes(options = {}) {
-  const { payments = [], registration = { id: 'reg-1', event_slug: 'innovation-challenge' }, razorpayError } = options;
+  const { payments = [], razorpayError } = options;
   // `in`, not defaults: an explicit undefined or null must reach the code under test.
   const fee = 'fee' in options ? options.fee : 10000;
-  const calls = { orders: [], inserted: [], marked: [], lookups: [] };
+  const startError = options.startError;
+  const calls = { orders: [], inserted: [], marked: [], started: [] };
   const state = { payments: [...payments] };
   const razorpay = {
     orders: {
@@ -34,11 +35,11 @@ function fakes(options = {}) {
     },
   };
   const db = {
-    async findRegistration(code, email) {
-      calls.lookups.push([code, email]);
-      return code === CODE && email === EMAIL ? registration : null;
+    async startPaidRegistration(details) {
+      calls.started.push(details);
+      if (startError) throw startError;
+      return { id: 'reg-1', event_slug: details.eventSlug, fee };
     },
-    async getEventFee() { return fee; },
     async listPayments() { return state.payments; },
     async insertPayment(row) { calls.inserted.push(row); },
     async findPaymentByOrder(orderId) { return state.payments.find((p) => p.razorpay_order_id === orderId) ?? null; },
@@ -47,19 +48,26 @@ function fakes(options = {}) {
       const row = state.payments.find((p) => p.razorpay_order_id === args.orderId && p.status === 'created');
       if (!row) return false;
       row.status = 'paid';
+      row.razorpay_payment_id = args.paymentId;
       return true;
+    },
+    async getCodeForOrder(orderId) { return state.payments.some((p) => p.razorpay_order_id === orderId) ? CODE : null; },
+    async findPaidByPayment(paymentId) {
+      const row = state.payments.find((p) => p.razorpay_payment_id === paymentId && p.status === 'paid');
+      return row ? { email: EMAIL, registration_code: CODE, event_slug: 'innovation-challenge' } : null;
     },
   };
   return { deps: { config, razorpay, db }, calls, state };
 }
 const pending = { razorpay_order_id: ORDER, amount_paise: 10000, status: 'created' };
-const goodBody = { registration_code: CODE, email: EMAIL };
+const goodBody = { event_slug: 'innovation-challenge', name: 'Aarav Mehta', email: EMAIL, phone: '9876543210', school: 'DPS Hisar' };
 const verification = (over = {}) => ({
   razorpay_order_id: ORDER,
   razorpay_payment_id: PAYMENT,
   razorpay_signature: sign(ORDER, PAYMENT, SECRET),
   ...over,
 });
+const p0001 = (message) => Object.assign(new Error(message), { code: 'P0001' });
 
 /* ------------------------------------------------------------- signature */
 test('signature matches an independently computed HMAC-SHA256 (openssl)', () => {
@@ -78,53 +86,63 @@ test('signature check rejects wrong, short, non-hex and non-string signatures', 
 });
 
 /* ---------------------------------------------------------- create order */
-test('create-order: bad input is refused before anything is called', async () => {
-  for (const body of [null, undefined, 'x', [], {}, { registration_code: CODE }, { email: EMAIL },
-    { registration_code: 'nope', email: EMAIL }, { registration_code: CODE, email: 'not-an-email' },
-    { registration_code: { $ne: '' }, email: EMAIL }, { registration_code: CODE, email: ['a@b.co'] }]) {
+test('create-order: an incomplete or malformed form is refused before anything is called', async () => {
+  for (const body of [null, undefined, 'x', [], {}, { ...goodBody, name: '' }, { ...goodBody, email: '   ' },
+    { ...goodBody, event_slug: '../../etc' }, { ...goodBody, event_slug: 'Innovation Challenge' }, { ...goodBody, phone: 9876543210 },
+    { ...goodBody, school: { $ne: '' } }, { ...goodBody, name: 'x'.repeat(201) }]) {
     const { deps, calls } = fakes();
     const result = await createOrder(body, deps);
-    assert.equal(result.status, 400, JSON.stringify(body));
-    assert.deepEqual(calls.lookups, []);
+    assert.equal(result.status, 400, JSON.stringify(body)?.slice(0, 80));
+    assert.deepEqual(calls.started, []);
     assert.deepEqual(calls.orders, []);
   }
 });
 
-test('create-order: unknown code and wrong email give the identical answer', async () => {
-  const { deps } = fakes();
-  const wrongEmail = await createOrder({ registration_code: CODE, email: 'someone@else.co' }, deps);
-  const wrongCode = await createOrder({ registration_code: 'IC26-AAAA-BBBB', email: EMAIL }, deps);
-  assert.equal(wrongEmail.status, 400);
-  assert.deepEqual(wrongEmail, wrongCode);
+test('create-order: the form goes to the database function as given (it does the real validation)', async () => {
+  const { deps, calls } = fakes();
+  await createOrder(goodBody, deps);
+  assert.deepEqual(calls.started, [{ eventSlug: 'innovation-challenge', name: 'Aarav Mehta', email: EMAIL, phone: '9876543210', school: 'DPS Hisar' }]);
+});
+
+test('create-order: the database refusing (closed, invalid, already paid) is a 400 with its own message', async () => {
+  for (const message of ['Registration for this event is not open yet.', 'Enter a valid phone number.']) {
+    const { deps, calls } = fakes({ startError: p0001(message) });
+    const result = await createOrder(goodBody, deps);
+    assert.equal(result.status, 400);
+    assert.equal(result.body.error, message);
+    assert.deepEqual(calls.orders, []);
+  }
+  const { deps } = fakes({ startError: p0001('This email is already registered and paid for this event. Use "Already paid? Get your code" to see your registration code.') });
+  const paid = await createOrder(goodBody, deps);
+  assert.equal(paid.status, 400);
+  assert.equal(paid.body.already_paid, true);
+});
+
+test('create-order: any other database failure is not shown to the visitor', async () => {
+  const { deps } = fakes({ startError: Object.assign(new Error('connection refused db.internal'), { code: '08006' }) });
+  await assert.rejects(createOrder(goodBody, deps), /connection refused/); // the route turns this into a generic 500
 });
 
 test('create-order: the amount comes from the database, never from the request', async () => {
   const { deps, calls } = fakes({ fee: 10000 });
   const result = await createOrder({ ...goodBody, amount: 1, currency: 'USD', fee_paise: 100 }, deps);
   assert.equal(result.status, 200);
-  assert.equal(calls.orders.length, 1);
   assert.equal(calls.orders[0].amount, 10000);
   assert.equal(calls.orders[0].currency, 'INR');
-  assert.equal(calls.orders[0].receipt, CODE);
+  assert.equal(calls.orders[0].receipt, 'reg-1');
 });
 
-test('create-order: success returns the order, records it, and carries no secret', async () => {
+test('create-order: success returns the order and never the registration code or a secret', async () => {
   const { deps, calls } = fakes();
   const result = await createOrder(goodBody, deps);
   assert.equal(result.status, 200);
   assert.deepEqual(result.body, { order_id: ORDER, amount: 10000, currency: 'INR', key_id: config.keyId });
   assert.deepEqual(calls.inserted, [{ registration_id: 'reg-1', razorpay_order_id: ORDER, amount_paise: 10000 }]);
   assert.ok(!JSON.stringify(result).includes(SECRET));
+  assert.ok(!JSON.stringify(result).includes(CODE), 'the code is only released after payment');
 });
 
-test('create-order: code and email are normalised (case, spaces)', async () => {
-  const { deps, calls } = fakes();
-  const result = await createOrder({ registration_code: `  ${CODE.toLowerCase()} `, email: '  Aarav@Example.COM ' }, deps);
-  assert.equal(result.status, 200);
-  assert.deepEqual(calls.lookups, [[CODE, EMAIL]]);
-});
-
-test('create-order: payment off (no fee) or below Razorpay minimum -> 409, Razorpay never called', async () => {
+test('create-order: no fee, or a fee below the Razorpay minimum -> 409, Razorpay never called', async () => {
   for (const fee of [null, undefined, 0, 99, -500, 100.5, '10000']) {
     const { deps, calls } = fakes({ fee });
     const result = await createOrder(goodBody, deps);
@@ -185,11 +203,12 @@ test('create-order: a Razorpay answer that does not match what we asked for is n
 });
 
 /* -------------------------------------------------------- verify payment */
-test('verify: a genuine signature marks the order paid', async () => {
+test('verify: a genuine signature marks the order paid and only then hands out the code', async () => {
   const { deps, calls } = fakes({ payments: [{ ...pending }] });
   const result = await verifyPayment(verification(), deps);
   assert.equal(result.status, 200);
   assert.equal(result.body.verified, true);
+  assert.equal(result.body.registration_code, CODE);
   assert.deepEqual(calls.marked, [{ orderId: ORDER, paymentId: PAYMENT }]);
 });
 
@@ -205,6 +224,7 @@ test('verify: a wrong signature is a 400 and nothing is marked paid', async () =
     const result = await verifyPayment(body, deps);
     assert.equal(result.status, 400);
     assert.deepEqual(calls.marked, []);
+    assert.ok(!JSON.stringify(result).includes(CODE), 'no code for a forged payment');
   }
 });
 
@@ -232,6 +252,7 @@ test('verify: repeating it is harmless', async () => {
   const again = await verifyPayment(verification(), deps);
   assert.equal(again.status, 200);
   assert.equal(again.body.already_recorded, true);
+  assert.equal(again.body.registration_code, CODE, 'the webhook may have recorded it first; the buyer still gets the code');
   assert.equal(calls.marked.length, 1);
 });
 
@@ -240,6 +261,32 @@ test('verify: losing a race with another verification still ends paid', async ()
   deps.db.markPaid = async () => { state.payments[0].status = 'paid'; return false; };
   const result = await verifyPayment(verification(), deps);
   assert.equal(result.status, 200);
+});
+
+/* ------------------------------------------- already paid? get your code */
+test('find-registration: the email and a paid payment id give back the code', async () => {
+  const { deps } = fakes({ payments: [{ ...pending, status: 'paid', razorpay_payment_id: PAYMENT }] });
+  const result = await findRegistration({ email: ' Aarav@Example.com ', razorpay_payment_id: PAYMENT }, deps);
+  assert.equal(result.status, 200);
+  assert.equal(result.body.registration_code, CODE);
+});
+
+test('find-registration: wrong email, unknown payment and unpaid payment all get the same answer', async () => {
+  const { deps } = fakes({ payments: [{ ...pending, status: 'paid', razorpay_payment_id: PAYMENT }, { ...pending, razorpay_order_id: 'order_Unpaid000001', razorpay_payment_id: 'pay_NotPaidYet0001' }] });
+  const answers = await Promise.all([
+    findRegistration({ email: 'someone@else.co', razorpay_payment_id: PAYMENT }, deps),
+    findRegistration({ email: EMAIL, razorpay_payment_id: 'pay_DoesNotExist01' }, deps),
+    findRegistration({ email: EMAIL, razorpay_payment_id: 'pay_NotPaidYet0001' }, deps),
+  ]);
+  for (const answer of answers) assert.equal(answer.status, 404);
+  assert.equal(new Set(answers.map((a) => JSON.stringify(a))).size, 1);
+});
+
+test('find-registration: malformed input is a 400', async () => {
+  const { deps } = fakes();
+  for (const body of [null, {}, { email: EMAIL }, { email: EMAIL, razorpay_payment_id: 'order_x' }, { email: 'nope', razorpay_payment_id: PAYMENT }, { email: EMAIL, razorpay_payment_id: ["pay_x'; --"] }]) {
+    assert.equal((await findRegistration(body, deps)).status, 400, JSON.stringify(body));
+  }
 });
 
 /* ------------------------------------------------------------------ http */
@@ -281,7 +328,7 @@ test('http: missing configuration is a generic 500 that names no variable', asyn
 
 test('http: an unexpected crash does not leak its message', async () => {
   const { deps } = fakes();
-  deps.db.findRegistration = async () => { throw new Error('connection refused at db.internal:5432 password=hunter2'); };
+  deps.db.startPaidRegistration = async () => { throw new Error('connection refused at db.internal:5432 password=hunter2'); };
   await withServer(createOrder, deps, async (base) => {
     const response = await post(base, goodBody);
     assert.equal(response.status, 500);
@@ -319,11 +366,19 @@ function fakeSupabase(responses = {}) {
 }
 const has = (step, op, ...args) => step.ops.some((o) => o[0] === op && args.every((a, i) => JSON.stringify(o[i + 1]) === JSON.stringify(a)));
 
-test('db: lookups are bound equality filters on code and lower-cased email', async () => {
-  const { client, log } = fakeSupabase({ 'event_registrations.select': { data: { id: 'reg-1', event_slug: 'x' }, error: null } });
-  const db = createDb(config, client);
-  await db.findRegistration(CODE, EMAIL);
-  assert.ok(has(log[0], 'eq', 'registration_code', CODE) && has(log[0], 'eq', 'email', EMAIL));
+test('db: the registration goes to the database function as bound parameters, and no code is read', async () => {
+  const calls = [];
+  const client = { rpc: async (name, args) => { calls.push([name, args]); return { data: [{ reg_id: 'reg-1', reg_event_slug: 'innovation-challenge', reg_fee_paise: 10000 }], error: null }; } };
+  const result = await createDb(config, client).startPaidRegistration({ eventSlug: 'innovation-challenge', name: 'A B', email: 'a@b.co', phone: '9876543210', school: 'S' });
+  assert.deepEqual(calls, [['start_paid_registration', { p_event_slug: 'innovation-challenge', p_name: 'A B', p_email: 'a@b.co', p_phone: '9876543210', p_school: 'S' }]]);
+  assert.deepEqual(result, { id: 'reg-1', event_slug: 'innovation-challenge', fee: 10000 });
+});
+
+test('db: the code lookup for "already paid" only matches PAID payments', async () => {
+  const { client, log } = fakeSupabase({ 'payments.select': { data: { status: 'paid', event_registrations: { email: 'Aarav@Example.com', registration_code: CODE, event_slug: 'x' } }, error: null } });
+  const found = await createDb(config, client).findPaidByPayment(PAYMENT);
+  assert.ok(has(log[0], 'eq', 'razorpay_payment_id', PAYMENT) && has(log[0], 'eq', 'status', 'paid'));
+  assert.equal(found.email, 'aarav@example.com');
 });
 
 test('db: markPaid only touches rows still "created", and skips the registration if nothing changed', async () => {
@@ -340,7 +395,7 @@ test('db: markPaid only touches rows still "created", and skips the registration
 
 test('db: the real Supabase client can be constructed (no network) on this Node version', () => {
   const db = createDb({ supabaseUrl: 'https://example.supabase.co', serviceRoleKey: 'service-role-test' });
-  assert.equal(typeof db.findRegistration, 'function');
+  assert.equal(typeof db.startPaidRegistration, 'function');
 });
 
 test('db: a database error is thrown, never swallowed', async () => {

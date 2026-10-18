@@ -1,16 +1,16 @@
 import { signatureMatches } from './signature.js';
-import { parseRegistration, parseVerification, ORDER_SHAPE } from './validate.js';
+import { parseLookup, parseRegistration, parseVerification, ORDER_SHAPE } from './validate.js';
 
 /*
- * The two payment endpoints, as plain functions: parsed JSON body in, a
+ * The payment endpoints, as plain functions: parsed JSON body in, a
  * { status, body } answer out. The Razorpay client and the database are passed
  * in, so the same code serves the Node server, the Vercel functions and the
  * tests.
  *
- * What the browser is trusted with: a registration code + email (the same pair
- * that authorises a project submission) and the three values Razorpay's
- * checkout hands back. It is never trusted with an amount, a payment status or
- * a row id.
+ * Registering for an event with a fee and paying are one step. The browser
+ * sends the registration form; the registration code (the credential for
+ * submitting a project) comes back only after the payment is verified. The
+ * browser is never trusted with an amount, a payment status or a row id.
  */
 
 const MIN_PAISE = 100;
@@ -18,19 +18,27 @@ const MIN_PAISE = 100;
 const reply = (status, body) => ({ status, body });
 const fail = (status, error, extra = {}) => reply(status, { error, ...extra });
 
-/* ------------------------------------------------------------ create order */
+/* ------------------------------------------------- register + create order */
 export async function createOrder(body, { config, razorpay, db }) {
-  const registration = parseRegistration(body);
-  if (!registration) return fail(400, 'Enter your registration code and the email you registered with.');
+  const details = parseRegistration(body);
+  if (!details) return fail(400, 'Fill in every field of the registration form.');
 
-  const found = await db.findRegistration(registration.code, registration.email);
-  // One answer for "no such code" and "wrong email", so this cannot be used to
-  // find out which codes exist.
-  if (!found) return fail(400, 'That registration code and email do not match.');
+  let found;
+  try {
+    // Creates the registration, or finds this email's unpaid one. Returns the
+    // id and the fee, never the code.
+    found = await db.startPaidRegistration(details);
+  } catch (error) {
+    // P0001 messages are written for the visitor (closed, invalid phone, already paid...).
+    if (error?.code === 'P0001' && typeof error.message === 'string') {
+      return fail(400, error.message, /already registered and paid/.test(error.message) ? { already_paid: true } : {});
+    }
+    throw error;
+  }
 
-  const amount = await db.getEventFee(found.event_slug);
+  const amount = found.fee;
   if (!Number.isInteger(amount) || amount < MIN_PAISE) {
-    return fail(409, 'Online payment is not open for this event yet. JSRO will contact you with the fee and how to pay it.');
+    return fail(409, 'Online payment is not open for this event yet.');
   }
 
   const payments = await db.listPayments(found.id);
@@ -50,8 +58,8 @@ export async function createOrder(body, { config, razorpay, db }) {
     order = await razorpay.orders.create({
       amount,
       currency: 'INR',
-      receipt: registration.code,
-      notes: { registration_code: registration.code, event: found.event_slug },
+      receipt: found.id, // a uuid, 36 characters (Razorpay allows 40)
+      notes: { registration_id: found.id, event: found.event_slug },
     });
   } catch (error) {
     // Log what went wrong for us; tell the visitor only what they can act on.
@@ -83,14 +91,31 @@ export async function verifyPayment(body, { config, db }) {
   // A valid signature on an order we never created is not ours to record.
   if (!payment) return fail(404, 'No payment is waiting for that order.');
 
-  if (payment.status === 'paid') return reply(200, { verified: true, already_recorded: true });
-
-  const marked = await db.markPaid({ orderId: details.orderId, paymentId: details.paymentId });
-  if (!marked) {
-    // Lost a race with another verification of the same order; it is paid.
-    const again = await db.findPaymentByOrder(details.orderId);
-    if (again?.status !== 'paid') return fail(500, 'The payment was received but could not be recorded. Contact JSRO with your registration code.');
-    return reply(200, { verified: true, already_recorded: true });
+  let alreadyRecorded = payment.status === 'paid';
+  if (!alreadyRecorded) {
+    const marked = await db.markPaid({ orderId: details.orderId, paymentId: details.paymentId });
+    if (!marked) {
+      // Lost a race with another verification (or the webhook); it is paid.
+      const again = await db.findPaymentByOrder(details.orderId);
+      if (again?.status !== 'paid') return fail(500, 'The payment was received but could not be recorded. Contact JSRO with your payment ID.');
+      alreadyRecorded = true;
+    }
   }
-  return reply(200, { verified: true });
+
+  // Only now, with a verified payment, is the registration code handed out.
+  const code = await db.getCodeForOrder(details.orderId);
+  return reply(200, { verified: true, registration_code: code, ...(alreadyRecorded ? { already_recorded: true } : {}) });
+}
+
+/* -------------------------------------------- already paid? get your code */
+export async function findRegistration(body, { db }) {
+  const lookup = parseLookup(body);
+  if (!lookup) return fail(400, 'Enter the email you registered with and the payment ID from your Razorpay receipt (it starts with pay_).');
+
+  const found = await db.findPaidByPayment(lookup.paymentId);
+  // One answer for every miss, so this cannot be used to probe payments or emails.
+  if (!found || found.email !== lookup.email || !found.registration_code) {
+    return fail(404, 'No paid registration matches that email and payment ID.');
+  }
+  return reply(200, { registration_code: found.registration_code, event_slug: found.event_slug });
 }

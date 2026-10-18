@@ -1,11 +1,12 @@
 /*
  * Razorpay Standard Checkout, browser side.
  *
- * What happens: ask our server for an order (it decides the amount), open
- * Razorpay's checkout for that order, and when it succeeds hand the three
- * values Razorpay returns to our server to verify. Nothing here knows the key
- * secret, and nothing here says how much is owed or whether something was
- * paid; the server does.
+ * Registering for an event with a fee and paying are one step: send the
+ * registration form to our server (it creates the registration and an order
+ * for the fee it looks up), open Razorpay's checkout for that order, and when
+ * it succeeds hand the three values Razorpay returns to our server to verify.
+ * The registration code comes back only from that verification. Nothing here
+ * knows the key secret, and nothing here decides an amount or a payment status.
  */
 
 export class PaymentError extends Error {
@@ -59,8 +60,8 @@ async function postJson(path, body) {
   try { data = await response.json(); } catch { /* not JSON */ }
 
   if (!response.ok) {
-    // 400 and 409 carry a message written for the visitor; anything else is a fault.
-    const message = (response.status === 400 || response.status === 409) && typeof data?.error === 'string'
+    // 400, 404 and 409 carry a message written for the visitor; anything else is a fault.
+    const message = [400, 404, 409].includes(response.status) && typeof data?.error === 'string'
       ? data.error
       : GENERIC;
     throw new PaymentError(message, { alreadyPaid: data?.already_paid === true });
@@ -69,16 +70,17 @@ async function postJson(path, body) {
 }
 
 /*
- * Runs the whole payment. Resolves with
- *   { status: 'paid' }         verified by the server
+ * Registers and pays. `details` is the registration form:
+ * { event_slug, name, email, phone, school }. Resolves with
+ *   { status: 'paid', registrationCode, paymentId }  verified by the server
  *   { status: 'cancelled' }    the visitor closed the window; nothing was taken
- *   { status: 'unconfirmed' }  Razorpay reported success but we could not verify it
- * and throws PaymentError if the order could not be created at all.
+ *   { status: 'unconfirmed', paymentId }  Razorpay reported success but we could not verify it
+ * and throws PaymentError if the registration or the order could not be made.
  * `onFailed(message)` is called when an attempt fails inside the window (the
  * visitor can retry there, so the promise stays open).
  */
-export async function payForRegistration({ code, email, description, onFailed }) {
-  const order = await postJson('/api/create-order', { registration_code: code, email });
+export async function payForRegistration({ details, description, onFailed }) {
+  const order = await postJson('/api/create-order', details);
   if (typeof order?.order_id !== 'string' || !Number.isInteger(order.amount)) throw new PaymentError(GENERIC);
 
   const Razorpay = await loadCheckout();
@@ -92,18 +94,22 @@ export async function payForRegistration({ code, email, description, onFailed })
       name: 'JSRO',
       description,
       image: `${window.location.origin}/logojsro.jpeg`,
-      prefill: { email },
+      prefill: {
+        name: details.name,
+        email: details.email,
+        contact: String(details.phone || '').replace(/[^0-9+]/g, ''),
+      },
       theme: { color: '#ff4f00' },
       handler: async (response) => {
         try {
-          await postJson('/api/verify-payment', {
+          const verified = await postJson('/api/verify-payment', {
             razorpay_order_id: response.razorpay_order_id,
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_signature: response.razorpay_signature,
           });
-          resolve({ status: 'paid' });
+          resolve({ status: 'paid', registrationCode: verified?.registration_code || null, paymentId: response.razorpay_payment_id });
         } catch {
-          resolve({ status: 'unconfirmed' });
+          resolve({ status: 'unconfirmed', paymentId: response.razorpay_payment_id });
         }
       },
       modal: { ondismiss: () => resolve({ status: 'cancelled' }) },
@@ -114,4 +120,11 @@ export async function payForRegistration({ code, email, description, onFailed })
     });
     checkout.open();
   });
+}
+
+/* "Already paid? Get your code": the email plus the payment id from Razorpay's receipt. */
+export async function findRegistrationCode({ email, paymentId }) {
+  const found = await postJson('/api/find-registration', { email, razorpay_payment_id: paymentId });
+  if (typeof found?.registration_code !== 'string') throw new PaymentError(GENERIC);
+  return found.registration_code;
 }

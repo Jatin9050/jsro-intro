@@ -19,18 +19,33 @@ export function createDb(config, client = createClient(config.supabaseUrl, confi
   realtime: { transport: ws },
 })) {
   return {
-    async findRegistration(code, email) {
-      return check(await client.from('event_registrations')
-        .select('id, event_slug')
-        .eq('registration_code', code)
-        .eq('email', email) // stored lower-cased by register_participant
-        .maybeSingle());
+    /* Database function: validates, creates or reuses the unpaid registration. */
+    async startPaidRegistration({ eventSlug, name, email, phone, school }) {
+      const rows = check(await client.rpc('start_paid_registration', {
+        p_event_slug: eventSlug, p_name: name, p_email: email, p_phone: phone, p_school: school,
+      }));
+      const row = rows?.[0];
+      return row ? { id: row.reg_id, event_slug: row.reg_event_slug, fee: row.reg_fee_paise } : null;
     },
 
-    async getEventFee(slug) {
-      if (!slug) return null;
-      const row = check(await client.from('event_settings').select('fee_paise').eq('slug', slug).maybeSingle());
-      return row?.fee_paise ?? null;
+    /* The code of the registration an order belongs to. Called only after verification. */
+    async getCodeForOrder(orderId) {
+      const row = check(await client.from('payments')
+        .select('event_registrations(registration_code)')
+        .eq('razorpay_order_id', orderId)
+        .maybeSingle());
+      return row?.event_registrations?.registration_code ?? null;
+    },
+
+    /* The registration a PAID payment belongs to, for "Already paid? Get your code". */
+    async findPaidByPayment(paymentId) {
+      const row = check(await client.from('payments')
+        .select('status, event_registrations(email, registration_code, event_slug)')
+        .eq('razorpay_payment_id', paymentId)
+        .eq('status', 'paid')
+        .maybeSingle());
+      const reg = row?.event_registrations;
+      return reg ? { email: (reg.email || '').toLowerCase(), registration_code: reg.registration_code, event_slug: reg.event_slug } : null;
     },
 
     async listPayments(registrationId) {

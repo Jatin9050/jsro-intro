@@ -7,6 +7,7 @@ import SiteFooter from '../components/SiteFooter';
 import { getEvent, eventPath } from '@jsro/shared/events';
 import { site } from '@jsro/shared/site';
 import { supabase } from '../lib/supabase';
+import { findRegistrationCode, payForRegistration } from '../lib/payments';
 import { collectErrors, focusFirstError, isEmail } from '../lib/formErrors';
 import '../components/Form.css';
 import './EventRegister.css';
@@ -21,10 +22,70 @@ const RULES = [
   { field: 'school', message: 'Tell us where you are studying or working.' },
 ];
 
+const PAYMENT_ID = /^pay_[A-Za-z0-9]{8,40}$/;
+
+// For someone who paid but never saw their code (closed the tab, lost
+// connection): the email plus the payment ID from Razorpay's receipt email.
+function FindCode() {
+  const [email, setEmail] = useState('');
+  const [paymentId, setPaymentId] = useState('');
+  const [result, setResult] = useState({ busy: false, code: null, error: null });
+
+  const submit = async (e) => {
+    e.preventDefault();
+    if (!isEmail(email.trim()) || !PAYMENT_ID.test(paymentId.trim())) {
+      setResult({ busy: false, code: null, error: 'Enter your email and the payment ID from your Razorpay receipt email. It starts with pay_.' });
+      return;
+    }
+    setResult({ busy: true, code: null, error: null });
+    try {
+      const code = await findRegistrationCode({ email: email.trim(), paymentId: paymentId.trim() });
+      setResult({ busy: false, code, error: null });
+    } catch (error) {
+      setResult({ busy: false, code: null, error: error.message });
+    }
+  };
+
+  return (
+    <details className="find-code">
+      <summary>Already paid? Get your code</summary>
+      <p className="jsro-form-hint">
+        Use the email you registered with and the payment ID from the receipt Razorpay emailed you.
+      </p>
+      <form className="jsro-form" onSubmit={submit} noValidate>
+        <div className="jsro-form-row">
+          <label htmlFor="find-email">Email you registered with</label>
+          <input id="find-email" type="email" inputMode="email" autoComplete="email" spellCheck="false" autoCapitalize="none"
+            value={email} onChange={(e) => setEmail(e.target.value)} disabled={result.busy} />
+        </div>
+        <div className="jsro-form-row">
+          <label htmlFor="find-payment">Payment ID</label>
+          <input id="find-payment" autoComplete="off" spellCheck="false" autoCapitalize="none" placeholder="pay_…"
+            value={paymentId} onChange={(e) => setPaymentId(e.target.value)} disabled={result.busy} />
+        </div>
+        {result.error && <p className="jsro-form-status" data-tone="error" role="alert">{result.error}</p>}
+        {result.code && (
+          <p className="jsro-form-status" data-tone="success" role="status">
+            Your registration code is <strong translate="no">{result.code}</strong>. Keep it: you need it, with your email, to submit your project.
+          </p>
+        )}
+        <div className="jsro-form-actions">
+          <button className="jsro-quiet-action find-code-button" type="submit" disabled={result.busy}>
+            {result.busy ? 'Looking…' : 'Show my code'}
+          </button>
+        </div>
+      </form>
+    </details>
+  );
+}
+
 export default function EventRegister() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const event = getEvent(slug);
+  // An event with a fee is registered for and paid for in one step; its code
+  // is shown only after the payment is verified.
+  const paidFlow = Boolean(event?.paymentsOpen && event?.fee);
 
   const [values, setValues] = useState(EMPTY);
   const [errors, setErrors] = useState({});
@@ -102,6 +163,42 @@ export default function EventRegister() {
     setSaving(true);
     setStatus(null);
 
+    if (paidFlow) {
+      setStatus({ tone: 'info', message: 'Saving your details and opening secure payment…' });
+      try {
+        const result = await payForRegistration({
+          details: {
+            event_slug: event.slug,
+            name: values.name.trim(),
+            email: values.email.trim(),
+            phone: values.phone.trim(),
+            school: values.school.trim(),
+          },
+          description: `${event.title} entry fee`,
+          onFailed: (message) => setStatus({ tone: 'error', message: `${message} You can try again in the payment window.` }),
+        });
+        if (result.status === 'paid') {
+          navigate('/thank-you', {
+            state: { eventSlug: event.slug, name: values.name, email: values.email, code: result.registrationCode, paid: true, paymentId: result.paymentId },
+          });
+          return;
+        }
+        if (result.status === 'cancelled') {
+          setStatus({ tone: 'info', message: 'The payment window was closed and nothing was charged. Your details are saved: press Register and pay to continue.' });
+        } else {
+          setStatus({
+            tone: 'error',
+            message: `We could not confirm your payment. If money left your account, do not pay again: use "Already paid? Get your code" below with payment ID ${result.paymentId}, or contact JSRO.`,
+          });
+        }
+      } catch (error) {
+        setStatus({ tone: 'error', message: error.message });
+      } finally {
+        setSaving(false);
+      }
+      return;
+    }
+
     // The database generates the registration code and enforces whether
     // registration is open. Direct inserts into the table are not permitted.
     const { data: code, error } = await supabase.rpc('register_participant', {
@@ -154,6 +251,7 @@ export default function EventRegister() {
           </dl>
         </div>
 
+        <div className="register-side">
         <form className="jsro-form" onSubmit={submit} ref={formRef} noValidate>
           <div className="jsro-form-row">
             <label htmlFor="register-name">Full name</label>
@@ -185,13 +283,22 @@ export default function EventRegister() {
             </p>
           )}
 
+          {paidFlow && (
+            <p className="jsro-form-hint">
+              The {event.fee} entry fee is paid as part of registering, through Razorpay (UPI, cards, netbanking).
+              Your registration code appears as soon as the payment goes through.
+            </p>
+          )}
+
           <div className="jsro-form-actions">
             <button className="jsro-action" type="submit" disabled={saving}>
-              {saving ? 'Sending…' : 'Confirm Registration'}
+              {saving ? 'Working…' : paidFlow ? `Register and pay ${event.fee}` : 'Confirm Registration'}
               {!saving && <ArrowUpRight size={19} strokeWidth={1.75} aria-hidden="true" />}
             </button>
           </div>
         </form>
+        {paidFlow && <FindCode />}
+        </div>
       </main>
 
       <SiteFooter />

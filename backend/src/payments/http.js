@@ -2,7 +2,7 @@ import Razorpay from 'razorpay';
 
 import { ConfigError, readConfig, readWebhookSecret } from './config.js';
 import { createDb } from './db.js';
-import { createOrder, verifyPayment } from './handlers.js';
+import { createOrder, findRegistration, verifyPayment } from './handlers.js';
 import { handleWebhook } from './webhook.js';
 
 /*
@@ -133,4 +133,5 @@ export function webhookRoute({ deps = () => ({ webhookSecret: readWebhookSecret(
 export const webhookHttp = webhookRoute();
 
 export const createOrderRoute = route(createOrder);
+export const findRegistrationRoute = route(findRegistration);
 export const verifyPaymentRoute = route(verifyPayment);

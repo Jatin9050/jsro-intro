@@ -4,7 +4,7 @@ import { ArrowUpRight, Check, Copy } from 'lucide-react';
 
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
-import { getEvent, payPath, submitPath } from '@jsro/shared/events';
+import { getEvent, submitPath } from '@jsro/shared/events';
 import { site, whatsappUrl } from '@jsro/shared/site';
 import './ThankYou.css';
 
@@ -34,7 +34,7 @@ export default function ThankYou() {
       <SiteHeader />
 
       <main id="main-content" className="jsro-main jsro-measure">
-        <p className="jsro-effective">Registration received</p>
+        <p className="jsro-effective">{state?.paid ? 'Registration and payment received' : 'Registration received'}</p>
         <h1 className="jsro-page-title">
           {firstName ? `You’re registered, ${firstName}.` : 'You are registered.'}
         </h1>
@@ -76,11 +76,11 @@ export default function ThankYou() {
           )}
 
           <h2>About payment</h2>
-          {event?.paymentsOpen && event.fee ? (
+          {state?.paid ? (
             <p>
-              The entry fee is {event.fee}. You can{' '}
-              <Link to={payPath(event)} state={{ code, email: state?.email }}>pay it online</Link>{' '}
-              now, or later with your registration code.
+              Your {event?.fee ? `${event.fee} ` : ''}entry fee is paid. Razorpay emails you a receipt
+              {typeof state.paymentId === 'string' && /^pay_[A-Za-z0-9]+$/.test(state.paymentId) ? ` (payment ID ${state.paymentId})` : ''}.
+              If you lose your code, use “Already paid? Get your code” on the registration page with that payment ID.
             </p>
           ) : (
             <p>

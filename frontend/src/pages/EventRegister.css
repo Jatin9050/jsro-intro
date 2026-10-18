@@ -19,6 +19,15 @@
 .register-facts dt { color: var(--ink-muted); font-size: .76rem; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; }
 .register-facts dd { font-size: .95rem; font-variant-numeric: tabular-nums; margin: 0; }
 
+.register-side { display: grid; gap: 44px; align-content: start; }
+.find-code { border-top: 1px solid var(--rule); max-width: 520px; padding-top: 22px; }
+.find-code summary { cursor: pointer; font-size: .92rem; font-weight: 600; list-style-position: outside; min-height: 44px; display: flex; align-items: center; }
+.find-code summary:focus-visible { outline: 2px solid var(--signal); outline-offset: 4px; }
+.find-code[open] summary { margin-bottom: 14px; }
+.find-code .jsro-form { margin-top: 18px; gap: 22px; }
+.find-code-button { background: none; border: 0; color: var(--ink); cursor: pointer; font-family: var(--font); min-height: 44px; padding: 0; text-decoration: underline; text-underline-offset: 4px; }
+.find-code strong { color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: .03em; }
+
 @media (max-width: 860px) {
   .register-main { grid-template-columns: 1fr; }
 }
