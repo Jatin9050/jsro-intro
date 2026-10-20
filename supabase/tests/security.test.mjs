@@ -140,9 +140,9 @@ b.public === false && Number(b.file_size_limit) === 10485760 && b.allowed_mime_t
 console.log('\n== 7. submitting a project ==');
 const other = (await reg('innovation-challenge', 'Riya Kapoor', 'riya@example.com', '9123456789', 'KV')).rows[0].code;
 await up(`${other}/riya.pdf`);
-const sub = (c, e, p, v = null) => as('anon', null,
+const sub = (c, e, p, v = null, category = 'sustainability') => as('anon', null,
   `select public.submit_project($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) id`,
-  [c, e, 'Smart Irrigation Controller', 'iot-smart-systems', 'Aarav, Riya',
+  [c, e, 'Smart Irrigation Controller', category, 'Aarav, Riya',
    'Farmers over-water because they cannot see soil moisture in real time.',
    'An ESP32 node reads soil moisture and opens a valve only when needed.',
    null, 'ESP32, capacitive sensor', null, null, p, v]);
@@ -159,6 +159,15 @@ const id1 = s1?.rows[0].id;
 await new Promise(r => setTimeout(r, 30));
 const s2 = await expectOk('resubmission accepted', () => sub(code.toLowerCase(), 'aarav@example.com', `${code}/doc2.pdf`));
 s2?.rows[0].id === id1 ? ok('resubmission replaces the entry, same id') : bad('upsert', 'new row created');
+// The poster's five tracks, enforced by the database.
+for (const track of ['robotics-ai', 'sustainability', 'space-aerospace', 'social-impact', 'open-innovation']) {
+  await expectOk(`track "${track}" is accepted`, () => sub(code, 'aarav@example.com', `${code}/doc2.pdf`, null, track));
+}
+for (const old of ['iot-smart-systems', 'robotics-automation', 'smart-city', 'made-up', '']) {
+  await expectErr(`track "${old}" is refused (not one of the five)`, () => sub(code, 'aarav@example.com', `${code}/doc2.pdf`, null, old), 'check constraint|category');
+}
+await expectOk('...and the entry kept its last valid track', () => db.query(`select category from public.project_submissions where id = $1`, [id1]), (r) => r.rows[0].category === 'open-innovation');
+await sub(code, 'aarav@example.com', `${code}/doc2.pdf`, null, 'sustainability');
 const cnt = (await db.query(`select count(*)::int n, max(document_path) p from public.project_submissions`)).rows[0];
 cnt.n === 1 && cnt.p.endsWith('doc2.pdf') ? ok('one row, latest document kept') : bad('rows', JSON.stringify(cnt));
 await expectErr('anon has no read privilege on submissions', () => as('anon', null, 'select * from public.project_submissions'), 'permission denied');

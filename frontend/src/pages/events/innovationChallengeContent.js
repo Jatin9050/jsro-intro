@@ -1,12 +1,8 @@
 /*
- * Copy for the JSRO Innovation Challenge 2026, taken from the client's
- * "Website Content & Developer Brief".
- *
- * Two things the brief asks for that are deliberately NOT published here:
- *   - Prize amounts. The brief marks them "suggested" and notes they go live
- *     only once the prize pool and sponsors are confirmed.
- *   - Timeline dates. Every milestone is still [DATE] in the brief.
- * Both render as "to be announced" instead of being invented.
+ * Copy for the JSRO Innovation Challenge 2026. Written from the client's
+ * "Website Content & Developer Brief", then updated from the official
+ * competition poster, which confirms the dates, the tracks, who can enter, the
+ * prizes and the sponsor. Where the two differ, the poster wins.
  */
 
 export const FEE = '₹100';
@@ -14,41 +10,38 @@ export const FEE = '₹100';
 export const hero = {
   headline: 'Your idea can become the next innovation.',
   sub:
-    'Think, build, innovate. Present your solution to a real-world problem and compete with young innovators through the JSRO Innovation Challenge 2026.',
+    'A national-level competition for students and young innovators to build real-world solutions using robotics, AI, space, sustainability and technology. Turn ideas into impact.',
   facts: [
-    { label: 'Entry', value: FEE },
+    { label: 'Entry', value: `${FEE} per team` },
     { label: 'Format', value: 'Online' },
-    { label: 'Open to', value: 'School & college students' },
+    { label: 'First prize', value: '₹10,000' },
   ],
-  trust: 'Run by JSRO — robotics, AI, IoT and innovation.',
+  trust: 'Organised by JSRO. Sponsored by HR20 Car Custom.',
 };
 
 export const about = [
-  'The JSRO Innovation Challenge 2026 is an online competition that gives students and young innovators a platform to identify real-world problems and propose technology-driven solutions. You can enter alone or as a team, with an original idea, concept, prototype, simulation or working project.',
-  'It rewards practical thinking across robotics, artificial intelligence, IoT, electronics, sustainability, healthcare, smart cities, aerospace and other emerging technologies.',
+  'The JSRO Innovation Challenge 2026 is a national-level competition that gives students and young innovators a platform to identify real-world problems and propose technology-driven solutions. You can enter with an original idea, concept, prototype, simulation or working project.',
+  'It rewards practical thinking across robotics and AI, sustainability and the environment, space and aerospace, social impact and smart solutions, hardware and IoT, and any other creative idea with real-world impact.',
 ];
 
 /* `slug` must match the CHECK constraint on project_submissions.category. */
 export const categories = [
-  { slug: 'robotics-automation', name: 'Robotics & automation', detail: 'Robots, autonomous systems, assistive machines and automation.' },
-  { slug: 'artificial-intelligence', name: 'Artificial intelligence', detail: 'AI and ML concepts, intelligent systems, computer vision and applied AI.' },
-  { slug: 'iot-smart-systems', name: 'IoT & smart systems', detail: 'Connected devices, sensors, monitoring and smart solutions.' },
-  { slug: 'space-aerospace', name: 'Space & aerospace', detail: 'Space technology, satellites, CanSat concepts, aerospace and exploration.' },
-  { slug: 'sustainability-environment', name: 'Sustainability & environment', detail: 'Clean technology, waste, water, climate and environmental solutions.' },
-  { slug: 'healthcare-technology', name: 'Healthcare technology', detail: 'Assistive technology, monitoring, safety and healthcare innovation.' },
-  { slug: 'smart-city', name: 'Smart city', detail: 'Transport, public safety, infrastructure and urban technology.' },
-  { slug: 'energy-electronics', name: 'Energy & electronics', detail: 'Energy efficiency, renewable energy, electronics and embedded systems.' },
+  { slug: 'robotics-ai', name: 'Robotics & AI', detail: 'Autonomous systems, AI models and smart robots.' },
+  { slug: 'sustainability', name: 'Sustainability', detail: 'Clean energy, agriculture and waste management.' },
+  { slug: 'space-aerospace', name: 'Space & aerospace', detail: 'CanSat, drones, space tech and remote sensing.' },
+  { slug: 'social-impact', name: 'Social impact', detail: 'Healthcare, education and rural solutions.' },
+  { slug: 'open-innovation', name: 'Open innovation', detail: 'Any creative idea with real-world impact.' },
 ];
 
 /* A genuine sequence, so these carry numbers. */
 export const steps = [
-  { title: 'Register', detail: `Complete the online registration and pay the ${FEE} entry fee.` },
-  { title: 'Choose a problem', detail: 'Identify a real-world problem inside one of the categories.' },
+  { title: 'Register', detail: `Register and pay the ${FEE} team entry fee together, by 22 Nov 2026.` },
+  { title: 'Choose a problem', detail: 'Identify a real-world problem inside one of the five tracks.' },
   { title: 'Create your solution', detail: 'Develop an idea, design, prototype, simulation or working model.' },
-  { title: 'Submit', detail: 'Upload your project information before the submission deadline.' },
+  { title: 'Submit', detail: 'Upload your project before the deadline on 20 Dec 2026.' },
   { title: 'Evaluation', detail: 'Entries are reviewed against the published judging criteria.' },
-  { title: 'Finalists', detail: 'Selected participants may be invited to pitch their project online.' },
-  { title: 'Results', detail: 'Winners and finalists are announced on official JSRO channels.' },
+  { title: 'Shortlist', detail: 'The top 100 teams are announced on 30 Dec 2026.' },
+  { title: 'Results', detail: 'Winners are announced on 10 Jan 2027 on official JSRO channels.' },
 ];
 
 /* Weights sum to 100 — the page draws them to scale. */
@@ -62,33 +55,29 @@ export const judging = [
 ];
 
 export const benefits = [
-  { title: 'Show your idea', detail: 'Put your solution in front of a wider innovation community.' },
-  { title: 'Compete from anywhere', detail: 'Everything runs online, so there is nothing to travel to.' },
-  { title: 'Build your portfolio', detail: 'Turn the project into a documented innovation achievement.' },
-  { title: 'Get recognised', detail: 'Winners and finalists receive certificates and recognition.' },
-  { title: 'Sharpen your craft', detail: 'Develop problem-solving, presentation and technical communication.' },
-  { title: 'Go further', detail: 'Strong projects may be considered for future JSRO programmes.' },
+  { title: 'Win cash prizes', detail: 'The first prize is ₹10,000, and the other top winners receive cash prizes too.' },
+  { title: 'Get a certificate', detail: 'Every participant receives a certificate.' },
+  { title: 'Meet industry experts', detail: 'Showcase your project to people working in the field.' },
+  { title: 'Find a mentor', detail: 'Mentorship and networking opportunities, with internship opportunities for standout teams.' },
+  { title: 'Join the network', detail: 'Be part of the JSRO Innovation Network and be featured on the JSRO platform.' },
 ];
 
 export const submission = {
   items: [
-    'Project title',
-    'Participant or team details',
-    'Problem statement',
-    'Proposed solution',
-    'What makes it original',
-    'Technology and components used',
-    'Working principle or methodology',
-    'Expected impact',
-    'Photos, CAD, circuit diagrams, simulation screenshots or prototype video where they apply',
+    'Project idea or concept note',
+    'A working model or prototype (or a simulation)',
+    'A short demo video',
+    'A presentation (PPT)',
+    'The problem you solve, your solution, what makes it original, the technology used and the expected impact',
   ],
-  note: 'A 2–5 page PDF, plus an optional 3–5 minute demonstration or pitch video.',
+  note: 'Upload your concept note and presentation as one PDF (export your PPT to PDF), and add a link to your short demo video.',
 };
 
 export const eligibility = [
-  'Open to school and college students.',
-  'Enter individually or as a team.',
-  'Recommended team size is 1–4 participants.',
+  'School students in Class 6 to 12.',
+  'College students, undergraduate or diploma.',
+  'Young innovators aged 15 to 25.',
+  'Enter as a team or on your own. The ₹100 entry fee is per team.',
   'Give accurate name, institution and contact details.',
   'Submit original work, or clearly credit any third-party resources you used.',
 ];
@@ -104,33 +93,32 @@ export const rules = [
   'JSRO may reject submissions that do not meet the published requirements.',
 ];
 
+/* From the official poster. */
 export const timeline = [
-  'Registration opens',
-  'Registration closes',
-  'Submission deadline',
-  'Shortlisting',
-  'Final presentation',
-  'Winners announced',
+  { milestone: 'Registration opens', date: '20 Oct 2026' },
+  { milestone: 'Last date to register', date: '22 Nov 2026' },
+  { milestone: 'Project submission deadline', date: '20 Dec 2026' },
+  { milestone: 'Shortlisted teams announced (top 100)', date: '30 Dec 2026' },
+  { milestone: 'Winners announced', date: '10 Jan 2027' },
 ];
 
-/* Structure only. Amounts stay unpublished until JSRO confirms the prize pool. */
 export const prizes = [
-  { place: 'First', award: 'Trophy and certificate' },
-  { place: 'Second', award: 'Certificate' },
-  { place: 'Third', award: 'Certificate' },
-  { place: 'Special awards', award: 'Best innovation, best student project, best presentation' },
-  { place: 'Finalists', award: 'Finalist certificate' },
-  { place: 'Everyone who completes', award: 'Certificate of participation' },
+  { place: 'First prize', award: '₹10,000 cash prize' },
+  { place: 'Other top winners', award: 'Cash prizes' },
+  { place: 'Every participant', award: 'Certificate' },
+  { place: 'Standout teams', award: 'Mentorship and internship opportunities' },
+  { place: 'Showcase', award: 'Featured on the JSRO platform' },
 ];
 
 export const faqs = [
-  { q: 'Who can take part?', a: 'School and college students, and young innovators who meet the final eligibility criteria.' },
-  { q: 'Is the whole thing online?', a: 'Registration and the initial project submission are online. Shortlisted participants will be told what the final presentation involves.' },
-  { q: 'What does it cost?', a: `The entry fee is ${FEE}.` },
-  { q: 'Can I enter on my own?', a: 'Yes. Individual entries are supported, and team entries may also be allowed.' },
+  { q: 'Who can take part?', a: 'School students in Class 6 to 12, college students (undergraduate or diploma), and young innovators aged 15 to 25.' },
+  { q: 'Is the whole thing online?', a: 'Yes. Registration, payment and project submission are all online. Shortlisted teams will be told if anything more is needed.' },
+  { q: 'What does it cost?', a: `The entry fee is ${FEE} per team, paid when you register.` },
+  { q: 'When are the deadlines?', a: 'Register by 22 Nov 2026 and submit your project by 20 Dec 2026. The top 100 teams are announced on 30 Dec 2026, and winners on 10 Jan 2027.' },
+  { q: 'Can I enter on my own?', a: 'Yes. You can enter alone or as a team.' },
   { q: 'Do I need a physical prototype?', a: 'Not necessarily. Ideas, simulations and designs can be accepted, depending on the submission requirements.' },
   { q: 'Can I use Arduino, ESP32 or Raspberry Pi?', a: 'Yes. Choose whatever hardware and software suits your solution.' },
-  { q: 'Will I get a certificate?', a: 'Participants who complete the required process can receive a digital participation certificate. Finalist and winner certificates are issued separately.' },
+  { q: 'Will I get a certificate?', a: 'Yes. Every participant receives a certificate.' },
   { q: 'How are winners chosen?', a: 'Entries are scored against the published judging criteria.' },
   { q: 'Can I submit a project I have already built?', a: 'Existing projects may be allowed if you clearly explain your own contribution and how it was developed. Final rules will say whether previously awarded projects qualify.' },
 ];

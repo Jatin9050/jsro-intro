@@ -36,11 +36,11 @@ export const events = [
     title: 'JSRO Innovation Challenge 2026',
     shortTitle: 'Innovation Challenge',
     summary:
-      'An online competition where students identify a real-world problem and propose a technology-driven solution.',
+      'A national-level online competition where students and young innovators build a technology solution to a real-world problem. First prize ₹10,000.',
     // Corrected from the 2026 content brief. The previous values (Delhi NCR,
     // 9:00-17:00, May 30) predate it and described a different, offline event.
-    focus: 'Open innovation',
-    date: null,          // brief leaves every milestone as [DATE]
+    focus: 'Robotics, AI, space and more',
+    date: 'Register by 22 Nov 2026',
     duration: null,
     time: null,
     location: 'Online',

@@ -303,7 +303,7 @@ export default function InnovationChallenge() {
 
         <section className="board-section is-raised" id="categories" aria-labelledby="cat-title">
           <div className="section-head">
-            <h2 id="cat-title">Eight things you could enter</h2>
+            <h2 id="cat-title">Five tracks</h2>
             <p>Pick the one your problem belongs to.</p>
           </div>
           <ul className="pin-list">
@@ -361,14 +361,14 @@ export default function InnovationChallenge() {
         <section className="board-section board-split" aria-labelledby="when-title">
           <div>
             <h2 id="when-title">Dates</h2>
-            <p className="section-note">JSRO confirms the schedule before registration opens.</p>
+            <p className="section-note">Register by 22 Nov 2026 and submit by 20 Dec 2026.</p>
             <dl className="spec-list">
-              {timeline.map((m) => <div key={m}><dt>{m}</dt><dd>To be announced</dd></div>)}
+              {timeline.map((m) => <div key={m.milestone}><dt>{m.milestone}</dt><dd>{m.date}</dd></div>)}
             </dl>
           </div>
           <div>
             <h2>Prizes</h2>
-            <p className="section-note">The prize pool is confirmed with sponsors before it is published.</p>
+            <p className="section-note">Sponsored by HR20 Car Custom.</p>
             <dl className="spec-list">
               {prizes.map((p) => <div key={p.place}><dt>{p.place}</dt><dd>{p.award}</dd></div>)}
             </dl>
@@ -383,9 +383,9 @@ export default function InnovationChallenge() {
         <section className="board-close" aria-labelledby="close-title">
           <h2 id="close-title">Don’t just have an idea. Build it.</h2>
           <p>
-            Entry is {FEE} and the whole challenge runs online.{' '}
+            Entry is {FEE} per team and the whole challenge runs online. First prize is ₹10,000.{' '}
             {EVENT.registrationOpen
-              ? 'Register now to get your registration code, or message JSRO with any question.'
+              ? 'Register and pay by 22 Nov 2026 to get your registration code, or message JSRO with any question.'
               : 'Registration has not opened yet — message JSRO and you will hear the moment it does.'}
           </p>
           <div className="board-actions">
