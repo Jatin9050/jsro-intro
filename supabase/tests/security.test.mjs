@@ -175,5 +175,23 @@ await expectOk('stranger reads 0 submissions', () => as('authenticated', strange
 await expectOk('admin reads the submission', () => as('authenticated', admin, 'select * from public.project_submissions'), r => r.rows.length === 1);
 await expectErr('anon cannot write submissions directly', () => as('anon', null, `insert into public.project_submissions (registration_id, project_title, category, problem_statement, proposed_solution, document_path) values (gen_random_uuid(),'x','smart-city','xxxxxxxxxxxxxxxxxxxxxx','xxxxxxxxxxxxxxxxxxxxxx','a.pdf')`), 'permission denied');
 
+console.log('\n== 12. registration deadline ==');
+// Called without switching role: the logic is what is under test here (the
+// role-level privileges of these functions are covered in the sections above).
+const startPaidNow = (slug, n, e) => db.query(`select * from public.start_paid_registration($1, $2, $3, '9123456789', 'DPS Hisar')`, [slug, n, e]);
+await expectOk('the Innovation Challenge closes at the end of 22 Nov 2026, India time', () => db.query(
+  `select registration_closes_at = '2026-11-22 18:30:00+00'::timestamptz as ok from public.event_settings where slug = 'innovation-challenge'`), (r) => r.rows[0].ok === true);
+
+await db.exec(`update public.event_settings set registration_open = true, fee_paise = 10000, registration_closes_at = now() - interval '1 minute' where slug = 'innovation-challenge'`);
+await expectErr('after the deadline the paid route refuses', () => startPaidNow('innovation-challenge', 'Late Person', 'late-one@deadline.test'), 'has closed');
+await expectErr('after the deadline the free route refuses too', () => reg('innovation-challenge', 'Late Person', 'late-two@deadline.test', '9123456789', 'DPS Hisar'), 'has closed');
+await expectOk('...and neither created anything', () => db.query(`select count(*)::int n from public.event_registrations where email like '%@deadline.test'`), (r) => r.rows[0].n === 0);
+
+await db.exec(`update public.event_settings set registration_closes_at = now() + interval '1 hour' where slug = 'innovation-challenge'`);
+await expectOk('before the deadline the paid route works', () => startPaidNow('innovation-challenge', 'On Time', 'ontime@deadline.test'), (r) => r.rows.length === 1);
+
+await db.exec(`update public.event_settings set registration_closes_at = null where slug = 'innovation-challenge'`);
+await expectOk('with no deadline set it stays open', () => startPaidNow('innovation-challenge', 'No Deadline', 'nodeadline@deadline.test'), (r) => r.rows.length === 1);
+
 console.log(`\n== RESULT: ${pass} passed, ${fail} failed ==\n`);
 process.exit(fail ? 1 : 0);

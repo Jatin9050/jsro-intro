@@ -4,7 +4,7 @@ import { ArrowUpRight } from 'lucide-react';
 
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
-import { getEvent, eventPath } from '@jsro/shared/events';
+import { getEvent, eventPath, hasRegistrationClosed, isRegistrationOpen } from '@jsro/shared/events';
 import { site } from '@jsro/shared/site';
 import { supabase } from '../lib/supabase';
 import { findRegistrationCode, payForRegistration } from '../lib/payments';
@@ -93,16 +93,20 @@ export default function EventRegister() {
   const [saving, setSaving] = useState(false);
   const formRef = useRef(null);
 
-  if (event && !event.registrationOpen) {
+  if (event && !isRegistrationOpen(event)) {
+    const closed = hasRegistrationClosed(event);
     return (
       <div className="jsro-page">
         <SiteHeader />
         <main id="main-content" className="jsro-main jsro-measure">
-          <p className="jsro-effective">Coming soon</p>
-          <h1 className="jsro-page-title">Registration for {event.title} has not opened yet.</h1>
+          <p className="jsro-effective">{closed ? 'Closed' : 'Coming soon'}</p>
+          <h1 className="jsro-page-title">
+            {closed ? `Registration for ${event.title} has closed.` : `Registration for ${event.title} has not opened yet.`}
+          </h1>
           <p className="jsro-page-intro">
-            JSRO is finalising dates and cost. Message the team and they will send the
-            outline as soon as it is ready.
+            {closed
+              ? 'The last date to register has passed. If you have a question, or you already paid and need your registration code, message the team.'
+              : 'JSRO is finalising dates and cost. Message the team and they will send the outline as soon as it is ready.'}
           </p>
           <p style={{ marginTop: 34 }}>
             <a className="jsro-action" href={`mailto:${site.email}?subject=${encodeURIComponent(event.title)}`}>

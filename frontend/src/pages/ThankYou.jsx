@@ -69,7 +69,7 @@ export default function ThankYou() {
             <>
               <h2>What happens next</h2>
               <p>
-                When submissions open, upload your project from the{' '}
+                {event.submissionsOpen ? 'Submissions are open. Upload' : 'When submissions open, upload'} your project from the{' '}
                 <Link to={submitPath(event)}>submission page</Link> using your code and email.
               </p>
             </>

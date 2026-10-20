@@ -46,11 +46,15 @@ export const events = [
     location: 'Online',
     fee: '\u20B9100',
     registrationOpen: true, // keep in step with event_settings.registration_open in Supabase
+    // The last moment to register: the end of 22 Nov 2026, India time. The
+    // database enforces it (event_settings.registration_closes_at); this lets
+    // the pages say "closed" instead of offering a button that would fail.
+    registrationCloses: '2026-11-23T00:00:00+05:30',
     closedLabel: 'Registration opens soon',
     // The brief's flow ends in a project upload; the other two events do not.
     acceptsSubmissions: true,
     // UI only — the database's event_settings.submissions_open is what enforces it.
-    submissionsOpen: false,
+    submissionsOpen: true, // keep in step with event_settings.submissions_open in Supabase
     // UI only: the registration form takes payment ("Register and pay") and
     // the code is shown after payment. The database enforces it: with
     // event_settings.fee_paise set, the free registration route refuses.
@@ -91,8 +95,18 @@ export const legacyRedirects = events.flatMap((event) =>
   event.legacySlugs.map((from) => ({ from: `/${from}`, to: eventPath(event) }))
 );
 
-export const eventStatusLabel = (event) =>
-  event.registrationOpen ? 'Registration open' : event.closedLabel || 'Coming soon';
+// Registration is open while it is switched on and its last moment has not passed.
+export const hasRegistrationClosed = (event, now = Date.now()) =>
+  Boolean(event.registrationOpen && event.registrationCloses && now >= Date.parse(event.registrationCloses));
+
+export const isRegistrationOpen = (event, now = Date.now()) =>
+  Boolean(event.registrationOpen) && !hasRegistrationClosed(event, now);
+
+export const eventStatusLabel = (event, now = Date.now()) => {
+  if (isRegistrationOpen(event, now)) return 'Registration open';
+  if (hasRegistrationClosed(event, now)) return 'Registration closed';
+  return event.closedLabel || 'Coming soon';
+};
 
 // Until pricing is published, the fee line points at JSRO instead of a number.
 export const hasPublishedFee = (event) => Boolean(event.fee);

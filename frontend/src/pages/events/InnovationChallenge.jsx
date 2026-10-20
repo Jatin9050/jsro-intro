@@ -4,7 +4,7 @@ import { animate, stagger, svg, utils } from 'animejs';
 import { ArrowUpRight, Minus, MoveRight, Plus } from 'lucide-react';
 
 import SiteFooter from '../../components/SiteFooter';
-import { getEvent, eventStatusLabel, registerPath } from '@jsro/shared/events';
+import { getEvent, eventStatusLabel, hasRegistrationClosed, isRegistrationOpen, registerPath, submitPath } from '@jsro/shared/events';
 import { site, whatsappUrl } from '@jsro/shared/site';
 import {
   about, benefits, categories, eligibility, faqs, hero,
@@ -14,10 +14,24 @@ import './InnovationChallenge.css';
 
 const EVENT = getEvent('innovation-challenge');
 
+// Shown once submissions are open: where a registered team uploads its project.
+function SubmitLink({ onCopper = false }) {
+  if (!EVENT.submissionsOpen) return null;
+  return (
+    <Link className={onCopper ? 'close-link' : 'silk-link'} to={submitPath(EVENT)}>
+      Submit your project
+    </Link>
+  );
+}
+
 function RegisterButton({ onCopper = false }) {
   const tone = onCopper ? ' on-copper' : '';
-  if (!EVENT.registrationOpen) {
-    return <span className={`copper-btn is-pending${tone}`} aria-disabled="true">Registration opens soon</span>;
+  if (!isRegistrationOpen(EVENT)) {
+    return (
+      <span className={`copper-btn is-pending${tone}`} aria-disabled="true">
+        {hasRegistrationClosed(EVENT) ? 'Registration closed' : 'Registration opens soon'}
+      </span>
+    );
   }
   return (
     <Link className={`copper-btn${tone}`} to={registerPath(EVENT)}>
@@ -290,6 +304,7 @@ export default function InnovationChallenge() {
             </dl>
             <div className="board-actions hero-in">
               <RegisterButton />
+              <SubmitLink />
               <a className="silk-link" href="#scoring">How entries are scored</a>
             </div>
           </div>
@@ -384,12 +399,16 @@ export default function InnovationChallenge() {
           <h2 id="close-title">Don’t just have an idea. Build it.</h2>
           <p>
             Entry is {FEE} per team and the whole challenge runs online. First prize is ₹10,000.{' '}
-            {EVENT.registrationOpen
+            {isRegistrationOpen(EVENT)
               ? 'Register and pay by 22 Nov 2026 to get your registration code, or message JSRO with any question.'
-              : 'Registration has not opened yet — message JSRO and you will hear the moment it does.'}
+              : hasRegistrationClosed(EVENT)
+                ? 'Registration has closed. Message JSRO if you have a question.'
+                : 'Registration has not opened yet — message JSRO and you will hear the moment it does.'}
+            {EVENT.submissionsOpen && ' Already registered? Submit your project by 20 Dec 2026.'}
           </p>
           <div className="board-actions">
             <RegisterButton onCopper />
+            <SubmitLink onCopper />
             <a className="close-link" href={`mailto:${site.email}?subject=${encodeURIComponent('JSRO Innovation Challenge 2026')}`}>{site.email}</a>
             <a className="close-link" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
               WhatsApp <ArrowUpRight size={17} strokeWidth={1.8} aria-hidden="true" />

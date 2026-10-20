@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { MoveUpRight } from 'lucide-react';
-import { listedEvents, eventPath, eventStatusLabel } from '@jsro/shared/events';
+import { listedEvents, eventPath, eventStatusLabel, isRegistrationOpen } from '@jsro/shared/events';
 import './EventList.css';
 
 export default function EventList() {
@@ -11,7 +11,7 @@ export default function EventList() {
           <Link className="event-row jsro-reveal" to={eventPath(event)}>
             <i className="event-rule" aria-hidden="true" />
 
-            <span className="event-status" data-open={String(event.registrationOpen)}>
+            <span className="event-status" data-open={String(isRegistrationOpen(event))}>
               {eventStatusLabel(event)}
             </span>
 
